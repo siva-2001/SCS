@@ -1,6 +1,5 @@
 from django.db import models
 from SCSapp.models.VolleyballTeam import VolleyballTeam
-from SCSapp.models.Competition import Competition
 
 
 
@@ -14,7 +13,7 @@ class Match(models.Model):
         null=True, on_delete=models.SET_NULL, related_name="first_team", default=None)
     secondTeam = models.ForeignKey(VolleyballTeam, blank=True,
         null=True, on_delete=models.SET_NULL, related_name="second_team", default=None)
-    competition = models.ForeignKey(Competition, on_delete=models.CASCADE)
+    competition = models.ForeignKey('SCSapp.Competition', on_delete=models.CASCADE)
     matchDateTime = models.DateTimeField(null=True, default=None)
     firstTeamScore = models.IntegerField(default=0)
     secondTeamScore = models.IntegerField(default=0)

@@ -577,7 +577,7 @@ class AppFrame(wx.Frame):
                 return repr(v)
         
         with open(self.filename, "w") as f:
-            for element in sorted(self.elements, key=lambda e:e.name):
+            for element in sorted(self.elements, key=lambda e:e._name):
                 if element.static:
                     continue
                 d = element.as_dict()
@@ -622,7 +622,7 @@ class AppFrame(wx.Frame):
             for element in self.elements:
                 if txt in element:
                     element.selected = True
-                    print "Found:", element.name
+                    print "Found:", element._name
             self.canvas.Refresh(False)
         dlg.Destroy()              
 
@@ -631,7 +631,7 @@ class AppFrame(wx.Frame):
         new_elements = []
         for element in self.elements:
             if element.selected:
-                print "Erasing:", element.name
+                print "Erasing:", element._name
                 element.selected = False
                 self.canvas.Refresh(False)
                 element.remove()
@@ -651,13 +651,13 @@ class AppFrame(wx.Frame):
             for i in range(1, data['qty']+1):
                 for element in self.elements:
                     if element.selected:
-                        print "Copying:", element.name
+                        print "Copying:", element._name
                         new_element = element.copy()
-                        name = new_element.name
+                        name = new_element._name
                         if len(name)>2 and name[-2:].isdigit():
-                            new_element.name = name[:-2] + "%02d" % (int(name[-2:])+i)
+                            new_element._name = name[:-2] + "%02d" % (int(name[-2:]) + i)
                         else:
-                            new_element.name = new_element.name + "_copy"
+                            new_element._name = new_element._name + "_copy"
                         new_element.selected = False
                         new_element.move(data['dx']*i, data['dy']*i)
                         new_elements.append(new_element)
@@ -701,7 +701,7 @@ class AppFrame(wx.Frame):
     def move_elements(self, x, y):
         for element in self.elements:
             if element.selected:
-                print "moving", element.name, x, y
+                print "moving", element._name, x, y
                 element.x = element.x + x
                 element.y = element.y + y
 

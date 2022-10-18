@@ -1,6 +1,6 @@
 from django.db import models
 
-class MatchEvent(models.Model):
+class MatchAction(models.Model):
     class Meta:
         verbose_name = 'Событие'
         verbose_name_plural = 'События'
