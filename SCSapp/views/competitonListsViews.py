@@ -2,6 +2,9 @@
 # from SCSapp.models.Competition import Competition
 # from django.core.paginator import Paginator
 #
+def homePageView(request):
+    pass
+
 # def compHomePageView(request):
 #     pastCompetitions = Competition.objects.all().filter(status=Competition.PAST)
 #     if(len(pastCompetitions) > 3):

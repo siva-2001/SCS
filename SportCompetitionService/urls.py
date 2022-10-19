@@ -15,22 +15,23 @@ Including another URLconf
 """
 from django.contrib import admin
 from django.urls import path
-# from SCSapp.views import competitonListsViews, authViews
+from SCSapp.views.competitonListsViews import homePageView
+from SCSapp.views.authViews import signUpUserView, logoutUser, logInUserView
 from SCSapp.views.competitionView import competitionView
-# from SCSapp.views.createCompetitionView import createCompetitionsView
+from SCSapp.views.createCompetitionView import createCompetitionView
 from django.conf.urls.static import static
 from django.conf import settings
 
 urlpatterns = [
     path('admin/', admin.site.urls),
 
-    # path('login/', authViews.logInUserView, name='login'),
-    # path('signup/', authViews.signUpUserView, name='signup'),
-    # path('logout/', authViews.logoutUser, name="logout"),
+    path('login/', logInUserView, name='login'),
+    path('signup/', signUpUserView, name='signup'),
+    path('logout/', logoutUser, name="logout"),
     #
-    # path('', competitonListsViews.compHomePageView, name='homePage'),
     # path('past/', competitonListsViews.pastCompetitionsView, name='pastCompetition' ),
-    # path('createCompetition/', createCompetitionsView, name='createCompetition'),
+    path('', homePageView, name='homePage'),
+    path('createCompetition/', createCompetitionView, name='createCompetition'),
     path('competition/<comp_id>/', competitionView, name='competition'),
 ]
 

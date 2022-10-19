@@ -5,6 +5,15 @@
 # from django.contrib.auth.models import User
 # from django.contrib.auth.forms import  AuthenticationForm
 
+def signUpUserView(request):
+    pass
+def logInUserView(request):
+    pass
+
+def logoutUser(request):
+    pass
+
+
 # def signUpUserView(request):
 #     userAuth = request.user.is_authenticated
 #     form = SignUpUser()
