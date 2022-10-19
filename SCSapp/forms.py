@@ -3,7 +3,7 @@ from SCSapp.models.Competition import Competition
 from SCSapp.models.Player import Player
 from SCSapp.models.VolleyballTeam import VolleyballTeam
 from SCSapp.models.Match import Match
-from django.forms.widgets import DateTimeInput, TextInput, Textarea
+from django.forms.widgets import DateTimeInput, TextInput, Textarea, RadioSelect
 #from crispy_forms.helper import FormHelper
 from django.contrib.auth.models import User
 from django.contrib.auth.forms import UserCreationForm
@@ -35,26 +35,28 @@ class MatchEditForm(forms.ModelForm):
 class CreateCompetitionsForm(forms.ModelForm):
     class Meta:
         model = Competition
-        fields = ['_name', '_discription', '_dateTimeStartCompetition', '_type', '_sportType']
+        fields = ['name', 'description', 'dateTimeStartCompetition', 'type', 'sportType']
         widgets = {
-            '_name':TextInput(attrs={
+            'name':TextInput(attrs={
                 'id': 'id_name',
                 'type': "text",
                 'class': "form-control",
                 'placeholder': "Заголовок",
                 'required': ''
             }),
-            '_discription':Textarea(attrs={
-                'id': 'id_discription',
+            'description':Textarea(attrs={
+                'id': 'id_description',
                 'type': "text",
                 'class': "form-control",
                 'placeholder': "Описание предстоящих соревнований",
                 'required': '',
                 'style':'resize:none;'
             }),
-            '_type':TextInput(attrs={}),
-            '_sportTye=pe':TextInput(attrs={}),
-            '_dateTimeStartCompetition':TextInput(attrs={
+            'type':RadioSelect(attrs={
+
+            }),
+            'sportTye=pe':TextInput(attrs={}),
+            'dateTimeStartCompetition':TextInput(attrs={
                 'id':'id_datetimepicker',
                 'type':"text",
                 'class':"form-control",
@@ -64,8 +66,8 @@ class CreateCompetitionsForm(forms.ModelForm):
         }
         labels = {
             'name':'Заголовок:',
-            'discription':'Описание:',
-            '_dateTimeStartCompetition':'Заявки подаются до:',
+            'description':'Описание:',
+            'dateTimeStartCompetition':'Заявки подаются до:',
         }
 
 # class RegistrPlayerForm(forms.ModelForm):

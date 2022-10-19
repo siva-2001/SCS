@@ -4,7 +4,7 @@ from SCSapp.forms import CreateCompetitionsForm
 from django.contrib.auth.decorators import login_required
 from SCSapp.func import convertDTPickerStrToDateTime
 #
-@login_required
+#@login_required
 def createCompetitionView(request):
     userIsJudge = request.user.has_perm('SCS.control_competition')
     if request.method == "GET":
@@ -17,7 +17,7 @@ def createCompetitionView(request):
         try:
             newCompetition = Competition.create(
                 name=request.POST['name'],
-                discription=request.POST['discription'],
+                discription=request.POST['description'],
                 sportType=request.POST['sportType'],
                 startDate=convertDTPickerStrToDateTime(request.POST['lastTimeForApplications']),
                 organizer=request.user,
