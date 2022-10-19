@@ -3,7 +3,7 @@ from SCSapp.models.Competition import Competition
 from SCSapp.models.Player import Player
 from SCSapp.models.VolleyballTeam import VolleyballTeam
 from SCSapp.models.Match import Match
-from django.forms.widgets import DateTimeInput, TextInput, Textarea
+from django.forms.widgets import DateTimeInput, TextInput, Textarea, Select
 #from crispy_forms.helper import FormHelper
 from django.contrib.auth.models import User
 from django.contrib.auth.forms import UserCreationForm
@@ -35,32 +35,49 @@ class MatchEditForm(forms.ModelForm):
 class CreateCompetitionsForm(forms.ModelForm):
     class Meta:
         model = Competition
-        fields = ['_name', '_discription', '_dateTimeStartCompetition', '_type', '_sportType']
+        fields = ['_name', '_discription', '_dateTimeStartCompetition', '_sportType', '_type']
         widgets = {
             '_name':TextInput(attrs={
-                'id': 'id_name',
+                'id': 'competition-title',
                 'type': "text",
                 'class': "form-control",
-                'placeholder': "Заголовок",
+                'placeholder': "Соревнования по волейболу",
                 'required': ''
             }),
             '_discription':Textarea(attrs={
-                'id': 'id_discription',
-                'type': "text",
-                'class': "form-control",
+                'id': 'competition-description',
+                'class': "form-control competition-description",
                 'placeholder': "Описание предстоящих соревнований",
-                'required': '',
-                'style':'resize:none;'
+                'cols': '30',
+                'rows': '10',
+                'required': ''
             }),
-            '_type':TextInput(attrs={}),
-            '_sportTye=pe':TextInput(attrs={}),
             '_dateTimeStartCompetition':TextInput(attrs={
-                'id':'id_datetimepicker',
-                'type':"text",
-                'class':"form-control",
-                'placeholder':"Заявки принимаются до",
-                'required':'',
+                 'id':'competition-date',
+                 'type':"date",
+                 'class':"form-control",
+                 'required':'',
             }),
+            '_sportType':Select(attrs={
+                 'id': 'competition-sport',
+                 'class': 'form-select',
+                 'required': '',
+            }),
+            '_type':TextInput(attrs={
+                'id': 'flexRadioDefault1',
+                'class': 'form-check-input mt-2',
+                'type': 'radio',
+                'name': 'flexRadioDefault',
+                'checked': '',
+                'required': '',
+            }),
+#             '_type2':TextInput(attrs={
+#                 'id': 'flexRadioDefault2',
+#                 'class': 'form-check-input mt-2',
+#                 'type': 'radio',
+#                 'name': 'flexRadioDefault',
+#                 'required': '',
+#             }),
         }
         labels = {
             'name':'Заголовок:',
