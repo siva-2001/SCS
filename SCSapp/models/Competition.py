@@ -13,29 +13,38 @@ from SCSapp.models.VolleyballTeam import VolleyballTeam
 
 class Competition(models.Model):
 
-    class StatusChoises(models.TextChoices):
+    class StatusChoices(models.TextChoices):
         ANNOUNSED = "AN", 'Анонсированное'
         CURRENT = 'CR', 'Текущее'
         PAST = 'P', 'Прошедшее'
 
-    class SportTypeChoises(models.TextChoices):
+    class SportTypeChoices(models.TextChoices):
         FOOTBALL = 'FB', 'Футбол'
         VOLLEYBALL = 'VB', 'Волейбол'
 
+    class TypeChoices(models.TextChoices):
+        INTERNAL = 'INT', 'Внутреннее'
+        INTERCOLLEGIATE = 'IC', 'Межвузовское'
 
     _name = models.CharField(max_length=256, verbose_name="Заголовок", null=True)
     _status = models.CharField(
         max_length=2,
-        choices = StatusChoises.choices,
-        default = StatusChoises.ANNOUNSED,
+        choices = StatusChoices.choices,
+        default = StatusChoices.ANNOUNSED,
         verbose_name = 'Статус',
     )
     _sportType = models.CharField(
         max_length=128,
         verbose_name='Тип спорта',
-        choices=SportTypeChoises.choices,
-        default=SportTypeChoises.VOLLEYBALL
+        choices=SportTypeChoices.choices,
+        default=SportTypeChoices.VOLLEYBALL
     )
+    _type = models.CharField(
+        max_length=3,
+        choises = TypeChoises.choices,
+        default = TypeChoices.INTERCOLLEGIATE,
+    )
+
     _discription = models.TextField(blank=True, verbose_name="Описание", null=True)
     _dateTimeStartCompetition = models.DateTimeField(verbose_name="Заявки на участие принимаются до")
     _dateTimeFinishCompetition = models.DateTimeField(blank=True, null=True, verbose_name="Соревнование завершилось")
@@ -54,6 +63,18 @@ class Competition(models.Model):
     def get_absolute_url(self):
         return reverse('competition', args=[str(self.id)])
 
+    @classmethod
+    def create(cls, name, discription, sportType, type, startDate, isHighLevel, orginizer):
+        object = cls()
+        object._name = name
+        object._discription = discription
+        object._sportType = sportType
+        object._dateTimeStartCompetition = startDate
+        object._isHightLevelSportEvent = isHighLevel
+        object._organizer = orginizer
+        object._type = type
+        object.save()
+        return object
 
     def editCompetition(self, name, discription, startDate):
         if name and len(name) > 0: self._name = name

@@ -1,6 +1,10 @@
 from django.db import models
 from SCSapp.models.VolleyballTeam import VolleyballTeam
 
+class AbstractMatch(models.Model):
+    pass
+
+
 
 
 class Match(models.Model):
