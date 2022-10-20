@@ -66,13 +66,13 @@ class Competition(models.Model):
     @classmethod
     def create(cls, name, discription, sportType, type, startDate, isHighLevel, orginizer):
         object = cls()
-        object._name = name
-        object._discription = discription
-        object._sportType = sportType
-        object._dateTimeStartCompetition = startDate
-        object._isHightLevelSportEvent = isHighLevel
-        object._organizer = orginizer
-        object._type = type
+        object.name = name
+        object.discription = discription
+        object.sportType = sportType
+        object.dateTimeStartCompetition = startDate
+        object.isHightLevelSportEvent = isHighLevel
+        object.organizer = orginizer
+        object.type = type
         object.save()
         return object
 
