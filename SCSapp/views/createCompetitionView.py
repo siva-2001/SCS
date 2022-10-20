@@ -3,7 +3,7 @@ from SCSapp.models.Competition import Competition
 from SCSapp.forms import CreateCompetitionsForm
 from django.contrib.auth.decorators import login_required
 from SCSapp.func import convertDTPickerStrToDateTime
-#
+
 #@login_required
 def createCompetitionView(request):
     userIsJudge = request.user.has_perm('SCS.control_competition')

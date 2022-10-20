@@ -1,56 +1,50 @@
 {% extends 'base.html' %}
 {% block content %}
 
-    <div class="row justify-content-start">
-        <div class="col-12 col-xl-10">
-            <p class="h3"></p>
-            <form method="POST">
-                {% csrf_token %}
-                <div class="input-group input-group-lg mb-3">
-                    <span class="input-group-text">Заголовок</span>
-                    {{ form.name }}
+<div class="container">
+    <div class="create-competition-title h2 text-center pt-5 mb-5">Создание соревнования</div>
+    <form method="POST">
+        {% csrf_token %}
+        <div class="row">
+            <div class="mb-3">
+                <label class="form-label">Название</label>
+                {{ form.name }}
+            </div>
+            <div class="mb-3">
+                <label class="form-label">Описание</label>
+                {{ form.description }}
+            </div>
+            <div class="mb-3 col-6">
+                <label class="form-label">Дата начала</label>
+                {{ form.dateTimeStartCompetition }}
+            </div>
+            <div class="mb-3">
+                <label class="form-label">Вид спорта</label>
+                {{form.sportType}}
+            </div>
+            <div class="row">
+                <span class="col-3 form-label">Тип соревнований:</span>
+                {% for radio in form.type %}
+                <div class="form-check-label">
+                    {{ radio }}
                 </div>
 
-                <div class="input-group input-group-lg mb-3">
-                    <span class="input-group-text">Организатор</span>
-                    {{ form.organizerName }}
-                </div>
-
-                <div class="input-group input-group-lg mb-3">
-                    <span class="input-group-text">Время подачи заявок</span>
-                    {{ form.lastTimeForApplications }}
-                </div>
-
-                <div class="input-group input-group-lg mb-3">
-                    <span class="input-group-text">Мин. кол-во команд</span>
-                    {{ form.theNumberOfTeamsRequiredToStartTheCompetition }}
-                </div>
-
-                <div class="input-group input-group-lg mb-3">
-                    <span class="input-group-text">Описание</span>
-                    {{ form.discription }}
-                </div>
-
-                <div class="row justify-content-end">
-                    <div class="col-auto">
-                        <button type="submit" class="btn createCompBtn">
-                            Создать
-                        </button>
-                    </div>
-                </div>
-
-
-            </form>
+                {% endfor %}
+            </div>
+            <div class="row d-flex justify-content-center">
+                <button type="submit" class="btn btn-warning col-4 pt-4 pb-4 mt-5 mb-5">Создать соревнование</button>
+            </div>
         </div>
-    </div>
+    </form>
+</div>
 
-    <script>
-         $('#id_datetimepicker').datetimepicker({
-             format:'Y:m:d H:i',
-              step: 10,
-              theme:'dark',
-              maxTime:'23:59'
-         });
-    </script>
+<!--<script>-->
+<!--    $('#id_datetimepicker').datetimepicker({-->
+<!--        format: 'Y:m:d H:i',-->
+<!--        step: 10,-->
+<!--        theme: 'dark',-->
+<!--        maxTime: '23:59'-->
+<!--    });-->
+<!--</script>-->
 
 {% endblock %}

@@ -3,7 +3,8 @@ from SCSapp.models.Competition import Competition
 from SCSapp.models.Player import Player
 from SCSapp.models.VolleyballTeam import VolleyballTeam
 from SCSapp.models.Match import Match
-from django.forms.widgets import DateTimeInput, TextInput, Textarea, RadioSelect
+from django.forms.widgets import DateTimeInput, TextInput, Textarea, RadioSelect, Select
+
 #from crispy_forms.helper import FormHelper
 from django.contrib.auth.models import User
 from django.contrib.auth.forms import UserCreationForm
@@ -35,27 +36,41 @@ class MatchEditForm(forms.ModelForm):
 class CreateCompetitionsForm(forms.ModelForm):
     class Meta:
         model = Competition
-        fields = ['name', 'description', 'dateTimeStartCompetition', 'type', 'sportType']
+        fields = ['name', 'description', 'dateTimeStartCompetition', 'sportType', 'type']
         widgets = {
             'name':TextInput(attrs={
-                'id': 'id_name',
+                'id': 'competition-title',
                 'type': "text",
                 'class': "form-control",
-                'placeholder': "Заголовок",
+                'placeholder': "Соревнования по волейболу",
                 'required': ''
             }),
             'description':Textarea(attrs={
-                'id': 'id_description',
-                'type': "text",
-                'class': "form-control",
+                'id': 'competition-description',
+                'class': "form-control competition-description",
                 'placeholder': "Описание предстоящих соревнований",
-                'required': '',
-                'style':'resize:none;'
+                'cols': '30',
+                'rows': '10',
+                'required': ''
+            }),
+            'dateTimeStartCompetition':TextInput(attrs={
+                 'id':'competition-date',
+                 'type':"date",
+                 'class':"form-control",
+                 'required':'',
+            }),
+            'sportType':Select(attrs={
+                 'id': 'competition-sport',
+                 'class': 'form-select',
+                 'required': '',
             }),
             'type':RadioSelect(attrs={
-
+                'id': 'flexRadioDefault',
+                'class': 'form-check-input',
+                'name': 'flexRadioDefault',
+                'checked': '',
+                'required': '',
             }),
-            'sportTye=pe':TextInput(attrs={}),
             'dateTimeStartCompetition':TextInput(attrs={
                 'id':'id_datetimepicker',
                 'type':"text",

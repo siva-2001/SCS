@@ -36,10 +36,39 @@ $btn-padding-x-lg:         2rem;
 $input-group-addon-bg:                  $primary;
 $input-group-addon-color:                  #ddd;
 
+// New variables since 19 october
 
-
+$h2-font-color: #001D3D;
+$button-primary-bg-color: #FFD60A;
+$form-label-font-size:                  24px;
+$form-label-font-weight:                700;
+$form-label-color:                      #000814;
+$input-padding-y:                    20px;
+$input-padding-x:                    20px;
+$input-border-radius:                   10px;
+$input-font-size:                       24px;
+$btn-font-size:               24px;
+$btn-border-radius:           10px;
+$form-check-input-width: 1.2em;
 
 @import "../boostrap/scss/bootstrap";
+
+body {
+    font-family: $font-family-sans-serif;
+}
+
+textarea {
+    resize: none;
+}
+
+.create-competition-title {
+    color: $h2-font-color;
+    font-weight: 700;
+}
+
+.form-check-label {
+    font-size: 24px;
+}
 
 .createCompBtn{
     padding-left:       1.8rem;
@@ -188,5 +217,3 @@ $input-group-addon-color:                  #ddd;
         background-color: $black;
     }
 }
-
-

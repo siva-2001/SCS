@@ -19,7 +19,7 @@ class Competition(models.Model):
         PAST = 'P', 'Прошедшее'
 
     class SportTypeChoices(models.TextChoices):
-        FOOTBALL = 'FB', 'Футбол'
+        FOOTBALL = 'BB', 'Баскетбол'
         VOLLEYBALL = 'VB', 'Волейбол'
 
     class TypeChoices(models.TextChoices):
@@ -64,10 +64,10 @@ class Competition(models.Model):
         return reverse('competition', args=[str(self.id)])
 
     @classmethod
-    def create(cls, name, discription, sportType, type, startDate, isHighLevel, orginizer):
+    def create(cls, name, description, sportType, type, startDate, isHighLevel, orginizer):
         object = cls()
         object.name = name
-        object.discription = discription
+        object.description = description
         object.sportType = sportType
         object.dateTimeStartCompetition = startDate
         object.isHightLevelSportEvent = isHighLevel
@@ -76,10 +76,10 @@ class Competition(models.Model):
         object.save()
         return object
 
-    def editCompetition(self, name, discription, startDate):
+    def editCompetition(self, name, description, startDate):
         if name and len(name) > 0: self.name = name
-        if discription and len(discription) > 0: self.discription = discription
-        if startDate and len(startDate) > 0: self._dateTimeStartCompetition = startDate
+        if description and len(description) > 0: self.description = description
+        if startDate and len(startDate) > 0: self.dateTimeStartCompetition = startDate
         self.save()
 
     def getDateTimeStartCompetition(self):
