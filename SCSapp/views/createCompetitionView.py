@@ -17,15 +17,18 @@ def createCompetitionView(request):
         try:
             newCompetition = Competition.create(
                 name=request.POST['name'],
-                discription=request.POST['description'],
+                description=request.POST['description'],
                 sportType=request.POST['sportType'],
-                startDate=convertDTPickerStrToDateTime(request.POST['lastTimeForApplications']),
+                #startDate=convertDTPickerStrToDateTime(request.POST['competition-date']),
+                startDate=request.POST['dateStartCompetition'],
                 organizer=request.user,
                 type=request.POST['type'],
-                status=Competition.ANNOUNSED
+                isHighLevel=True,
+                regulations=request.FILES.get('regulations'),
             )
             return redirect(newCompetition)
-        except:
+        except Exception as e:
+            print(e.__str__())
             return render(request, 'createCompetitions.html', {
                 "form":CreateCompetitionsForm(),
                 "error":"Bad data, try again",

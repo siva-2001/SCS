@@ -3,7 +3,7 @@ from SCSapp.models.Competition import Competition
 from SCSapp.models.Player import Player
 from SCSapp.models.VolleyballTeam import VolleyballTeam
 from SCSapp.models.Match import Match
-from django.forms.widgets import DateTimeInput, TextInput, Textarea, RadioSelect, Select
+from django.forms.widgets import DateTimeInput, TextInput, Textarea, RadioSelect, Select, FileInput
 
 #from crispy_forms.helper import FormHelper
 from django.contrib.auth.models import User
@@ -36,14 +36,17 @@ class MatchEditForm(forms.ModelForm):
 class CreateCompetitionsForm(forms.ModelForm):
     class Meta:
         model = Competition
-        fields = ['name', 'description', 'dateTimeStartCompetition', 'sportType', 'type']
+        fields = ['name', 'description', 'dateStartCompetition', 'sportType', 'type', 'regulations']
         widgets = {
             'name':TextInput(attrs={
                 'id': 'competition-title',
-                'type': "text",
                 'class': "form-control",
                 'placeholder': "Соревнования по волейболу",
                 'required': ''
+            }),
+            'regulations':FileInput(attrs={
+                'id':'regulations',
+
             }),
             'description':Textarea(attrs={
                 'id': 'competition-description',
@@ -53,7 +56,7 @@ class CreateCompetitionsForm(forms.ModelForm):
                 'rows': '10',
                 'required': ''
             }),
-            'dateTimeStartCompetition':TextInput(attrs={
+            'dateStartCompetition':TextInput(attrs={
                  'id':'competition-date',
                  'type':"date",
                  'class':"form-control",
@@ -71,20 +74,7 @@ class CreateCompetitionsForm(forms.ModelForm):
                 'checked': '',
                 'required': '',
             }),
-            'dateTimeStartCompetition':TextInput(attrs={
-                'id':'id_datetimepicker',
-                'type':"text",
-                'class':"form-control",
-                'placeholder':"Заявки принимаются до",
-                'required':'',
-            }),
         }
-        labels = {
-            'name':'Заголовок:',
-            'description':'Описание:',
-            'dateTimeStartCompetition':'Заявки подаются до:',
-        }
-
 # class RegistrPlayerForm(forms.ModelForm):
 #     class Meta:
 #         model = Player

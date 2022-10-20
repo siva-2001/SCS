@@ -46,10 +46,11 @@ class Competition(models.Model):
     )
 
     description = models.TextField(blank=True, verbose_name="Описание", null=True)
-    dateTimeStartCompetition = models.DateTimeField(verbose_name="Заявки на участие принимаются до")
-    dateTimeFinishCompetition = models.DateTimeField(blank=True, null=True, verbose_name="Соревнование завершилось")
+    dateStartCompetition = models.DateField(verbose_name="Заявки на участие принимаются до", default=None, null=True)
+    dateFinishCompetition = models.DateField(blank=True, null=True, verbose_name="Соревнование завершилось")
     organizer = models.ForeignKey(User, on_delete=models.CASCADE, verbose_name="Организатор")
     protocol = models.FileField(upload_to='protocols', null=True, blank=True, verbose_name="Протокол")
+    regulations = models.FileField(upload_to='regulations', null=True, blank=True, verbose_name="Регламент соревнований")
     #_olympics = models.ForeignKey('SCSapp.olympics', on_delete=models.CASCADE, verbose_name='Спартакиада', null=True)
     isHightLevelSportEvent = models.BooleanField(default=True)
 
@@ -64,22 +65,24 @@ class Competition(models.Model):
         return reverse('competition', args=[str(self.id)])
 
     @classmethod
-    def create(cls, name, description, sportType, type, startDate, isHighLevel, orginizer):
+    def create(cls, name, description, sportType, isHighLevel, type, startDate, organizer, regulations):
         object = cls()
         object.name = name
         object.description = description
         object.sportType = sportType
-        object.dateTimeStartCompetition = startDate
+        object.dateStartCompetition = startDate
         object.isHightLevelSportEvent = isHighLevel
-        object.organizer = orginizer
+        object.organizer = organizer
         object.type = type
+        object.regulations = regulations
+        object.status = cls.StatusChoices.ANNOUNSED
         object.save()
         return object
 
     def editCompetition(self, name, description, startDate):
         if name and len(name) > 0: self.name = name
         if description and len(description) > 0: self.description = description
-        if startDate and len(startDate) > 0: self.dateTimeStartCompetition = startDate
+        if startDate and len(startDate) > 0: self.dateStartCompetition = startDate
         self.save()
 
     def getDateTimeStartCompetition(self):
@@ -90,11 +93,11 @@ class Competition(models.Model):
     def getData(self):
         data = {
             'name':self.name,
-            'discription':self.discription,
+            'discription':self.description,
             'status':self.get_status_display(),
-            'dateTimeStartCompetition':self.getDateTimeStartCompetition(),
+            'dateStartCompetition':self.dateStartCompetition,
         }
-        if self.dateTimeFinishCompetition: data["dateTimeEndCompetition"] = self.getDateTimeFinishCompetition()
+        if self.dateFinishCompetition: data["dateEndCompetition"] = self.getDateFinishCompetition()
         if self.protocol: data['protocol_url'] = self.protocol.url
         return data
 
