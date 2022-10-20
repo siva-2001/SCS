@@ -58,7 +58,7 @@ class Competition(models.Model):
         verbose_name_plural = 'Соревнования'
 
     def __str__(self):
-        return self._name
+        return self.name
 
     def get_absolute_url(self):
         return reverse('competition', args=[str(self.id)])
@@ -77,25 +77,25 @@ class Competition(models.Model):
         return object
 
     def editCompetition(self, name, discription, startDate):
-        if name and len(name) > 0: self._name = name
-        if discription and len(discription) > 0: self._discription = discription
+        if name and len(name) > 0: self.name = name
+        if discription and len(discription) > 0: self.discription = discription
         if startDate and len(startDate) > 0: self._dateTimeStartCompetition = startDate
         self.save()
 
     def getDateTimeStartCompetition(self):
-        return self._dateTimeStartCompetition.strftime("%H:%M   %Y:%m:%d")
+        return self.dateTimeStartCompetition.strftime("%H:%M   %Y:%m:%d")
     def getDateTimeFinishCompetition(self):
-        return self._dateTimeFinishCompetition.strftime("%H:%M   %Y:%m:%d")
+        return self.dateTimeFinishCompetition.strftime("%H:%M   %Y:%m:%d")
 
     def getData(self):
         data = {
-            'name':self._name,
-            'discription':self._discription,
-            'status':self.get__status_display(),
+            'name':self.name,
+            'discription':self.discription,
+            'status':self.get_status_display(),
             'dateTimeStartCompetition':self.getDateTimeStartCompetition(),
         }
-        if self._dateTimeFinishCompetition: data["dateTimeEndCompetition"] = self.getDateTimeFinishCompetition()
-        if self._protocol: data['protocol_url'] = self._protocol.url
+        if self.dateTimeFinishCompetition: data["dateTimeEndCompetition"] = self.getDateTimeFinishCompetition()
+        if self.protocol: data['protocol_url'] = self.protocol.url
         return data
 
     def getRelatedMatchesData(self):
