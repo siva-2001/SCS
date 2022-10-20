@@ -26,32 +26,32 @@ class Competition(models.Model):
         INTERNAL = 'INT', 'Внутреннее'
         INTERCOLLEGIATE = 'IC', 'Межвузовское'
 
-    _name = models.CharField(max_length=256, verbose_name="Заголовок", null=True)
-    _status = models.CharField(
+    name = models.CharField(max_length=256, verbose_name="Заголовок", null=True)
+    status = models.CharField(
         max_length=2,
         choices = StatusChoices.choices,
         default = StatusChoices.ANNOUNSED,
         verbose_name = 'Статус',
     )
-    _sportType = models.CharField(
+    sportType = models.CharField(
         max_length=128,
         verbose_name='Тип спорта',
         choices=SportTypeChoices.choices,
         default=SportTypeChoices.VOLLEYBALL
     )
-    _type = models.CharField(
+    type = models.CharField(
         max_length=3,
         choices = TypeChoices.choices,
         default = TypeChoices.INTERCOLLEGIATE,
     )
 
-    _discription = models.TextField(blank=True, verbose_name="Описание", null=True)
-    _dateTimeStartCompetition = models.DateTimeField(verbose_name="Заявки на участие принимаются до")
-    _dateTimeFinishCompetition = models.DateTimeField(blank=True, null=True, verbose_name="Соревнование завершилось")
-    _organizer = models.ForeignKey(User, on_delete=models.CASCADE, verbose_name="Организатор")
-    _protocol = models.FileField(upload_to='protocols', null=True, blank=True, verbose_name="Протокол")
+    discription = models.TextField(blank=True, verbose_name="Описание", null=True)
+    dateTimeStartCompetition = models.DateTimeField(verbose_name="Заявки на участие принимаются до")
+    dateTimeFinishCompetition = models.DateTimeField(blank=True, null=True, verbose_name="Соревнование завершилось")
+    organizer = models.ForeignKey(User, on_delete=models.CASCADE, verbose_name="Организатор")
+    protocol = models.FileField(upload_to='protocols', null=True, blank=True, verbose_name="Протокол")
     #_olympics = models.ForeignKey('SCSapp.olympics', on_delete=models.CASCADE, verbose_name='Спартакиада', null=True)
-    _isHightLevelSportEvent = models.BooleanField(default=True)
+    isHightLevelSportEvent = models.BooleanField(default=True)
 
     class Meta:
         verbose_name = 'Соревнование'
@@ -66,13 +66,13 @@ class Competition(models.Model):
     @classmethod
     def create(cls, name, discription, sportType, type, startDate, isHighLevel, orginizer):
         object = cls()
-        object._name = name
-        object._discription = discription
-        object._sportType = sportType
-        object._dateTimeStartCompetition = startDate
-        object._isHightLevelSportEvent = isHighLevel
-        object._organizer = orginizer
-        object._type = type
+        object.name = name
+        object.discription = discription
+        object.sportType = sportType
+        object.dateTimeStartCompetition = startDate
+        object.isHightLevelSportEvent = isHighLevel
+        object.organizer = orginizer
+        object.type = type
         object.save()
         return object
 

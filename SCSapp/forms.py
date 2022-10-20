@@ -35,16 +35,16 @@ class MatchEditForm(forms.ModelForm):
 class CreateCompetitionsForm(forms.ModelForm):
     class Meta:
         model = Competition
-        fields = ['_name', '_discription', '_dateTimeStartCompetition', '_sportType', '_type']
+        fields = ['name', 'discription', 'dateTimeStartCompetition', 'sportType', 'type']
         widgets = {
-            '_name':TextInput(attrs={
+            'name':TextInput(attrs={
                 'id': 'competition-title',
                 'type': "text",
                 'class': "form-control",
                 'placeholder': "Соревнования по волейболу",
                 'required': ''
             }),
-            '_discription':Textarea(attrs={
+            'discription':Textarea(attrs={
                 'id': 'competition-description',
                 'class': "form-control competition-description",
                 'placeholder': "Описание предстоящих соревнований",
@@ -52,18 +52,18 @@ class CreateCompetitionsForm(forms.ModelForm):
                 'rows': '10',
                 'required': ''
             }),
-            '_dateTimeStartCompetition':TextInput(attrs={
+            'dateTimeStartCompetition':TextInput(attrs={
                  'id':'competition-date',
                  'type':"date",
                  'class':"form-control",
                  'required':'',
             }),
-            '_sportType':Select(attrs={
+            'sportType':Select(attrs={
                  'id': 'competition-sport',
                  'class': 'form-select',
                  'required': '',
             }),
-            '_type':TextInput(attrs={
+            'type':TextInput(attrs={
                 'id': 'flexRadioDefault1',
                 'class': 'form-check-input mt-2',
                 'type': 'radio',
