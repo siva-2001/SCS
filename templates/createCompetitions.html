@@ -2,40 +2,57 @@
 {% block content %}
 
 <div class="container">
-    <div class="create-competition-title h2 text-center pt-5 mb-5">Создание соревнования</div>
+    <div class="create-competition-title h1 text-center pt-5 mb-5">Соревнование</div>
     <form method="POST" enctype="multipart/form-data" action=".">
+        <div class="h2 fw-bold mb-5">Основная информация</div>
         {% csrf_token %}
         <div class="row">
-            <div class="mb-3">
-                <label class="form-label">Название</label>
-                {{ form.name }}
+            <div class="row flex-nowrap">
+                <div class="col-4">
+                    <div class="mb-3 col-9">
+                        <label class="form-label">Вид спорта</label>
+                        {{form.sportType}}
+                    </div>
+                </div>
+                <span class="col-1 form-label">Тип:</span>
+                <div class="col radio-group">
+                    {% for radio in form.type %}
+                    <div class="form-check-label mb-1">
+                        {{ radio }}
+                    </div>
+                    {% endfor %}
+                </div>
             </div>
-            <div class="mb-3">
-                <label class="form-label">Описание</label>
-                {{ form.description }}
-            </div>
-            <div class="mb-3 col-6">
+            <div class="mb-3 col-3">
                 <label class="form-label">Дата начала</label>
                 {{ form.dateStartCompetition }}
             </div>
-            <div class="mb-3">
-                <label class="form-label">Вид спорта</label>
-                {{form.sportType}}
+            <div class="row">
+                <div class="col-8 mb-3">
+                    <label class="form-label">Как называется соревнование?</label>
+                    {{ form.name }}
+                </div>
             </div>
             <div class="row">
-                <span class="col-3 form-label">Тип соревнований:</span>
-                {% for radio in form.type %}
-                <div class="form-check-label">
-                    {{ radio }}
+                <div class="col-8 mb-3">
+                    <label class="form-label">Дайте соревнованию краткое описание</label>
+                    {{ form.description }}
                 </div>
-                {% endfor %}
             </div>
-
-            <div class="mb-3 col-6">
-                <label class="form-label">{{ form.regulations.label }}</label>
-                {{ form.regulations }}
+            <div class="row">
+                <div class="col-8 mb-3">
+                    <label class="form-label">{{ form.regulations.label }}</label>
+                    <div class="dashed-block p-5 text-center">
+                        <svg width="88" height="64" viewBox="0 0 88 64" fill="none" xmlns="http://www.w3.org/2000/svg">
+                            <path fill-rule="evenodd" clip-rule="evenodd" d="M63.5269 64H46.8172L46.3478 35.6595L53.3393 41.501L56.875 36.8121L42.5824 25.3853L29.3585 36.9894L32.7244 41.6094L39.9056 35.8861L40.0055 63.9507C32.0153 63.9507 24.2947 63.9507 18.242 63.9507C-3.49149 63.9507 -5.91853 35.2163 11.5702 28.9906C11.4703 14.5495 20.9088 0 40.0654 0C54.0484 0 63.1373 7.6934 67.0326 17.4357C95.3781 20.2432 95.7276 64 63.5269 64Z" fill="#000814"/>
+                        </svg>
+                        {{ form.regulations }}
+                    </div>
+                </div>
             </div>
-
+        </div>
+        <div class="container">
+            <div class="h2 text-center fw-bold mt-5">Всё готово? Нажмите кнопку ниже</div>
             <div class="row d-flex justify-content-center">
                 <button type="submit" class="btn btn-warning col-4 pt-4 pb-4 mt-5 mb-5">Создать соревнование</button>
             </div>

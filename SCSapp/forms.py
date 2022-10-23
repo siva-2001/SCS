@@ -41,7 +41,7 @@ class CreateCompetitionsForm(forms.ModelForm):
             'name':TextInput(attrs={
                 'id': 'competition-title',
                 'class': "form-control",
-                'placeholder': "Соревнования по волейболу",
+                'placeholder': "Томская межвузовская спартакиада",
                 'required': ''
             }),
             'regulations':FileInput(attrs={
@@ -51,9 +51,9 @@ class CreateCompetitionsForm(forms.ModelForm):
             'description':Textarea(attrs={
                 'id': 'competition-description',
                 'class': "form-control competition-description",
-                'placeholder': "Описание предстоящих соревнований",
+                'placeholder': "Ежегодная Томская спартакиада, в которой принимают участие все вузы города",
                 'cols': '30',
-                'rows': '10',
+                'rows': '5',
                 'required': ''
             }),
             'dateStartCompetition':TextInput(attrs={

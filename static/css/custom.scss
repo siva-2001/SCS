@@ -5,7 +5,7 @@ $primary:                       #003566;
 
 $font-family-sans-serif:      Roboto, system-ui, -apple-system, "Segoe UI",  "Helvetica Neue", Arial, "Noto Sans", "Liberation Sans", sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol", "Noto Color Emoji" !default;
 $font-size-base:              1rem;
-$h1-font-size:                $font-size-base * 4;
+$h1-font-size:                $font-size-base * 3;
 $h2-font-size:                $font-size-base * 2.25;
 $h3-font-size:                $font-size-base * 1.75;
 $h4-font-size:                $font-size-base * 1.5;
@@ -40,13 +40,15 @@ $input-group-addon-color:                  #ddd;
 
 $h2-font-color: #001D3D;
 $button-primary-bg-color: #FFD60A;
+$white: #fff;
+$menu-item-hover-color: #d0d0d0;
 $form-label-font-size:                  24px;
 $form-label-font-weight:                700;
 $form-label-color:                      #000814;
 $input-padding-y:                    20px;
 $input-padding-x:                    20px;
 $input-border-radius:                   10px;
-$input-font-size:                       24px;
+$input-font-size:                       20px;
 $btn-font-size:               24px;
 $btn-border-radius:           10px;
 $form-check-input-width: 1.2em;
@@ -55,10 +57,45 @@ $form-check-input-width: 1.2em;
 
 body {
     font-family: $font-family-sans-serif;
+    background: #fff;
 }
 
 textarea {
     resize: none;
+}
+
+.menu {
+    background-color: #071935;
+}
+
+.item-container {
+    height: 80px;
+    display: flex;
+    justify-content: flex-end;
+    align-items: center;
+    flex-direction: column;
+}
+
+.menu-item {
+    color: $white;
+    margin: 0 16px;
+    text-decoration: none;
+}
+
+.menu-item svg {
+    margin-bottom: 5px;
+}
+
+.menu-item:hover svg path {
+    fill: $menu-item-hover-color;
+}
+
+.menu-item:hover .item-name {
+    color: $menu-item-hover-color;
+}
+
+.conteiner {
+    background-color: $white;
 }
 
 .create-competition-title {
@@ -67,7 +104,19 @@ textarea {
 }
 
 .form-check-label {
-    font-size: 24px;
+    font-size: 20px;
+}
+
+.dashed-block {
+    position: relative;
+    border: 1px dashed #000814;
+    border-radius: $btn-border-radius;
+}
+
+.dashed-block svg {
+    position: absolute;
+    top: 30px;
+    left: 38px;
 }
 
 .createCompBtn{

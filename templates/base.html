@@ -6,7 +6,7 @@
 
     {% load static %}
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
-   <!--<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-1BmE4kWBq78iYhFldvKuhfTAU6auU8tT94WrHftjDbrCEXSU1oBoqyl2QvZ6jIW3" crossorigin="anonymous">-->
+    <!--<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-1BmE4kWBq78iYhFldvKuhfTAU6auU8tT94WrHftjDbrCEXSU1oBoqyl2QvZ6jIW3" crossorigin="anonymous">-->
     <link href="{% static 'dist/custom.min.css' %}" rel="stylesheet">
     <link href="https://fonts.googleapis.com/css?family=Roboto" rel="stylesheet">
     <link rel="icon" href="#">
@@ -14,98 +14,150 @@
     <link rel="stylesheet" type="text/css" href="{% static 'css/jquery.datetimepicker.css' %}"/>
     <script src="{% static 'js/jquery.js' %}"></script>
     <script src="{% static 'js/jquery.datetimepicker.full.min.js'%}"></script>
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-ka7Sk0Gln4gmtz2MlQnikT1wXgYsOg+OMhuP+IlRH9sENBO0LRn5q+8nbTov4+1p" crossorigin="anonymous"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js"
+            integrity="sha384-ka7Sk0Gln4gmtz2MlQnikT1wXgYsOg+OMhuP+IlRH9sENBO0LRn5q+8nbTov4+1p"
+            crossorigin="anonymous"></script>
 
 </head>
-<body class="bg-light">
+<body>
 
-    <nav class="navbar navbar-expand-md bg-warning">
-        <div class="col">
-            <div class="row justify-content-center">
-                <div class="col-11 col-xl-8">
-                    <div class="row justify-content-between">
-                        <div class="col-auto my-md-3">
-                            <button class="navbar-toggler shadow-none" type="button" data-bs-toggle="collapse" data-bs-target="#navbarID" aria-controls="navbarID" aria-expanded="false" aria-label="Toggle navigation">
-                                <img src="{% static 'volleyball.png' %}" alt="" width="60" height="52">
+<nav class="menu d-flex justify-content-center align-items-center p-4">
+    <a href="{% url 'createCompetition' %}" class="menu-item">
+        <div class="item-container">
+            <svg width="46" height="43" viewBox="0 0 46 43" fill="none" xmlns="http://www.w3.org/2000/svg">
+                <path fill-rule="evenodd" clip-rule="evenodd"
+                      d="M46 40.0912L45.3226 42.8847L0.612129 43L0 40.1765L13.9987 35.1613L14.6108 29.8101C13.6067 28.3489 12.8333 26.7419 12.3178 25.0457C8.18848 20.7828 8.80563 15.231 10.9832 15.0505C10.9832 14.1628 10.9481 13.235 10.9481 12.2721C10.9481 5.83263 15.0624 0 22.99 0C30.9175 0 34.8813 5.64206 34.8813 13.2601C34.8813 13.877 34.8813 14.4738 34.8813 15.0505C37.1693 14.8499 38.0022 20.3114 34.1337 24.6646C33.7371 26.6215 32.9579 28.4809 31.8408 30.1361L32.7038 35.3368L46 40.0912ZM29.7836 37.5836C29.7033 36.6057 29.5779 34.399 29.4876 32.8092C28.2488 33.9695 26.9182 35.0278 25.5087 35.9738L21.2589 35.9236C19.7751 34.9688 18.3812 33.881 17.0945 32.6738C17.0092 34.4291 16.8787 37.0169 16.8336 38.055C16.688 41.4403 30.0897 41.4804 29.7836 37.5886V37.5836ZM32.2421 12.0364C32.2421 9.5757 31.2642 7.21579 29.5234 5.47582C27.7827 3.73584 25.4217 2.75834 22.9599 2.75834C20.498 2.75834 18.1371 3.73584 16.3963 5.47582C14.6555 7.21579 13.6776 9.5757 13.6776 12.0364C13.6776 24.0728 15.1226 28.3407 22.1119 32.8694L24.4852 32.9396C31.1684 28.4009 32.2421 23.9875 32.2421 12.0414V12.0364Z"
+                      fill="white"/>
+            </svg>
+            <div class="item-name">Профиль</div>
+        </div>
+    </a>
+    <a href="{% url 'createCompetition' %}" class="menu-item">
+        <div class="item-container">
+            <svg width="46" height="45" viewBox="0 0 46 45" fill="none" xmlns="http://www.w3.org/2000/svg">
+                <path fill-rule="evenodd" clip-rule="evenodd"
+                      d="M46 18.5149L43.3816 21.9736L22.9581 6.60681L2.76503 22.1473L0 18.6781L22.9476 0L32.1173 7.37014L32.4262 2.00573L39.6425 2.28475L39.4697 13.2768L46 18.5149ZM6.76594 22.5948L23.1204 10.1339L39.7577 22.3631L39.3283 39.4987L43.9419 39.3987L43.7115 45H2.91166V40.2621L7.0592 40.1726L6.76594 22.5948ZM11.4791 32.5076L22.6648 32.2444V26.5746L11.2591 26.4851L11.4791 32.5076ZM34.9451 26.6536L27.2732 26.5746L27.6031 39.7356L34.61 39.5882L34.9451 26.6536Z"
+                      fill="white"/>
+            </svg>
+            <div class="item-name">Главная</div>
+        </div>
+    </a>
+    <a href="{% url 'createCompetition' %}" class="menu-item">
+        <div class="item-container">
+            <svg width="48" height="56" viewBox="0 0 48 56" fill="none" xmlns="http://www.w3.org/2000/svg">
+                <path fill-rule="evenodd" clip-rule="evenodd"
+                      d="M0.447859 56L0 22.5211L48 21.9991L47.8946 55.8486L0.447859 56ZM37.6992 51.3903L44.728 51.2964L44.8176 48.8845L37.6202 48.8427L37.6992 51.3903ZM19.0367 27.0995C5.12667 27.0995 4.67881 27.7729 4.67881 39.2997C4.67881 50.8265 5.20571 51.4582 19.1842 51.4582C33.1627 51.4582 33.6263 51.1032 33.6263 39.2945C33.6263 27.4858 32.9572 27.0995 19.0367 27.0995ZM41.3875 28.0809C37.0564 28.0809 36.8509 34.5856 41.4613 34.5856C45.6764 34.6013 45.7027 28.0809 41.3875 28.0809ZM37.4516 43.544L37.5254 46.0602L44.9019 45.9715L44.9914 43.4552L37.4516 43.544ZM25.0011 19.9787L12.0079 19.6133C11.9915 18.6469 12.2045 17.6903 12.6296 16.8204L4.37322 8.24312L6.19627 6.45773L14.9111 14.4242C15.9858 13.8158 17.2007 13.4924 18.4384 13.4851C19.6761 13.4778 20.8948 13.7868 21.9767 14.3824L36.598 0L38.5106 1.83761L24.2213 16.6898C24.7495 17.7062 25.0173 18.8357 25.0011 19.9787Z"
+                      fill="white"/>
+            </svg>
+            <div class="item-name">Текущие события</div>
+        </div>
+    </a>
+    <a href="{% url 'createCompetition' %}" class="menu-item">
+        <div class="item-container">
+            <svg width="43" height="43" viewBox="0 0 43 43" fill="none" xmlns="http://www.w3.org/2000/svg">
+                <path fill-rule="evenodd" clip-rule="evenodd"
+                      d="M23.1264 31.2924C22.909 28.5942 22.8732 25.8845 23.0192 23.1815C31.1498 22.2396 37.8571 17.5205 41.6641 14.2068C42.8059 17.5603 43.223 21.1185 42.8876 24.6456C38.3884 27.2614 30.6575 31.024 23.1264 31.2924ZM13.9478 1.1718C16.3371 0.378829 18.84 -0.0168295 21.357 0.000548518C30.8427 0.000548518 37.2137 4.88075 40.4601 11.3568C38.216 13.4089 35.7544 15.2091 33.1191 16.725C29.3901 8.94596 19.4998 3.6607 13.9478 1.1718ZM22.4781 20.3119C15.9951 13.9677 7.85472 12.0888 2.28319 11.6398C4.00708 7.96142 6.79796 4.88836 10.292 2.8213C14.2208 4.37809 26.6166 9.83416 30.4966 18.028C27.9636 19.2153 25.2561 19.9865 22.4781 20.3119ZM8.87348 35.6895C9.05384 37.0315 9.26344 38.2906 9.47792 39.4375C0.830601 33.996 -1.73337 23.3767 1.10844 14.5484C4.05246 14.7172 6.96392 15.2533 9.77526 16.1443C8.14231 21.4978 7.85472 28.0617 8.87348 35.6895ZM20.1676 22.1762C19.5486 28.9743 20.7916 38.1003 21.6007 43C18.5928 42.8794 15.6266 42.2525 12.8267 41.1455C11.6032 35.5821 10.0726 25.4996 12.5293 17.1545C15.3498 18.367 17.9353 20.0668 20.1676 22.1762ZM39.9531 29.5258C40.7623 29.1354 41.526 28.7466 42.2441 28.3594C40.2602 36.0848 34.3719 42.512 24.5742 43C24.2134 40.843 23.7309 37.6611 23.3848 34.2156C28.3811 34.0155 33.9478 32.4539 39.9531 29.5258Z"
+                      fill="white"/>
+            </svg>
+            <div class="item-name">Все игры</div>
+        </div>
+    </a>
+</nav>
+
+<!--<nav class="navbar navbar-expand-md bg-warning">
+    <div class="col">
+        <div class="row justify-content-center">
+            <div class="col col-xl-8">
+                <div class="row justify-content-between">
+                    <div class="col-auto my-md-3">
+                        <button class="navbar-toggler shadow-none" type="button" data-bs-toggle="collapse"
+                                data-bs-target="#navbarID" aria-controls="navbarID" aria-expanded="false"
+                                aria-label="Toggle navigation">
+                            <img src="{% static 'volleyball.png' %}" alt="" width="60" height="52">
+                        </button>
+                        <a class="navbar-brand nav-link d-none d-md-block" href="{% url 'homePage' %}">
+                            <img src="{% static 'volleyball.png' %}" alt="" width="60" height="52">
+                            На главную
+                        </a>
+                    </div>
+
+                    {% if userIsJudge %}
+                    <div class="col-auto d-none d-md-block">
+                        <a href="{% url 'createCompetition' %}">
+                            <button type="button" class="btn my-2 border-2 btn-lg btn-outline-primary mx-2">Создать
+                                соревнование
                             </button>
-                            <a class="navbar-brand nav-link d-none d-md-block" href="{% url 'homePage' %}">
-                                <img src="{% static 'volleyball.png' %}" alt="" width="60" height="52">
-                                На главную
-                            </a>
-                        </div>
-
-                        {% if userIsJudge %}
-                        <div class="col-auto d-none d-md-block">
-                            <a href="{% url 'createCompetition' %}">
-                                <button type="button" class="btn my-2 border-2 btn-lg btn-outline-primary mx-2">Создать соревнование</button>
-                            </a>
-                        </div>
-                        {% endif %}
-                        {% if userAuth %}
-                        <div class="col-auto d-none d-md-block">
-                            <a class="nav-link my-md-3 mx-md-3" href="{% url 'logout' %}">Выход</a>
-                        </div>
-                        {% else %}
-                        <div class="col-auto d-none d-md-block">
-                            <a class="nav-link my-md-3 mx-md-3" href="{% url 'signup' %}">Регистрация</a>
-                        </div>
-                        <div class="col-auto d-none d-md-block">
-                            <a class="nav-link my-md-3 mx-md-3" href="{% url 'login' %}">Вход</a>
-                        </div>
-                        {% endif %}
-                        <div class="col d-md-none">
-                            <div class="collapse navbar-collapse" id="navbarID">
-                                <ul class="navbar-nav me-auto mb-2 mb-lg-0">
-                                    {% if userIsJudge %}
-                                    <li class="nav-item d-md-none">
-                                        <div class="col-auto text-end">
-                                            <a href="{% url 'createCompetition' %}">
-                                                <button type="button" class="btn my-2 border-2 btn-lg btn-outline-primary mx-2">Создать соревнование</button>
-                                            </a>
-                                        </div>
-                                    </li>
-                                    {% endif %}
-                                    <li class="nav-item d-md-none">
-                                        <div class="col-auto text-end">
-                                            <a class="nav-link" href="{% url 'homePage' %}">
-                                                На главную
-                                            </a>
-                                        </div>
-                                    </li>
-                                    {% if userAuth %}
-                                    <li class="nav-item">
-                                        <div class="col-auto text-end">
-                                            <a class="nav-link my-md-3 mx-md-3" href="{% url 'logout' %}">Выход</a>
-                                        </div>
-                                    </li>
-                                    {% else %}
-                                    <li class="nav-item">
-                                        <div class="col-auto  text-end">
-                                            <a class="nav-link my-md-3 mx-md-3" href="{% url 'signup' %}">Регистрация</a>
-                                        </div>
-                                    </li>
-                                    <li class="nav-item">
-                                        <div class="col-auto text-end">
-                                            <a class="nav-link my-md-3 mx-md-3" href="{% url 'login' %}">Вход</a>
-                                        </div>
-                                    </li>
-                                    {% endif %}
-                                </ul>
-                            </div>
+                        </a>
+                    </div>
+                    {% endif %}
+                    {% if userAuth %}
+                    <div class="col-auto d-none d-md-block">
+                        <a class="nav-link my-md-3 mx-md-3" href="{% url 'logout' %}">Выход</a>
+                    </div>
+                    {% else %}
+                    <div class="col-auto d-none d-md-block">
+                        <a class="nav-link my-md-3 mx-md-3" href="{% url 'signup' %}">Регистрация</a>
+                    </div>
+                    <div class="col-auto d-none d-md-block">
+                        <a class="nav-link my-md-3 mx-md-3" href="{% url 'login' %}">Вход</a>
+                    </div>
+                    {% endif %}
+                    <div class="col d-md-none">
+                        <div class="collapse navbar-collapse" id="navbarID">
+                            <ul class="navbar-nav me-auto mb-2 mb-lg-0">
+                                {% if userIsJudge %}
+                                <li class="nav-item d-md-none">
+                                    <div class="col-auto text-end">
+                                        <a href="{% url 'createCompetition' %}">
+                                            <button type="button"
+                                                    class="btn my-2 border-2 btn-lg btn-outline-primary mx-2">Создать
+                                                соревнование
+                                            </button>
+                                        </a>
+                                    </div>
+                                </li>
+                                {% endif %}
+                                <li class="nav-item d-md-none">
+                                    <div class="col-auto text-end">
+                                        <a class="nav-link" href="{% url 'homePage' %}">
+                                            На главную
+                                        </a>
+                                    </div>
+                                </li>
+                                {% if userAuth %}
+                                <li class="nav-item">
+                                    <div class="col-auto text-end">
+                                        <a class="nav-link my-md-3 mx-md-3" href="{% url 'logout' %}">Выход</a>
+                                    </div>
+                                </li>
+                                {% else %}
+                                <li class="nav-item">
+                                    <div class="col-auto  text-end">
+                                        <a class="nav-link my-md-3 mx-md-3" href="{% url 'signup' %}">Регистрация</a>
+                                    </div>
+                                </li>
+                                <li class="nav-item">
+                                    <div class="col-auto text-end">
+                                        <a class="nav-link my-md-3 mx-md-3" href="{% url 'login' %}">Вход</a>
+                                    </div>
+                                </li>
+                                {% endif %}
+                            </ul>
                         </div>
                     </div>
                 </div>
             </div>
         </div>
-    </nav>
+    </div>
+</nav>-->
 
-    <div class="conteiner">
-        <div class="row justify-content-center">
-            <div class="col-11 col-xl-8">
-                <h3 class="my-4">{{ error }}</h3>
-                {% block content %}{% endblock %}
-            </div>
+<div class="conteiner">
+    <div class="row justify-content-center">
+        <div class="col col-xl-8">
+            <h3 class="my-4">{{ error }}</h3>
+            {% block content %}{% endblock %}
         </div>
     </div>
+</div>
 </body>
 </html>
