@@ -1,5 +1,7 @@
 from django.db import models
 
+
+
 class MatchAction(models.Model):
     class Meta:
         verbose_name = 'Событие'
@@ -33,7 +35,7 @@ class MatchAction(models.Model):
 
     Team = models.IntegerField(choices=teamChoise, verbose_name="Команда", null=True, blank=True)
     EventTime = models.TimeField(auto_now_add=True, verbose_name="Время события")
-    match = models.ForeignKey('Match', on_delete=models.CASCADE, verbose_name="Матч")
+    match = models.ForeignKey('SCSapp.AbstractMatch', on_delete=models.CASCADE, verbose_name="Матч")
 
     def __str__(self):
         return f"{self.eventType}, team {self.Team} in {self.EventTime}"
