@@ -94,8 +94,14 @@ textarea {
     color: $menu-item-hover-color;
 }
 
-.conteiner {
+.white-container {
     background-color: $white;
+}
+
+.gray-container {
+    background-color: #F5F5F5;
+    padding: 80px 0;
+    margin-top: 80px;
 }
 
 .create-competition-title {
@@ -111,6 +117,7 @@ textarea {
     position: relative;
     border: 1px dashed #000814;
     border-radius: $btn-border-radius;
+    margin-bottom: 80px;
 }
 
 .dashed-block svg {
