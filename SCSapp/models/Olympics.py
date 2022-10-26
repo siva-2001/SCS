@@ -16,7 +16,7 @@ class Olympics(models.Model):
     )
 
     name = models.CharField(max_length=255, verbose_name= 'Название спартакиады')
-    discription = models.CharField(max_length=255, verbose_name= 'Описание спартакиады')
+    description = models.CharField(max_length=255, verbose_name= 'Описание спартакиады')
     dateTimeStartOlympics = models.DateField(verbose_name='Дата начала спартакиады')
     dateTimeFinishOlympics = models.DateField(verbose_name='Дата конца спартакиады')
     protocol = models.FileField(verbose_name='Протокол', upload_to='protocols', null=True, blank=True)
@@ -34,7 +34,7 @@ class Olympics(models.Model):
     def getData(self):
         data = {
             'name': self.name,
-            'discription': self.discription,
+            'description': self.description,
             'dateTimeStartOlympics': self.dateTimeStartOlympics,
             'dateTimeFinishOlympics': self.dateTimeFinishOlympics,
             'protocol': self.protocol,
