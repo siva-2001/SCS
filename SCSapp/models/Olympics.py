@@ -12,13 +12,13 @@ class Olympics(models.Model):
         max_length=2,
         choices=StatusChoices.choices,
         default=StatusChoices.ANNOUNSED,
-        verbose_name='Статус спортакиады',
+        verbose_name='Статус спартакиады',
     )
 
-    name = models.CharField(max_length=255, verbose_name= 'Название сопртакиады')
-    discribtion = models.CharField(max_length=255, verbose_name= 'Описание сопртакиады')
-    dateTimeStartOlympics = models.DateField(verbose_name='Дата начала спортакиады')
-    dateTimeFinishOlympics = models.DateField(verbose_name='Дата конца спортакиады')
+    name = models.CharField(max_length=255, verbose_name= 'Название спартакиады')
+    discription = models.CharField(max_length=255, verbose_name= 'Описание спартакиады')
+    dateTimeStartOlympics = models.DateField(verbose_name='Дата начала спартакиады')
+    dateTimeFinishOlympics = models.DateField(verbose_name='Дата конца спартакиады')
     protocol = models.FileField(verbose_name='Протокол', upload_to='protocols', null=True, blank=True)
     organizer = models.ForeignKey(User, on_delete=models.CASCADE, verbose_name="Организатор")
 
@@ -34,7 +34,7 @@ class Olympics(models.Model):
     def getData(self):
         data = {
             'name': self.name,
-            'discribtion': self.discribtion,
+            'discription': self.discription,
             'dateTimeStartOlympics': self.dateTimeStartOlympics,
             'dateTimeFinishOlympics': self.dateTimeFinishOlympics,
             'protocol': self.protocol,

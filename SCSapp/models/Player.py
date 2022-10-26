@@ -1,5 +1,5 @@
 from django.db import models
-from SCSapp.models.VolleyballTeam import VolleyballTeam
+
 
 class Player(models.Model):
     class Meta:
@@ -14,7 +14,6 @@ class Player(models.Model):
     height = models.IntegerField(verbose_name='Рост')
     weight = models.IntegerField(verbose_name='Вес')
     trainer = models.BooleanField(verbose_name='Тренер')
-    team = models.ManyToManyField(VolleyballTeam, blank=True)
 
     def __str__(self):
         return f'{self.name}  {self.surename}'
@@ -39,7 +38,7 @@ class Player(models.Model):
         if age and len(age) > 0: self.age = age
         if height and len(height) > 0: self.height = height
         if weight and len(weight) > 0: self.weight = weight
-        if trainer and len(trainer) > 0: self.trainer = trainer
+        if trainer: self.trainer = trainer
         self.save()
 
     def getData(self):
