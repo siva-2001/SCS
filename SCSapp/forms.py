@@ -58,7 +58,7 @@ class CreateCompetitionsForm(forms.ModelForm):
             }),
             'dateStartCompetition':TextInput(attrs={
                  'id':'competition-date',
-                 'type':"date",
+                 'type':"datetime-local",
                  'class':"form-control",
                  'required':'',
             }),
