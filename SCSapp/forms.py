@@ -46,7 +46,8 @@ class CreateCompetitionsForm(forms.ModelForm):
             }),
             'regulations':FileInput(attrs={
                 'id':'regulations',
-
+                'class':'competition-regulations',
+                'type':'file'
             }),
             'description':Textarea(attrs={
                 'id': 'competition-description',

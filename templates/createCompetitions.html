@@ -46,7 +46,10 @@
                         <svg width="88" height="64" viewBox="0 0 88 64" fill="none" xmlns="http://www.w3.org/2000/svg">
                             <path fill-rule="evenodd" clip-rule="evenodd" d="M63.5269 64H46.8172L46.3478 35.6595L53.3393 41.501L56.875 36.8121L42.5824 25.3853L29.3585 36.9894L32.7244 41.6094L39.9056 35.8861L40.0055 63.9507C32.0153 63.9507 24.2947 63.9507 18.242 63.9507C-3.49149 63.9507 -5.91853 35.2163 11.5702 28.9906C11.4703 14.5495 20.9088 0 40.0654 0C54.0484 0 63.1373 7.6934 67.0326 17.4357C95.3781 20.2432 95.7276 64 63.5269 64Z" fill="#000814"/>
                         </svg>
-                        {{ form.regulations }}
+                        <label class="regulation-label">
+                            <span class="regulation-label-text text-center d-block">Нажмите или перетащите файл, чтобы загрузить регламент</span>
+                            {{ form.regulations }}
+                        </label>
                     </div>
                 </div>
             </div>

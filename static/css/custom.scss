@@ -82,16 +82,26 @@ textarea {
     text-decoration: none;
 }
 
-.menu-item svg {
-    margin-bottom: 5px;
+.menu-item {
+    svg {
+        margin-bottom: 5px;
+    }
 }
 
-.menu-item:hover svg path {
-    fill: $menu-item-hover-color;
+.menu-item:hover {
+    svg {
+        path {
+            fill: $menu-item-hover-color;
+        }
+    }
 }
 
-.menu-item:hover .item-name {
-    color: $menu-item-hover-color;
+.menu-item{
+    &:hover {
+        .item-name {
+            color: $menu-item-hover-color;
+        }
+    }
 }
 
 .white-container {
@@ -120,10 +130,32 @@ textarea {
     margin-bottom: 80px;
 }
 
-.dashed-block svg {
+.dashed-block {
+    position: relative;
+    svg {
+        position: absolute;
+        top: calc(50% - 32px);
+        left: 38px;
+    }
+}
+
+.regulation-label {
+    z-index: -10;
+    .regulation-label-text {
+        font-size: 20px;
+        color: #929292;
+        max-width: 340px;
+    }
+}
+
+.competition-regulations {
+    opacity: 0;
     position: absolute;
-    top: 30px;
-    left: 38px;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    z-index: 10;
 }
 
 .createCompBtn{
