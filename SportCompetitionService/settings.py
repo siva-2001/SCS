@@ -129,3 +129,6 @@ if not locDev:
     STATICFILES_STORAGE = 'whitenoise.storage.CompressedManifestStaticFilesStorage'
     DISABLE_COLLECTSTATIC=1
     SECURE_PROXY_SSL_HEADER = ('HTTP_X_FORWARDED_PROTO', 'https')
+
+
+MAX_COMPETITIONS_NUM_IN_OLYMPICS = 3

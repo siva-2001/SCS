@@ -76,6 +76,65 @@ class CreateCompetitionsForm(forms.ModelForm):
                 'required': '',
             }),
         }
+
+
+class CreateRelatedCompetitionForm(forms.ModelForm):
+    class Meta:
+        model = Competition
+        fields = ['name', 'description', 'dateStartCompetition', 'sportType', 'type', 'regulations']
+        widgets = {
+            'regulations':FileInput(attrs={
+                'id':'regulations',
+                'class':'competition-regulations',
+                'type':'file'
+            }),
+            'description':Textarea(attrs={
+                'id': 'competition-description',
+                'class': "form-control competition-description",
+                'placeholder': "Ежегодная Томская спартакиада, в которой принимают участие все вузы города",
+                'cols': '30',
+                'rows': '5',
+                'required': ''
+            }),
+            'dateStartCompetition':TextInput(attrs={
+                 'id':'competition-date',
+                 'type':"datetime-local",
+                 'class':"form-control",
+                 'required':'',
+            }),
+            'sportType':Select(attrs={
+                 'id': 'competition-sport',
+                 'class': 'form-select',
+                 'required': '',
+            }),
+        }
+class CreateOlympicsForm(forms.ModelForm):
+    class Meta:
+        model = Competition
+        fields = ['name', 'description', 'dateStartCompetition', 'sportType', 'type', 'regulations']
+        widgets = {
+            'name':TextInput(attrs={
+                'id': 'competition-title',
+                'class': "form-control",
+                'placeholder': "Томская межвузовская спартакиада",
+                'required': ''
+            }),
+            'description':Textarea(attrs={
+                'id': 'competition-description',
+                'class': "form-control competition-description",
+                'placeholder': "Ежегодная Томская спартакиада, в которой принимают участие все вузы города",
+                'cols': '30',
+                'rows': '5',
+                'required': ''
+            }),
+            'type':RadioSelect(attrs={
+                'id': 'flexRadioDefault',
+                'class': 'form-check-input',
+                'name': 'flexRadioDefault',
+                'checked': '',
+                'required': '',
+            }),
+        }
 # class RegistrPlayerForm(forms.ModelForm):
 #     class Meta:
 #         model = Player
