@@ -19,7 +19,6 @@ def createCompetitionView(request):
                 name=request.POST['name'],
                 description=request.POST['description'],
                 sportType=request.POST['sportType'],
-                #startDate=convertDTPickerStrToDateTime(request.POST['competition-date']),
                 startDate=request.POST['dateStartCompetition'],
                 organizer=request.user,
                 type=request.POST['type'],
