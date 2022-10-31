@@ -2,35 +2,34 @@ from django import forms
 from SCSapp.models.Competition import Competition
 from SCSapp.models.Olympics import Olympics
 from SCSapp.models.Player import Player
-from SCSapp.models.VolleyballTeam import VolleyballTeam
-from SCSapp.models.Match import Match
+#from SCSapp.models.Match import Match
 from django.forms.widgets import DateTimeInput, TextInput, Textarea, RadioSelect, Select, FileInput
 
 #from crispy_forms.helper import FormHelper
 from django.contrib.auth.models import User
 from django.contrib.auth.forms import UserCreationForm
 
-class MatchEditForm(forms.ModelForm):
-    id = forms.IntegerField()
-    class Meta:
-        model = Match
-        fields = ['name', 'place', 'matchDateTime']
-        widgets = {
-            'place':TextInput(attrs={
-                'id': 'id_place',
-                'type': "text",
-                'class': "form-control",
-                'placeholder': "Место проведения",
-                'required': '',
-            }),
-            'matchDateTime':DateTimeInput(attrs={
-                'id':'id_datetimepicker',
-                'type':"text",
-                'class':"form-control",
-                'placeholder':"Время проведения матча",
-                'required':'',
-            })
-        }
+# class MatchEditForm(forms.ModelForm):
+#     id = forms.IntegerField()
+#     class Meta:
+#         model = Match
+#         fields = ['name', 'place', 'matchDateTime']
+#         widgets = {
+#             'place':TextInput(attrs={
+#                 'id': 'id_place',
+#                 'type': "text",
+#                 'class': "form-control",
+#                 'placeholder': "Место проведения",
+#                 'required': '',
+#             }),
+#             'matchDateTime':DateTimeInput(attrs={
+#                 'id':'id_datetimepicker',
+#                 'type':"text",
+#                 'class':"form-control",
+#                 'placeholder':"Время проведения матча",
+#                 'required':'',
+#             })
+#         }
 
 
 
