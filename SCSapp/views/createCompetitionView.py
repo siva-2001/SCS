@@ -7,19 +7,18 @@ from SCSapp.func import convertDTPickerStrToDateTime
 #@login_required
 def createCompetitionView(request):
     userIsJudge = request.user.has_perm('SCS.control_competition')
-    if request.method == "GET":
-        return  render(request, 'createCompetitions.html', {
-            "form":CreateCompetitionsForm(),
-            "userAuth":True,
-            "userIsJudge": userIsJudge
-        })
+    data = {
+        "form":CreateCompetitionsForm(),
+        "userAuth":True,
+        "userIsJudge": userIsJudge
+    }
+    if request.method == "GET": return  render(request, 'createCompetitions.html', data)
     else:
         try:
             newCompetition = Competition.create(
                 name=request.POST['name'],
                 description=request.POST['description'],
                 sportType=request.POST['sportType'],
-                #startDate=convertDTPickerStrToDateTime(request.POST['competition-date']),
                 startDate=request.POST['dateStartCompetition'],
                 organizer=request.user,
                 type=request.POST['type'],
@@ -29,11 +28,7 @@ def createCompetitionView(request):
             return redirect(newCompetition)
         except Exception as e:
             print(e.__str__())
-            return render(request, 'createCompetitions.html', {
-                "form":CreateCompetitionsForm(),
-                "error":"Bad data, try again",
-                "userAuth":True,
-                "userIsJudge":userIsJudge,
-            })
+            data['error'] = "Bad data, try again",
+            return render(request, 'createCompetitions.html', data)
 
 
