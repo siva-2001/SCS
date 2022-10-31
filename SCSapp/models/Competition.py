@@ -1,11 +1,13 @@
 import json
-
 from django.urls import reverse
 from django.db import models
 from django.contrib.auth.models import User
-from .Match import Match
 from .AbstractEvent import AbstractEvent
 from django.core.serializers import serialize
+from .Participant import AbstractParticipant
+from .Match import AbstractMatch
+from .MatchTeamResult import AbstractMatchTeamResult
+from .Team import Team
 
 class Competition(AbstractEvent):
 
@@ -42,7 +44,7 @@ class Competition(AbstractEvent):
         return reverse('competition', args=[str(self.id)])
 
     @classmethod
-    def create(cls, name, description, sportType, isHighLevel, type, startDate, organizer, regulations):
+    def create(cls, name, description, sportType, isHighLevel, type, startDate, organizer, regulations, olympics):
         object = cls()
         object.name = name
         object.description = description
@@ -51,6 +53,7 @@ class Competition(AbstractEvent):
         object.isHighLevelSportEvent = isHighLevel
         object.organizer = organizer
         object.type = type
+        # object.olympics = olympics
         object.regulations = regulations
         object.status = cls.StatusChoices.ANNOUNSED
         object.save()
@@ -83,20 +86,24 @@ class Competition(AbstractEvent):
         return data
 
     def getRelatedMatchesData(self):
-        relatedMatches = Match.objects.filter(competition=self).order_by('status').order_by('matchDateTime')
+        relatedMatches = AbstractMatch.objects.filter(competition=self).order_by('status').order_by('matchDateTime')
         return [match.getData() for match in relatedMatches]
 
     #   Возвращает подтверждённые организатором команды
     def getRelatedTeams(self):
-        pass
+        return Team.objects.filter(competition=self).filter(confirmed=True)
 
-    #   Возвращает ещё не подтверждённые организатором команды
+      # Возвращает ещё не подтверждённые организатором команды
     def getApplicationsForParticipation(self):
-        pass
+        return Team.objects.filter(competition=self).filter(confirmed=False)
+
 
     #   Данные на основе которых формируется турнирная сетка
     def getTournamentGrid(self):
-        pass
+        data = list()
+        for match in AbstractMatch.objects.filter(competition=self):
+            data.append(match.getGridData()['gameData'])
+        return data
 
 
     def getRelatedPlayersByParticipant(self):

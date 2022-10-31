@@ -1,6 +1,5 @@
 from django.db import models
 
-
 class Player(models.Model):
     class Meta:
         ordering = ['surename', 'name']

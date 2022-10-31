@@ -13,6 +13,7 @@ def convertDTPickerStrToDateTime(DTPStr):
     )
     return newCompDataTime
 
+
 def sentMail(message, strRecipients):
     sender = "scsapp@yandex.ru"
     password = 'Prostoparol1234'

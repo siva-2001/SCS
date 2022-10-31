@@ -20,6 +20,7 @@ from SCSapp.views.authViews import signUpUserView, logoutUser, logInUserView
 from SCSapp.views.competitionView import competitionView
 from SCSapp.views.createOlympicsView import createOlympicsView
 from SCSapp.views.competitonListsViews import pastCompetitionsView
+from SCSapp.views.matchView import matchView
 from SCSapp.views.createCompetitionView import createCompetitionView
 from django.conf.urls.static import static
 from django.conf import settings
@@ -35,6 +36,7 @@ urlpatterns = [
     path('createCompetition/', createCompetitionView, name='createCompetition'),
     path('competition/<comp_id>/', competitionView, name='competition'),
     path('createOlympics/', createOlympicsView, name='createOlympics'),
+    path('match/<match_id>/', matchView, name='match')
 ]
 
 urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
