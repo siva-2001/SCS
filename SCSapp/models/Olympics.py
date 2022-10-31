@@ -1,29 +1,9 @@
 from django.db import models
 from django.contrib.auth.models import User
+from .AbstractEvent import AbstractEvent
 import datetime
 
-class Olympics(models.Model):
-
-    class TypeChoices(models.TextChoices):
-        INTERNAL = 'INT', 'Внутреннее'
-        INTERCOLLEGIATE = 'IC', 'Межвузовское'
-
-    class StatusChoices(models.TextChoices):
-        ANNOUNSED = "AN", 'Анонсированное'
-        CURRENT = 'CR', 'Текущее'
-        PAST = 'P', 'Прошедшее'
-
-    statusOlympics = models.CharField(
-        max_length=2,
-        choices=StatusChoices.choices,
-        default=StatusChoices.ANNOUNSED,
-        verbose_name='Статус спартакиады',
-    )
-    type = models.CharField(
-        max_length=3,
-        choices = TypeChoices.choices,
-        default = TypeChoices.INTERCOLLEGIATE,
-    )
+class Olympics(AbstractEvent):
 
     name = models.CharField(max_length=255, verbose_name= 'Название спартакиады')
     description = models.CharField(max_length=255, verbose_name= 'Описание спартакиады')
@@ -47,16 +27,17 @@ class Olympics(models.Model):
             'name': self.name,
             'description': self.description,
             'dateTimeStartOlympics': self.dateTimeStartOlympics,
-            'dateTimeFinishOlympics': self.dateTimeFinishOlympics,
-            'protocol': self.protocol,
+            #'dateTimeFinishOlympics': self.dateTimeFinishOlympics,
             'organizer': self.organizer,
-            'status': self.statusOlympics,
+            'status': self.status,
         }
+        if self.dateTimeFinishOlympics: data["dateTimeFinishCompetition"] = self.dateTimeFinishOlympics
+        if self.protocol: data['protocol'] = self.protocol.url
         return data
 
-    def editCompetition(self, statusOlympics, name, description, startDate):
+    def editOlympics(self, status, name, description, startDate):
         if name and len(name) > 0: self.name = name
         if description and len(description) > 0: self.description = description
         if startDate and len(startDate) > 0: self.dateStartCompetition = startDate
-        if statusOlympics and len(statusOlympics) > 0: self.statusOlympics = statusOlympics
+        if status and len(status) > 0: self.status = status
         self.save()

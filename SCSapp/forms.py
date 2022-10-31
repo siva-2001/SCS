@@ -1,5 +1,6 @@
 from django import forms
 from SCSapp.models.Competition import Competition
+from SCSapp.models.Olympics import Olympics
 from SCSapp.models.Player import Player
 from SCSapp.models.VolleyballTeam import VolleyballTeam
 from SCSapp.models.Match import Match
@@ -36,7 +37,7 @@ class MatchEditForm(forms.ModelForm):
 class CreateCompetitionsForm(forms.ModelForm):
     class Meta:
         model = Competition
-        fields = ['name', 'description', 'dateStartCompetition', 'sportType', 'type', 'regulations']
+        fields = ['name', 'description', 'dateTimeStartCompetition', 'sportType', 'type', 'regulations']
         widgets = {
             'name':TextInput(attrs={
                 'id': 'competition-title',
@@ -57,7 +58,7 @@ class CreateCompetitionsForm(forms.ModelForm):
                 'rows': '5',
                 'required': ''
             }),
-            'dateStartCompetition':TextInput(attrs={
+            'dateTimeStartCompetition':TextInput(attrs={
                  'id':'competition-date',
                  'type':"datetime-local",
                  'class':"form-control",
@@ -81,7 +82,7 @@ class CreateCompetitionsForm(forms.ModelForm):
 class CreateRelatedCompetitionForm(forms.ModelForm):
     class Meta:
         model = Competition
-        fields = ['name', 'description', 'dateStartCompetition', 'sportType', 'type', 'regulations']
+        fields = ['name', 'description', 'dateTimeStartCompetition', 'sportType', 'type', 'regulations']
         widgets = {
             'regulations':FileInput(attrs={
                 'id':'regulations',
@@ -96,7 +97,7 @@ class CreateRelatedCompetitionForm(forms.ModelForm):
                 'rows': '5',
                 'required': ''
             }),
-            'dateStartCompetition':TextInput(attrs={
+            'dateTimeStartCompetition':TextInput(attrs={
                  'id':'competition-date',
                  'type':"datetime-local",
                  'class':"form-control",
@@ -110,8 +111,8 @@ class CreateRelatedCompetitionForm(forms.ModelForm):
         }
 class CreateOlympicsForm(forms.ModelForm):
     class Meta:
-        model = Competition
-        fields = ['name', 'description', 'dateStartCompetition', 'sportType', 'type', 'regulations']
+        model = Olympics
+        fields = ['name', 'description','type']
         widgets = {
             'name':TextInput(attrs={
                 'id': 'competition-title',
