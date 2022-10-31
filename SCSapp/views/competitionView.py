@@ -1,9 +1,8 @@
 from django.shortcuts import render, redirect, get_object_or_404
 
 from SCSapp.models.Competition import Competition
-from SCSapp.models.Match import Match
-from SCSapp.models.VolleyballTeam import VolleyballTeam
-from SCSapp.models.Player import Player
+#from SCSapp.models.Match import Match
+#from SCSapp.models.Player import Player
 from django.views.generic import View
 
 
@@ -18,15 +17,7 @@ class comptitionView(View):
 
 def competitionView(request, comp_id):
     competition = get_object_or_404(Competition, pk=comp_id)
-    data = competition.getData()
-    for key, value in data.items():
-        if key == 'matches':
-            for match in value:
-                print(match.name)
-                print(match.status_isCompleted)
-                print(match.matchDateTime)
-        else:
-            print(key, value, sep='     ')
+    return render(request, 'competition.html', competition.getData())
 
 
 # def competitionView(request, comp_id):
