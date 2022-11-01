@@ -13,7 +13,7 @@ def createOlympicsView(request):
     userIsJudge = request.user.has_perm('SCS.control_competition')
     data = {
         "form":{
-            'olymics' : CreateOlympicsForm(),
+            'olympics' : CreateOlympicsForm(),
             'competitions' : formset_factory(CreateRelatedCompetitionForm,
                 extra=settings.MAX_COMPETITIONS_NUM_IN_OLYMPICS),
         },
