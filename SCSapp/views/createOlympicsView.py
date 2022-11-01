@@ -9,7 +9,7 @@ from django.contrib.auth.decorators import login_required
 from SCSapp.func import convertDTPickerStrToDateTime
 
 #@login_required
-def createCompetitionView(request):
+def createOlympicsView(request):
     userIsJudge = request.user.has_perm('SCS.control_competition')
     data = {
         "form":{
