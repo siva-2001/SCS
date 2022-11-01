@@ -35,11 +35,7 @@ urlpatterns = [
     path('', homePageView, name='homePage'),
     path('createCompetition/', createCompetitionView, name='createCompetition'),
     path('competition/<comp_id>/', competitionView, name='competition'),
-<<<<<<< HEAD
     path('createOlympics/', createOlympicsView, name='createOlympics'),
-=======
     path('match/<match_id>/', matchView, name='match')
->>>>>>> 298d630cd976ee50481f4f5fbb459ddd24326849
-]
 
 urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
