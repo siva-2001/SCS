@@ -37,6 +37,7 @@ urlpatterns = [
     path('competition/<comp_id>/', competitionView, name='competition'),
     path('createOlympics/', createOlympicsView, name='createOlympics'),
     path('match/<match_id>/', matchView, name='match')
+
 ]
 
 urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
