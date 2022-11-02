@@ -62,7 +62,7 @@ CompetitionFormSet = modelformset_factory(
             }),
             'description':Textarea(attrs={
                 'id': 'competition-description',
-                'class': "form-control competition-description",
+                'class': "form-control competition-description add-competition-input",
                 'placeholder': "Ежегодная Томская спартакиада, в которой принимают участие все вузы города",
                 'cols': '30',
                 'rows': '5',
@@ -71,12 +71,12 @@ CompetitionFormSet = modelformset_factory(
             'dateTimeStartCompetition':TextInput(attrs={
                  'id':'competition-date',
                  'type':"datetime-local",
-                 'class':"form-control",
+                 'class':"form-control add-competition-input",
                  'required':'',
             }),
             'sportType':Select(attrs={
                  'id': 'competition-sport',
-                 'class': 'form-select',
+                 'class': 'form-select add-competition-input',
                  'required': '',
             }),
     }
