@@ -11,28 +11,36 @@ from SCSapp.func import convertDTPickerStrToDateTime
 
 # #@login_required
 class CreateOlympicsView(TemplateView):
-    template_name = 'createOlympics.html'
+    #template_name = 'createOlympics.html'
+    template_name = 'create.html'
 
     def get(self, *args, **kwargs):
         data = {
-            "competitionFormset":CompetitionFormSet(queryset=Competition.objects.none()),
+            "competitionFormSet":CompetitionFormSet(queryset=Competition.objects.none()),
             "olympicsForm":CreateOlympicsForm(),
         }
         return self.render_to_response(data)
 
     def post(self, *args, **kwargs):
-        print(self.request.POST)
-        # formset = CompetitionFormSet(data=self.request.POST)
-        # olympicsForm = CreateOlympicsForm(data=self.request.POST)
-        # if formset.is_valid() and olympicsForm.is_valid():
-        #     formset.save()
-        #     olympicsForm.save()
-        #     return redirect('homePage')
-        #
-        # return self.render_to_response({
-        #     "competitionFormset": formset,
-        #     "olympicsForm": CreateOlympicsForm(),
-        # })
+        print(self.request.POST['name'])
+        formset = CompetitionFormSet(data=self.request.POST)
+        olympicsForm = CreateOlympicsForm(data=self.request.POST)
+        if formset.is_valid() and olympicsForm.is_valid():
+            competitions = formset.save(commit=False)
+            olympics = olympicsForm.save(commit=False)
+            olympics.organizer = self.request.user
+            olympics.save()
+            for comp in competitions:
+                comp.organizer = self.request.user
+                print(comp.description)
+                # comp.olympics = olympics
+                comp.save()
+            return redirect('homePage')
+
+        return self.render_to_response({
+            "competitionFormset": formset,
+            "olympicsForm": CreateOlympicsForm(),
+        })
 
 
 

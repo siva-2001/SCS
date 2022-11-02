@@ -7,7 +7,7 @@ class Olympics(AbstractEvent):
 
     name = models.CharField(max_length=255, verbose_name= 'Название спартакиады')
     description = models.CharField(max_length=255, verbose_name= 'Описание спартакиады')
-    dateTimeStartOlympics = models.DateField(verbose_name='Дата начала спартакиады')
+    dateTimeStartOlympics = models.DateField(verbose_name='Дата начала спартакиады', auto_now_add=True)
     dateTimeFinishOlympics = models.DateField(verbose_name='Дата конца спартакиады', auto_now_add=True)
     protocol = models.FileField(verbose_name='Протокол', upload_to='protocols', null=True, blank=True)
     organizer = models.ForeignKey(User, on_delete=models.CASCADE, verbose_name="Организатор")

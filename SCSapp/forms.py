@@ -4,7 +4,7 @@ from SCSapp.models.Olympics import Olympics
 from SCSapp.models.Player import Player
 #from SCSapp.models.Match import Match
 from django.forms.widgets import DateTimeInput, TextInput, Textarea, RadioSelect, Select, FileInput
-from django.forms import modelform_factory
+from django.forms import modelformset_factory
 
 #from crispy_forms.helper import FormHelper
 from django.contrib.auth.models import User
@@ -79,9 +79,9 @@ class CreateCompetitionsForm(forms.ModelForm):
         }
 
 
-CompetitionFormSet = modelform_factory(
+CompetitionFormSet = modelformset_factory(
     Competition,
-    fields=['name', 'description', 'dateTimeStartCompetition', 'sportType', 'type', 'regulations'],
+    fields=['description', 'dateTimeStartCompetition', 'sportType', 'regulations'],
     widgets= {
             'regulations':FileInput(attrs={
                 'id':'regulations',
