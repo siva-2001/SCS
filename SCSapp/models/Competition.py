@@ -38,7 +38,9 @@ class Competition(AbstractEvent):
         verbose_name_plural = 'Соревнования'
 
     def __str__(self):
-        return self.name
+        #if olympics: return self.sportType
+        #return self.name
+        return self.sportType.
 
     def get_absolute_url(self):
         return reverse('competition', args=[str(self.id)])

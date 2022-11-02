@@ -4,6 +4,7 @@ from SCSapp.models.Olympics import Olympics
 from SCSapp.models.Player import Player
 #from SCSapp.models.Match import Match
 from django.forms.widgets import DateTimeInput, TextInput, Textarea, RadioSelect, Select, FileInput
+from django.forms import modelformset_factory
 
 #from crispy_forms.helper import FormHelper
 from django.contrib.auth.models import User
@@ -68,7 +69,7 @@ class CreateCompetitionsForm(forms.ModelForm):
                  'class': 'form-select',
                  'required': '',
             }),
-            'type':RadioSelect(attrs={
+            'type': RadioSelect(attrs={
                 'id': 'flexRadioDefault',
                 'class': 'form-check-input',
                 'name': 'flexRadioDefault',
@@ -78,11 +79,10 @@ class CreateCompetitionsForm(forms.ModelForm):
         }
 
 
-class CreateRelatedCompetitionForm(forms.ModelForm):
-    class Meta:
-        model = Competition
-        fields = ['name', 'description', 'dateTimeStartCompetition', 'sportType', 'type', 'regulations']
-        widgets = {
+CompetitionFormSet = modelformset_factory(
+    Competition,
+    fields=['description', 'dateTimeStartCompetition', 'sportType', 'regulations'],
+    widgets= {
             'regulations':FileInput(attrs={
                 'id':'regulations',
                 'class':'competition-regulations',
@@ -107,7 +107,38 @@ class CreateRelatedCompetitionForm(forms.ModelForm):
                  'class': 'form-select',
                  'required': '',
             }),
-        }
+    }
+)
+# class CreateRelatedCompetitionForm(forms.ModelForm):
+#     class Meta:
+#         model = Competition
+#         fields = ['name', 'description', 'dateTimeStartCompetition', 'sportType', 'type', 'regulations']
+#         widgets = {
+#             'regulations':FileInput(attrs={
+#                 'id':'regulations',
+#                 'class':'competition-regulations',
+#                 'type':'file'
+#             }),
+#             'description':Textarea(attrs={
+#                 'id': 'competition-description',
+#                 'class': "form-control competition-description",
+#                 'placeholder': "Ежегодная Томская спартакиада, в которой принимают участие все вузы города",
+#                 'cols': '30',
+#                 'rows': '5',
+#                 'required': ''
+#             }),
+#             'dateTimeStartCompetition':TextInput(attrs={
+#                  'id':'competition-date',
+#                  'type':"datetime-local",
+#                  'class':"form-control",
+#                  'required':'',
+#             }),
+#             'sportType':Select(attrs={
+#                  'id': 'competition-sport',
+#                  'class': 'form-select',
+#                  'required': '',
+#             }),
+#         }
 class CreateOlympicsForm(forms.ModelForm):
     class Meta:
         model = Olympics
