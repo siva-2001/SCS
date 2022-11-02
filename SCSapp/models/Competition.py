@@ -2,14 +2,35 @@ import json
 from django.urls import reverse
 from django.db import models
 from django.contrib.auth.models import User
-from .AbstractEvent import AbstractEvent
+
 from django.core.serializers import serialize
 from .Participant import AbstractParticipant
 from .Match import AbstractMatch
 from .MatchTeamResult import AbstractMatchTeamResult
 from .Team import Team
 
-class Competition(AbstractEvent):
+class Competition(models.Model):
+    class TypeChoices(models.TextChoices):
+        INTERNAL = 'INT', 'Внутреннее'
+        INTERCOLLEGIATE = 'IC', 'Межвузовское'
+
+    class StatusChoices(models.TextChoices):
+        ANNOUNSED = "AN", 'Анонсированное'
+        CURRENT = 'CR', 'Текущее'
+        PAST = 'P', 'Прошедшее'
+
+    status = models.CharField(
+        max_length=2,
+        choices = StatusChoices.choices,
+        default = StatusChoices.ANNOUNSED,
+        verbose_name = 'Статус',
+    )
+
+    type = models.CharField(
+        max_length=3,
+        choices = TypeChoices.choices,
+        default = TypeChoices.INTERCOLLEGIATE,
+    )
 
     class SportTypeChoices(models.TextChoices):
         FOOTBALL = 'BB', 'Баскетбол'
@@ -30,7 +51,7 @@ class Competition(AbstractEvent):
     organizer = models.ForeignKey(User, on_delete=models.CASCADE, verbose_name="Организатор")
     protocol = models.FileField(upload_to='protocols', null=True, blank=True, verbose_name="Протокол")
     regulations = models.FileField(upload_to='regulations', null=True, blank=True, verbose_name="Регламент соревнований")
-    #_olympics = models.ForeignKey('SCSapp.olympics', on_delete=models.CASCADE, verbose_name='Спартакиада', null=True)
+    olympics = models.ForeignKey('SCSapp.olympics', on_delete=models.CASCADE, verbose_name='Спартакиада', null=True, default=None)
     isHighLevelSportEvent = models.BooleanField(default=True)
 
     class Meta:
@@ -38,9 +59,9 @@ class Competition(AbstractEvent):
         verbose_name_plural = 'Соревнования'
 
     def __str__(self):
-        #if olympics: return self.sportType
-        #return self.name
-        return self.sportType.
+        if self.olympics: return self.sportType.get_display_name()
+        return self.name
+
 
     def get_absolute_url(self):
         return reverse('competition', args=[str(self.id)])

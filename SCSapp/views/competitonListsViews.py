@@ -6,18 +6,14 @@ from SCSapp.models.Olympics import Olympics
 from django.core.paginator import Paginator
 from SportCompetitionService import settings
 from django.core.serializers import serialize
-
-from SCSapp.models.AbstractEvent import AbstractEvent
 def homePageView(request):
     listOfCurrentEvents = list()
     listOfAnnouncedEvents = list()
-    for comp in Competition.objects.filter(status=AbstractEvent.StatusChoices.ANNOUNSED, isHighLevelSportEvent=True):
+    for comp in Competition.objects.filter(status=Competition.StatusChoices.ANNOUNSED, isHighLevelSportEvent=True):
         listOfAnnouncedEvents.append(comp.getData())
-    for olympics in Olympics.objects.filter(status=AbstractEvent.StatusChoices.ANNOUNSED):
-        listOfAnnouncedEvents.append(olympics.getData())
-    for comp in Competition.objects.filter(status=AbstractEvent.StatusChoices.CURRENT, isHighLevelSportEvent=True):
+    for comp in Competition.objects.filter(status=Competition.StatusChoices.CURRENT, isHighLevelSportEvent=True):
         listOfCurrentEvents.append(comp.getData())
-    for olympics in Olympics.objects.filter(status=AbstractEvent.StatusChoices.CURRENT):
+    for olympics in Olympics.objects.filter(status=Olympics.StatusChoices.CURRENT):
         listOfCurrentEvents.append(olympics.getData())
 
     data = {
