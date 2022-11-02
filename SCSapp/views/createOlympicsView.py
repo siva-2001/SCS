@@ -11,8 +11,7 @@ from SCSapp.func import convertDTPickerStrToDateTime
 
 # #@login_required
 class CreateOlympicsView(TemplateView):
-    #template_name = 'createOlympics.html'
-    template_name = 'create.html'
+    template_name = 'createOlympics.html'
 
     def get(self, *args, **kwargs):
         data = {
