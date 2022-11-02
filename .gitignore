@@ -5,3 +5,4 @@ gulpfile.js
 *.pyc
 auth.txt
 /SCSapp/migrations/
+static/dist
