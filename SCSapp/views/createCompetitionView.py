@@ -2,7 +2,7 @@ from django.shortcuts import render, redirect
 from SCSapp.models.Competition import Competition
 from SCSapp.forms import CreateCompetitionsForm
 from django.contrib.auth.decorators import login_required
-from SCSapp.func import convertDTPickerStrToDateTime
+
 
 #@login_required
 def createCompetitionView(request):
