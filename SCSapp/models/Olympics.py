@@ -1,8 +1,12 @@
 from django.db import models
 from django.contrib.auth.models import User
 import datetime
+class CurrentOlympicsManager(models.Manager):
+    def get_queryset(self):
+        return super().get_queryset().filter(status=Olympics.StatusChoices.CURRENT)
 
 class Olympics(models.Model):
+    current_objects = CurrentOlympicsManager()
     class TypeChoices(models.TextChoices):
         INTERNAL = 'INT', 'Внутреннее'
         INTERCOLLEGIATE = 'IC', 'Межвузовское'

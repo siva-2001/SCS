@@ -3,16 +3,11 @@ import pytz
 import smtplib
 from email.message import EmailMessage
 
-def convertDTPickerStrToDateTime(DTPStr):
-    newCompDataTime = datetime(
-        int(DTPStr[0:4]),
-        int(DTPStr[5:7]),
-        int(DTPStr[8:10]),
-        int(DTPStr[11:13]),
-        int(DTPStr[14:16])
-    )
-    return newCompDataTime
-
+def getUserAuthData(user):
+    return {
+        'userAuth' : user.is_authenticated,
+        "userIsJudge" : user.has_perm('SCS.control_competition'),
+    }
 
 def sentMail(message, strRecipients):
     sender = "scsapp@yandex.ru"

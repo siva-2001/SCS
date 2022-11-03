@@ -1,39 +1,28 @@
-import json
-
 from django.shortcuts import render
 from SCSapp.models.Competition import Competition
 from SCSapp.models.Olympics import Olympics
 from django.core.paginator import Paginator
 from SportCompetitionService import settings
-from django.core.serializers import serialize
+from SCSapp.func import getUserAuthData
+
+
 def homePageView(request):
     listOfCurrentEvents = list()
     listOfAnnouncedEvents = list()
-    for comp in Competition.objects.filter(status=Competition.StatusChoices.ANNOUNSED, isHighLevelSportEvent=True):
-        listOfAnnouncedEvents.append(comp.getData())
-    for comp in Competition.objects.filter(status=Competition.StatusChoices.CURRENT, isHighLevelSportEvent=True):
-        listOfCurrentEvents.append(comp.getData())
-    for olympics in Olympics.objects.filter(status=Olympics.StatusChoices.CURRENT):
-        listOfCurrentEvents.append(olympics.getData())
-
-    data = {
+    for comp in Competition.announced_objects.all(): listOfAnnouncedEvents.append(comp.getData())
+    for comp in Competition.current_objects.all(): listOfCurrentEvents.append(comp.getData())
+    for olympics in Olympics.current_objects.all(): listOfCurrentEvents.append(olympics.getData())
+    return render(request, 'competition.html', {
         'announcedEvents':listOfAnnouncedEvents,
         'currentEvents': listOfCurrentEvents,
-    }
-
-    return render(request, 'competition.html', data)
-
+    } | getUserAuthData(request.user))
 
 
 def pastCompetitionsView(request):
-    data = {
-        'userAuth':request.user.is_authenticated,
-        "userIsJudge": request.user.has_perm('SCS.control_competition')
-    }
-    pastCompetitions = Competition.objects.filter(status=AbstractEvent.StatusChoices.PAST)
-    pastOlympics = Olympics.objects.filter(status=AbstractEvent.StatusChoices.PAST)
+    data = getUserAuthData(request.user)
+    pastCompetitions = Competition.objects.filter(status=Competition.StatusChoices.PAST)
+    pastOlympics = Olympics.objects.filter(status=Olympics.StatusChoices.PAST)
     events = [e.getData() for e in pastOlympics] + [e.getData for e in pastCompetitions]
-
 
     if len(events) > settings.PAST_EVENT_PAGE_LEN:
         paginator = Paginator(events, settings.PAST_EVENT_PAGE_LEN)

@@ -48,37 +48,39 @@ class CreateCompetitionsForm(forms.ModelForm):
                 'checked': '',
                 'required': '',
             }),
+
         }
 
 
 CompetitionFormSet = modelformset_factory(
     Competition,
     fields=['description', 'dateTimeStartCompetition', 'sportType', 'regulations'],
+    labels={},
     widgets= {
-            'regulations':FileInput(attrs={
-                'id':'regulations',
-                'class':'competition-regulations',
-                'type':'file'
-            }),
-            'description':Textarea(attrs={
-                'id': 'competition-description',
-                'class': "form-control competition-description add-competition-input",
-                'placeholder': "Ежегодная Томская спартакиада, в которой принимают участие все вузы города",
-                'cols': '30',
-                'rows': '5',
-                'required': ''
-            }),
-            'dateTimeStartCompetition':TextInput(attrs={
-                 'id':'competition-date',
-                 'type':"datetime-local",
-                 'class':"form-control add-competition-input",
-                 'required':'',
-            }),
-            'sportType':Select(attrs={
-                 'id': 'competition-sport',
-                 'class': 'form-select add-competition-input',
-                 'required': '',
-            }),
+        'regulations':FileInput(attrs={
+            'id':'regulations',
+            'class':'competition-regulations',
+            'type':'file'
+        }),
+        'description':Textarea(attrs={
+            'id': 'competition-description',
+            'class': "form-control competition-description add-competition-input",
+            'placeholder': "Ежегодная Томская спартакиада, в которой принимают участие все вузы города",
+            'cols': '30',
+            'rows': '5',
+            'required': ''
+        }),
+        'dateTimeStartCompetition':TextInput(attrs={
+             'id':'competition-date',
+             'type':"datetime-local",
+                'class':"form-control add-competition-input",
+             'required':'',
+        }),
+        'sportType':Select(attrs={
+            'id': 'competition-sport',
+            'class': 'form-select add-competition-input',
+            'required': '',
+        }),
     }
 )
 
