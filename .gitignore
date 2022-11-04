@@ -4,3 +4,4 @@ db.sqlite3
 gulpfile.js
 *.pyc
 auth.txt
+/SCSapp/screen.png
