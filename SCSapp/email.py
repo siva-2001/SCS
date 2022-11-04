@@ -9,6 +9,8 @@ from email.mime.base import MIMEBase
 class Email:
     SENDER_ADRES = 'pomogator2@mail.ru'
     PASSWORD = '6Y09KjcZKDjgRn63J4AM'
+    SERVER_ADRES = 'smtp.mail.ru'
+    PORT = 587
 
     def send_emails(self, title, message, recipients, file):
         try:
@@ -18,7 +20,7 @@ class Email:
 
     def send_email(self, title, message, recipient, filePath):
 
-        server = smtplib.SMTP('smtp.mail.ru', 587)
+        server = smtplib.SMTP(self.SERVER_ADRES, self.PORT)
         server.starttls()
         server.ehlo()
 
