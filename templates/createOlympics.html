@@ -3,123 +3,207 @@
 
 <div class="container">
     <div class="create-competition-title h1 text-center pt-5 mb-5">Создание спартакиады</div>
-    <form method="POST" enctype="multipart/form-data" action=".">
-        <div class="h2 fw-bold mb-5">Основная информация</div>
+    <div class="h2 fw-bold mb-5">Основная информация</div>
+    <form id="form-container" method="POST" enctype="multipart/form-data" action=".">
         {% csrf_token %}
-        <div class="row">
-            <div class="row mb-4">
-                <span class="col-1 form-label">Тип:</span>
-                <div class="col radio-group">
-                    {% for radio in form.olympics.type %}
-                    <div class="form-check-label mb-1">
-                        {{ radio }}
-                    </div>
-                    {% endfor %}
+        <!--        <div class="row">-->
+        <div class="row mb-4">
+            <span class="col-1 form-label">Тип:</span>
+            <div class="col radio-group">
+                {% for radio in olympicsForm.type %}
+                <div class="form-check-label mb-1">
+                    {{ radio }}
                 </div>
-            </div>
-            <div class="row">
-                <div class="col-8 mb-3">
-                    <label class="form-label">Как называется спартакиада?</label>
-                    {{ form.olympics.name }}
-                </div>
-            </div>
-            <div class="row">
-                <div class="col-8 mb-3">
-                    <label class="form-label">Дайте спартакиаде краткое описание</label>
-                    {{ form.olympics.description }}
-                </div>
-            </div>
-            <div class="row">
-                <span class="h2 fw-bold mb-5">Соревнования внутри спартакиады</span>
-                <div class="competitions d-flex flex-column">
-                    <div class="competition-form my-4 col-8 p-4">
-                        <div class="competition-actions">
-                            <button type="button" class="competition-btn save">
-                                <svg width="26" height="19" viewBox="0 0 26 19" fill="none" xmlns="http://www.w3.org/2000/svg">
-                                    <path d="M10.2304 16.5751L23.5084 3.65165L22.248 2.42493L10.2304 14.1216L4.04577 8.1021L2.78539 9.32883L10.2304 16.5751ZM10.2304 19L0.293945 9.32883L4.04577 5.67718L10.2304 11.6967L22.248 0L25.9998 3.65165L10.2304 19Z" fill="white"/>
-                                    <rect x="4.20776" y="7.12744" width="11.7183" height="2.72692" transform="rotate(45.6413 4.20776 7.12744)" fill="white"/>
-                                    <rect x="24.1638" y="3.0437" width="19.0052" height="2.1078" transform="rotate(135 24.1638 3.0437)" fill="white"/>
-                                </svg>
-                            </button>
-                        </div>
-                        <div class="row d-flex justify-content-center">
-                            <div class="mb-3 col-5">
-                                <label class="form-label text-white">Вид спорта</label>
-                                {{ form.competitions.0.sportType }}
-                            </div>
-                            <div class="mb-3 col-5">
-                                <label class="form-label text-white">Дата начала</label>
-                                {{ form.competitions.0.dateTimeStartCompetition }}
-                            </div>
-                        </div>
-                        <div class="row d-flex justify-content-center">
-                            <div class=" col-10 mb-3">
-                                <label class="form-label text-white">Короткое описание</label>
-                                {{ form.competitions.0.description }}
-                            </div>
-                        </div>
-                        <div class="row d-flex justify-content-center">
-                            <div class="col-10 mb-3">
-                                <label class="form-label text-white">Загрузить регламент</label>
-                                <div class="dashed-block white-dashed-block mb-0 p-5 text-center">
-                                    <svg width="88" height="64" viewBox="0 0 88 64" fill="none" xmlns="http://www.w3.org/2000/svg">
-                                        <path fill-rule="evenodd" clip-rule="evenodd"
-                                              d="M63.5269 64H46.8172L46.3478 35.6595L53.3393 41.501L56.875 36.8121L42.5824 25.3853L29.3585 36.9894L32.7244 41.6094L39.9056 35.8861L40.0055 63.9507C32.0153 63.9507 24.2947 63.9507 18.242 63.9507C-3.49149 63.9507 -5.91853 35.2163 11.5702 28.9906C11.4703 14.5495 20.9088 0 40.0654 0C54.0484 0 63.1373 7.6934 67.0326 17.4357C95.3781 20.2432 95.7276 64 63.5269 64Z"
-                                              fill="#ffffff"/>
-                                    </svg>
-                                    <label class="regulation-label">
-                                        <span class="regulation-label-text text-center d-block">Нажмите или перетащите файл, чтобы загрузить регламент</span>
-                                        {{ form.competitions.0.regulations }}
-                                    </label>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="competition-item col-8 mb-4 p-4">
-                        <div class="competition-title form-label text-white">Соревнование по водному полу</div>
-                        <div class="competition-description text-white fs-5 pb-4">Создайте спартакиаду и добавьте приуроченные к ней соревнования по любым видам спорта.</div>
-                        <div class="competition-type-and-date text-white fs-5">межвузовские, 22.09.2022</div>
-                        <div class="competition-actions">
-                            <button class="competition-btn edit">
-                                <svg width="15" height="17" viewBox="0 0 15 17" fill="none" xmlns="http://www.w3.org/2000/svg">
-                                    <path fill-rule="evenodd" clip-rule="evenodd" d="M12.7768 5.45492L9.11011 2.30155C9.71072 1.59296 10.1911 1.0516 10.4607 0.781291C11.97 -0.694608 15.4261 2.19285 13.8805 4.08791C13.6701 4.34981 13.2804 4.83233 12.7768 5.45492ZM4.80103 15.3505L0.418509 16.7293L1.20088 12.0983C1.20088 12.0983 5.33845 6.84414 8.15157 3.43764L11.8375 6.60684C9.1039 10.0025 4.80103 15.3505 4.80103 15.3505Z" fill="white"/>
-                                </svg>
-                            </button>
-                            <button class="competition-btn delete">
-                                <svg width="19" height="20" viewBox="0 0 19 20" fill="none" xmlns="http://www.w3.org/2000/svg">
-                                    <path fill-rule="evenodd" clip-rule="evenodd" d="M19 16.0885V18.079L17.0732 19.7819L12.9084 19.8399L12.322 18.4479L11.2688 17.5895L11.568 14.2417H12.9036L14.5288 12.4275L18.2245 13.5875L18.1646 15.534L19 16.0885ZM14.9597 13.7476L13.94 14.6756L14.682 15.1396L16.3432 14.2116L14.9597 13.7476ZM17.6309 16.5316L15.7017 15.6175L14.6796 16.1859L13.2435 15.5943L12.3986 17.3923L15.1512 17.3529L15.6107 18.4618L16.4628 18.666L17.0062 17.6521L17.9061 17.4967L17.6309 16.5316ZM0 4.05221L14.5073 3.88749L14.56 6.56943L0.241749 6.4743L0 4.05221ZM8.58806 2.8922V1.94331L5.82351 1.91083V2.87364H3.85362C3.85362 2.87364 3.80814 2.16371 3.79617 1.58835C3.76984 0.535062 4.42328 0.0455384 5.66075 0.0060981C6.24717 -0.0147821 7.99924 0.0246578 8.73406 0.0246578C10.0673 0.0246578 10.5915 0.535062 10.5986 1.38187C10.5986 1.96883 10.5532 2.90612 10.5532 2.90612L8.58806 2.8922ZM13.6145 11.8103L11.4962 13.2024C11.5752 11.8846 11.6446 10.6875 11.6781 10.1631C11.7595 8.79896 10.0338 8.88016 10.0385 10.1214C10.0385 10.7803 10.0649 15.8031 10.0721 17.5454H10.1558L10.1008 18.2066L11.4005 19.8306L1.63479 20L1.20156 7.65519H13.7773L13.6145 11.8103ZM3.42996 10.2188C3.42996 10.9635 3.60469 16.571 3.64777 17.8981L5.00013 17.8238C5.01688 16.5989 5.09587 11.2141 5.09587 10.1539C5.0839 8.85696 3.42996 8.83608 3.42996 10.2188ZM6.78093 10.2026C6.85991 10.9125 6.93651 16.114 6.95805 17.7148L8.35349 17.6382C8.37742 15.9493 8.44684 11.2535 8.44684 10.1376C8.45641 8.77112 6.64689 8.97064 6.78093 10.2026Z" fill="white"/>
-                                </svg>
-                            </button>
-                        </div>
-                    </div>
-                    <div class="competition-item col-8 mb-4 p-4">
-                        <div class="competition-title form-label text-white">Соревнование по водному полу</div>
-                        <div class="competition-description text-white fs-5 pb-4">Создайте спартакиаду и добавьте приуроченные к ней соревнования по любым видам спорта.</div>
-                        <div class="competition-type-and-date text-white fs-5">межвузовские, 22.09.2022</div>
-                        <div class="competition-actions">
-                            <button type="button" class="competition-btn edit">
-                                <svg width="15" height="17" viewBox="0 0 15 17" fill="none" xmlns="http://www.w3.org/2000/svg">
-                                    <path fill-rule="evenodd" clip-rule="evenodd" d="M12.7768 5.45492L9.11011 2.30155C9.71072 1.59296 10.1911 1.0516 10.4607 0.781291C11.97 -0.694608 15.4261 2.19285 13.8805 4.08791C13.6701 4.34981 13.2804 4.83233 12.7768 5.45492ZM4.80103 15.3505L0.418509 16.7293L1.20088 12.0983C1.20088 12.0983 5.33845 6.84414 8.15157 3.43764L11.8375 6.60684C9.1039 10.0025 4.80103 15.3505 4.80103 15.3505Z" fill="white"/>
-                                </svg>
-                            </button>
-                            <button type="button" class="competition-btn delete">
-                                <svg width="19" height="20" viewBox="0 0 19 20" fill="none" xmlns="http://www.w3.org/2000/svg">
-                                    <path fill-rule="evenodd" clip-rule="evenodd" d="M19 16.0885V18.079L17.0732 19.7819L12.9084 19.8399L12.322 18.4479L11.2688 17.5895L11.568 14.2417H12.9036L14.5288 12.4275L18.2245 13.5875L18.1646 15.534L19 16.0885ZM14.9597 13.7476L13.94 14.6756L14.682 15.1396L16.3432 14.2116L14.9597 13.7476ZM17.6309 16.5316L15.7017 15.6175L14.6796 16.1859L13.2435 15.5943L12.3986 17.3923L15.1512 17.3529L15.6107 18.4618L16.4628 18.666L17.0062 17.6521L17.9061 17.4967L17.6309 16.5316ZM0 4.05221L14.5073 3.88749L14.56 6.56943L0.241749 6.4743L0 4.05221ZM8.58806 2.8922V1.94331L5.82351 1.91083V2.87364H3.85362C3.85362 2.87364 3.80814 2.16371 3.79617 1.58835C3.76984 0.535062 4.42328 0.0455384 5.66075 0.0060981C6.24717 -0.0147821 7.99924 0.0246578 8.73406 0.0246578C10.0673 0.0246578 10.5915 0.535062 10.5986 1.38187C10.5986 1.96883 10.5532 2.90612 10.5532 2.90612L8.58806 2.8922ZM13.6145 11.8103L11.4962 13.2024C11.5752 11.8846 11.6446 10.6875 11.6781 10.1631C11.7595 8.79896 10.0338 8.88016 10.0385 10.1214C10.0385 10.7803 10.0649 15.8031 10.0721 17.5454H10.1558L10.1008 18.2066L11.4005 19.8306L1.63479 20L1.20156 7.65519H13.7773L13.6145 11.8103ZM3.42996 10.2188C3.42996 10.9635 3.60469 16.571 3.64777 17.8981L5.00013 17.8238C5.01688 16.5989 5.09587 11.2141 5.09587 10.1539C5.0839 8.85696 3.42996 8.83608 3.42996 10.2188ZM6.78093 10.2026C6.85991 10.9125 6.93651 16.114 6.95805 17.7148L8.35349 17.6382C8.37742 15.9493 8.44684 11.2535 8.44684 10.1376C8.45641 8.77112 6.64689 8.97064 6.78093 10.2026Z" fill="white"/>
-                                </svg>
-                            </button>
-                        </div>
-                    </div>
-                    <button type="button" class="add-competition-button col-4 fs-5 p-4 d-flex align-items-center justify-content-center">Добавить соревнование<span class="plus-icon text-white d-inline-block d-flex justify-content-center align-items-center ms-3">+</span></button>
-                </div>
+                {% endfor %}
             </div>
         </div>
+        <div class="row">
+            <div class="col-8 mb-3">
+                <label class="form-label">Как называется спартакиада?</label>
+                {{ olympicsForm.name }}
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-8 mb-3">
+                <label class="form-label">Дайте спартакиаде краткое описание</label>
+                {{ olympicsForm.description }}
+            </div>
+        </div>
+        <input type="hidden" name="form-TOTAL_FORMS" value="1" id="id_form-TOTAL_FORMS">
+        <input type="hidden" name="form-INITIAL_FORMS" value="0" id="id_form-INITIAL_FORMS">
+        <input type="hidden" name="form-MIN_NUM_FORMS" value="0" id="id_form-MIN_NUM_FORMS">
+        <input type="hidden" name="form-MAX_NUM_FORMS" value="10" id="id_form-MAX_NUM_FORMS">
+        {{competitionFormSet.management_form}}
+        <div id="competitions-container" class="competitions-container">
+        {% for form in competitionFormSet %}
+            <div class="competition-form my-4 col-8 p-4">
+                <div class="competition-actions">
+                    <button type="button" class="competition-btn save">
+                        <svg width="26" height="19" viewBox="0 0 26 19" fill="none" xmlns="http://www.w3.org/2000/svg">
+                            <path d="M10.2304 16.5751L23.5084 3.65165L22.248 2.42493L10.2304 14.1216L4.04577 8.1021L2.78539 9.32883L10.2304 16.5751ZM10.2304 19L0.293945 9.32883L4.04577 5.67718L10.2304 11.6967L22.248 0L25.9998 3.65165L10.2304 19Z" fill="white"/>
+                            <rect x="4.20776" y="7.12744" width="11.7183" height="2.72692" transform="rotate(45.6413 4.20776 7.12744)" fill="white"/>
+                            <rect x="24.1638" y="3.0437" width="19.0052" height="2.1078" transform="rotate(135 24.1638 3.0437)" fill="white"/>
+                        </svg>
+                    </button>
+                </div>
+                <div class="row d-flex justify-content-center">
+                    <div class="mb-3 col-5">
+                        <label class="form-label text-white">Вид спорта</label>
+                        {{ form.sportType }}
+                    </div>
+                    <div class="mb-3 col-5">
+                        <label class="form-label text-white">Дата начала</label>
+                        {{ form.dateTimeStartCompetition }}
+                    </div>
+                </div>
+                <div class="row d-flex justify-content-center">
+                    <div class=" col-10 mb-3">
+                        <label class="form-label text-white">Короткое описание</label>
+                        {{ form.description }}
+                    </div>
+                </div>
+                <div class="row d-flex justify-content-center">
+                    <div class="col-10 mb-3">
+                        <label class="form-label text-white">Загрузить регламент</label>
+                        <div class="dashed-block white-dashed-block mb-0 p-5 text-center">
+                            <svg width="88" height="64" viewBox="0 0 88 64" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                <path fill-rule="evenodd" clip-rule="evenodd"
+                                      d="M63.5269 64H46.8172L46.3478 35.6595L53.3393 41.501L56.875 36.8121L42.5824 25.3853L29.3585 36.9894L32.7244 41.6094L39.9056 35.8861L40.0055 63.9507C32.0153 63.9507 24.2947 63.9507 18.242 63.9507C-3.49149 63.9507 -5.91853 35.2163 11.5702 28.9906C11.4703 14.5495 20.9088 0 40.0654 0C54.0484 0 63.1373 7.6934 67.0326 17.4357C95.3781 20.2432 95.7276 64 63.5269 64Z"
+                                      fill="#ffffff"/>
+                            </svg>
+                            <label class="regulation-label">
+                                <span class="regulation-label-text text-center d-block">Нажмите или перетащите файл, чтобы загрузить регламент</span>
+                                {{ form.regulations }}
+                            </label>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        {% endfor %}
+        </div>
+        <button type="button" id="add-form"
+                class="add-competition-button col-4 fs-5 p-4 d-flex align-items-center justify-content-center">Добавить
+            соревнование<span
+                    class="plus-icon text-white d-inline-block d-flex justify-content-center align-items-center ms-3">+</span>
+        </button>
+        <!--<div class="row mb-4">
+            <span class="col-1 form-label">Тип:</span>
+            <div class="col radio-group">
+                {% for radio in form.olympics.type %}
+                <div class="form-check-label mb-1">
+                    {{ radio }}
+                </div>
+                {% endfor %}
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-8 mb-3">
+                <label class="form-label">Как называется спартакиада?</label>
+                {{ form.olympics.name }}
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-8 mb-3">
+                <label class="form-label">Дайте спартакиаде краткое описание</label>
+                {{ form.olympics.description }}
+            </div>
+        </div>-->
+
+        <!--                старая форма-->
+        <div class="row">
+            <!--<span class="h2 fw-bold mb-5">Соревнования внутри спартакиады</span>
+
+
+             <div class="competitions d-flex flex-column">
+                 <div class="competition-form my-4 col-8 p-4">
+                     <div class="competition-actions">
+                         <button type="button" class="competition-btn save">
+                             <svg width="26" height="19" viewBox="0 0 26 19" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                 <path d="M10.2304 16.5751L23.5084 3.65165L22.248 2.42493L10.2304 14.1216L4.04577 8.1021L2.78539 9.32883L10.2304 16.5751ZM10.2304 19L0.293945 9.32883L4.04577 5.67718L10.2304 11.6967L22.248 0L25.9998 3.65165L10.2304 19Z" fill="white"/>
+                                 <rect x="4.20776" y="7.12744" width="11.7183" height="2.72692" transform="rotate(45.6413 4.20776 7.12744)" fill="white"/>
+                                 <rect x="24.1638" y="3.0437" width="19.0052" height="2.1078" transform="rotate(135 24.1638 3.0437)" fill="white"/>
+                             </svg>
+                         </button>
+                     </div>
+                     <div class="row d-flex justify-content-center">
+                         <div class="mb-3 col-5">
+                             <label class="form-label text-white">Вид спорта</label>
+                             {{ form.competitions.0.sportType }}
+                         </div>
+                         <div class="mb-3 col-5">
+                             <label class="form-label text-white">Дата начала</label>
+                             {{ form.competitions.0.dateTimeStartCompetition }}
+                         </div>
+                     </div>
+                     <div class="row d-flex justify-content-center">
+                         <div class=" col-10 mb-3">
+                             <label class="form-label text-white">Короткое описание</label>
+                             {{ form.competitions.0.description }}
+                         </div>
+                     </div>
+                     <div class="row d-flex justify-content-center">
+                         <div class="col-10 mb-3">
+                             <label class="form-label text-white">Загрузить регламент</label>
+                             <div class="dashed-block white-dashed-block mb-0 p-5 text-center">
+                                 <svg width="88" height="64" viewBox="0 0 88 64" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                     <path fill-rule="evenodd" clip-rule="evenodd"
+                                           d="M63.5269 64H46.8172L46.3478 35.6595L53.3393 41.501L56.875 36.8121L42.5824 25.3853L29.3585 36.9894L32.7244 41.6094L39.9056 35.8861L40.0055 63.9507C32.0153 63.9507 24.2947 63.9507 18.242 63.9507C-3.49149 63.9507 -5.91853 35.2163 11.5702 28.9906C11.4703 14.5495 20.9088 0 40.0654 0C54.0484 0 63.1373 7.6934 67.0326 17.4357C95.3781 20.2432 95.7276 64 63.5269 64Z"
+                                           fill="#ffffff"/>
+                                 </svg>
+                                 <label class="regulation-label">
+                                     <span class="regulation-label-text text-center d-block">Нажмите или перетащите файл, чтобы загрузить регламент</span>
+                                     {{ form.competitions.0.regulations }}
+                                 </label>
+                             </div>
+                         </div>
+                     </div>
+                 </div>
+                 <div class="competition-item col-8 mb-4 p-4">
+                     <div class="competition-title form-label text-white">Соревнование по водному полу</div>
+                     <div class="competition-description text-white fs-5 pb-4">Создайте спартакиаду и добавьте приуроченные к ней соревнования по любым видам спорта.</div>
+                     <div class="competition-type-and-date text-white fs-5">межвузовские, 22.09.2022</div>
+                     <div class="competition-actions">
+                         <button class="competition-btn edit">
+                             <svg width="15" height="17" viewBox="0 0 15 17" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                 <path fill-rule="evenodd" clip-rule="evenodd" d="M12.7768 5.45492L9.11011 2.30155C9.71072 1.59296 10.1911 1.0516 10.4607 0.781291C11.97 -0.694608 15.4261 2.19285 13.8805 4.08791C13.6701 4.34981 13.2804 4.83233 12.7768 5.45492ZM4.80103 15.3505L0.418509 16.7293L1.20088 12.0983C1.20088 12.0983 5.33845 6.84414 8.15157 3.43764L11.8375 6.60684C9.1039 10.0025 4.80103 15.3505 4.80103 15.3505Z" fill="white"/>
+                             </svg>
+                         </button>
+                         <button class="competition-btn delete">
+                             <svg width="19" height="20" viewBox="0 0 19 20" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                 <path fill-rule="evenodd" clip-rule="evenodd" d="M19 16.0885V18.079L17.0732 19.7819L12.9084 19.8399L12.322 18.4479L11.2688 17.5895L11.568 14.2417H12.9036L14.5288 12.4275L18.2245 13.5875L18.1646 15.534L19 16.0885ZM14.9597 13.7476L13.94 14.6756L14.682 15.1396L16.3432 14.2116L14.9597 13.7476ZM17.6309 16.5316L15.7017 15.6175L14.6796 16.1859L13.2435 15.5943L12.3986 17.3923L15.1512 17.3529L15.6107 18.4618L16.4628 18.666L17.0062 17.6521L17.9061 17.4967L17.6309 16.5316ZM0 4.05221L14.5073 3.88749L14.56 6.56943L0.241749 6.4743L0 4.05221ZM8.58806 2.8922V1.94331L5.82351 1.91083V2.87364H3.85362C3.85362 2.87364 3.80814 2.16371 3.79617 1.58835C3.76984 0.535062 4.42328 0.0455384 5.66075 0.0060981C6.24717 -0.0147821 7.99924 0.0246578 8.73406 0.0246578C10.0673 0.0246578 10.5915 0.535062 10.5986 1.38187C10.5986 1.96883 10.5532 2.90612 10.5532 2.90612L8.58806 2.8922ZM13.6145 11.8103L11.4962 13.2024C11.5752 11.8846 11.6446 10.6875 11.6781 10.1631C11.7595 8.79896 10.0338 8.88016 10.0385 10.1214C10.0385 10.7803 10.0649 15.8031 10.0721 17.5454H10.1558L10.1008 18.2066L11.4005 19.8306L1.63479 20L1.20156 7.65519H13.7773L13.6145 11.8103ZM3.42996 10.2188C3.42996 10.9635 3.60469 16.571 3.64777 17.8981L5.00013 17.8238C5.01688 16.5989 5.09587 11.2141 5.09587 10.1539C5.0839 8.85696 3.42996 8.83608 3.42996 10.2188ZM6.78093 10.2026C6.85991 10.9125 6.93651 16.114 6.95805 17.7148L8.35349 17.6382C8.37742 15.9493 8.44684 11.2535 8.44684 10.1376C8.45641 8.77112 6.64689 8.97064 6.78093 10.2026Z" fill="white"/>
+                             </svg>
+                         </button>
+                     </div>
+                 </div>
+                 <div class="competition-item col-8 mb-4 p-4">
+                     <div class="competition-title form-label text-white">Соревнование по водному полу</div>
+                     <div class="competition-description text-white fs-5 pb-4">Создайте спартакиаду и добавьте приуроченные к ней соревнования по любым видам спорта.</div>
+                     <div class="competition-type-and-date text-white fs-5">межвузовские, 22.09.2022</div>
+                     <div class="competition-actions">
+                         <button type="button" class="competition-btn edit">
+                             <svg width="15" height="17" viewBox="0 0 15 17" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                 <path fill-rule="evenodd" clip-rule="evenodd" d="M12.7768 5.45492L9.11011 2.30155C9.71072 1.59296 10.1911 1.0516 10.4607 0.781291C11.97 -0.694608 15.4261 2.19285 13.8805 4.08791C13.6701 4.34981 13.2804 4.83233 12.7768 5.45492ZM4.80103 15.3505L0.418509 16.7293L1.20088 12.0983C1.20088 12.0983 5.33845 6.84414 8.15157 3.43764L11.8375 6.60684C9.1039 10.0025 4.80103 15.3505 4.80103 15.3505Z" fill="white"/>
+                             </svg>
+                         </button>
+                         <button type="button" class="competition-btn delete">
+                             <svg width="19" height="20" viewBox="0 0 19 20" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                 <path fill-rule="evenodd" clip-rule="evenodd" d="M19 16.0885V18.079L17.0732 19.7819L12.9084 19.8399L12.322 18.4479L11.2688 17.5895L11.568 14.2417H12.9036L14.5288 12.4275L18.2245 13.5875L18.1646 15.534L19 16.0885ZM14.9597 13.7476L13.94 14.6756L14.682 15.1396L16.3432 14.2116L14.9597 13.7476ZM17.6309 16.5316L15.7017 15.6175L14.6796 16.1859L13.2435 15.5943L12.3986 17.3923L15.1512 17.3529L15.6107 18.4618L16.4628 18.666L17.0062 17.6521L17.9061 17.4967L17.6309 16.5316ZM0 4.05221L14.5073 3.88749L14.56 6.56943L0.241749 6.4743L0 4.05221ZM8.58806 2.8922V1.94331L5.82351 1.91083V2.87364H3.85362C3.85362 2.87364 3.80814 2.16371 3.79617 1.58835C3.76984 0.535062 4.42328 0.0455384 5.66075 0.0060981C6.24717 -0.0147821 7.99924 0.0246578 8.73406 0.0246578C10.0673 0.0246578 10.5915 0.535062 10.5986 1.38187C10.5986 1.96883 10.5532 2.90612 10.5532 2.90612L8.58806 2.8922ZM13.6145 11.8103L11.4962 13.2024C11.5752 11.8846 11.6446 10.6875 11.6781 10.1631C11.7595 8.79896 10.0338 8.88016 10.0385 10.1214C10.0385 10.7803 10.0649 15.8031 10.0721 17.5454H10.1558L10.1008 18.2066L11.4005 19.8306L1.63479 20L1.20156 7.65519H13.7773L13.6145 11.8103ZM3.42996 10.2188C3.42996 10.9635 3.60469 16.571 3.64777 17.8981L5.00013 17.8238C5.01688 16.5989 5.09587 11.2141 5.09587 10.1539C5.0839 8.85696 3.42996 8.83608 3.42996 10.2188ZM6.78093 10.2026C6.85991 10.9125 6.93651 16.114 6.95805 17.7148L8.35349 17.6382C8.37742 15.9493 8.44684 11.2535 8.44684 10.1376C8.45641 8.77112 6.64689 8.97064 6.78093 10.2026Z" fill="white"/>
+                             </svg>
+                         </button>
+                     </div>
+                 </div>
+                 <button type="button" class="add-competition-button col-4 fs-5 p-4 d-flex align-items-center justify-content-center">Добавить соревнование<span class="plus-icon text-white d-inline-block d-flex justify-content-center align-items-center ms-3">+</span></button>
+             </div>-->
+        </div>
+        <!--       закомментированный тег снизу для закоментированной 9 строки кода-->
+        <!--        </div>-->
         {% endblock %}
 
         {% block createCompetition %}
         <div class="container">
             <div class="h2 text-center fw-bold">Всё готово? Нажмите кнопку ниже</div>
             <div class="row d-flex justify-content-center">
-                <button type="submit" class="btn btn-warning col-4 pt-4 pb-4 mt-5">Создать спартакиаду</button>
+                <button type="submit" class="btn btn-warning create-competition-btn col-4 pt-4 pb-4 mt-5">Создать спартакиаду</button>
             </div>
         </div>
     </form>
