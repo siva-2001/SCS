@@ -20,8 +20,7 @@ def homePageView(request):
         'announcedEvents':listOfAnnouncedEvents,
         'currentEvents': listOfCurrentEvents,
     }
-
-    return render(request, 'competition.html', data)
+    return render(request, 'homePage.html', data)
 
 
 
@@ -45,4 +44,4 @@ def pastEventsView(request):
         data['page_obj'] = events
         data['pageList'] = []
         data['paginator'] = False
-    return render(request, 'pastCompPage.html', data)
+    return render(request, 'pastEventsPage.html', data)
