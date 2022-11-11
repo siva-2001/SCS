@@ -15,11 +15,11 @@ Including another URLconf
 """
 from django.contrib import admin
 from django.urls import path
-from SCSapp.views.competitonListsViews import homePageView
+from SCSapp.views.eventListsViews import homePageView
 from SCSapp.views.authViews import signUpUserView, logoutUser, logInUserView
 from SCSapp.views.competitionView import competitionView
 from SCSapp.views.createOlympicsView import CreateOlympicsView
-from SCSapp.views.competitonListsViews import pastEventsView
+from SCSapp.views.eventListsViews import pastEventsView
 from SCSapp.views.matchView import matchView
 from SCSapp.views.createCompetitionView import CreateCompetitionView
 from django.conf.urls.static import static

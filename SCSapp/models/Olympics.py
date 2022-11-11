@@ -52,10 +52,12 @@ class Olympics(models.Model):
         data = {
             'name': self.name,
             'description': self.description,
-            'dateTimeStartOlympics': self.dateTimeStartOlympics,
+            'dateTimeStart': self.dateTimeStartOlympics,
             #'dateTimeFinishOlympics': self.dateTimeFinishOlympics,
             'organizer': self.organizer,
             'status': self.status,
+            'type':self.type,
+            'isOlympics': True,
         }
         if self.dateTimeFinishOlympics: data["dateTimeFinishCompetition"] = self.dateTimeFinishOlympics
         if self.protocol: data['protocol'] = self.protocol.url
