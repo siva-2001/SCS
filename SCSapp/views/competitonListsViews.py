@@ -15,9 +15,7 @@ def homePageView(request):
     return render(request, 'competition.html', {
         'announcedEvents':listOfAnnouncedEvents,
         'currentEvents': listOfCurrentEvents,
-
-
-""" <<<<<<< HEAD
+<<<<<<< HEAD
     }
     return render(request, 'homePage.html', data)
 
@@ -29,15 +27,14 @@ def pastEventsView(request):
         "userIsJudge": request.user.has_perm('SCS.control_competition')
     }
     pastCompetitions = Competition.objects.filter(status=Olympics.StatusChoices.PAST)
-======= """
-
-
+=======
     } | getUserAuthData(request.user))
 
 
 def pastCompetitionsView(request):
     data = getUserAuthData(request.user)
     pastCompetitions = Competition.objects.filter(status=Competition.StatusChoices.PAST)
+>>>>>>> main
     pastOlympics = Olympics.objects.filter(status=Olympics.StatusChoices.PAST)
     events = [e.getData() for e in pastOlympics] + [e.getData for e in pastCompetitions]
 
