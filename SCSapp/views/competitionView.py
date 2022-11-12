@@ -1,22 +1,14 @@
 from django.shortcuts import render, redirect, get_object_or_404
-
 from SCSapp.models.Competition import Competition
-#from SCSapp.models.Match import Match
-#from SCSapp.models.Player import Player
 from django.views.generic import View
-
-
-#from SCSapp.forms import CreateCompetitionsForm, RegistrVolleybolTeamForm, RegistrPlayerForm, MatchEditForm
-from django.forms import formset_factory
-import pytz
-from datetime import timedelta, datetime
-from SCSapp.func import convertDTPickerStrToDateTime
+from SCSapp.func import getUserAuthData
 
 class comptitionView(View):
     pass
 
 def competitionView(request, comp_id):
     competition = get_object_or_404(Competition, pk=comp_id)
+    data = getUserAuthData()
     return render(request, 'competition.html', competition.getData())
 
 

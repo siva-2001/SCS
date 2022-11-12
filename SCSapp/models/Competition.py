@@ -10,7 +10,19 @@ from .MatchTeamResult import AbstractMatchTeamResult
 from .Team import Team
 import unittest
 
+class CurrentCompetitionManager(models.Manager):
+    def get_queryset(self):
+        return super().get_queryset().filter(status=Competition.StatusChoices.CURRENT, isHighLevelSportEvent=True)
+
+class AnnouncedCompetitionManager(models.Manager):
+    def get_queryset(self):
+        return super().get_queryset().filter(status=Competition.StatusChoices.ANNOUNSED, isHighLevelSportEvent=True)
+
+
 class Competition(models.Model):
+
+    current_objects = CurrentCompetitionManager()
+    announced_objects = AnnouncedCompetitionManager()
     class TypeChoices(models.TextChoices):
         INTERNAL = 'INT', 'Внутреннее'
         INTERCOLLEGIATE = 'IC', 'Межвузовское'
