@@ -12,13 +12,13 @@ def homePageView(request):
     for comp in Competition.announced_objects.all(): listOfAnnouncedEvents.append(comp.getData())
     for comp in Competition.current_objects.all(): listOfCurrentEvents.append(comp.getData())
     for olympics in Olympics.current_objects.all(): listOfCurrentEvents.append(olympics.getData())
-    return render(request, 'competition.html', {
+    return render(request, 'homePage.html', {
         'announcedEvents':listOfAnnouncedEvents,
         'currentEvents': listOfCurrentEvents,
     } | getUserAuthData(request.user))
 
 
-def pastCompetitionsView(request):
+def pastEventsView(request):
     data = getUserAuthData(request.user)
     pastCompetitions = Competition.objects.filter(status=Competition.StatusChoices.PAST)
     pastOlympics = Olympics.objects.filter(status=Olympics.StatusChoices.PAST)
@@ -34,4 +34,4 @@ def pastCompetitionsView(request):
         data['page_obj'] = events
         data['pageList'] = []
         data['paginator'] = False
-    return render(request, 'pastCompPage.html', data)
+    return render(request, 'pastEventsPage.html', data)
