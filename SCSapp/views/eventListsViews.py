@@ -12,29 +12,15 @@ def homePageView(request):
     for comp in Competition.announced_objects.all(): listOfAnnouncedEvents.append(comp.getData())
     for comp in Competition.current_objects.all(): listOfCurrentEvents.append(comp.getData())
     for olympics in Olympics.current_objects.all(): listOfCurrentEvents.append(olympics.getData())
-    return render(request, 'competition.html', {
+    return render(request, 'homePage.html', {
         'announcedEvents':listOfAnnouncedEvents,
         'currentEvents': listOfCurrentEvents,
-<<<<<<< HEAD
-    }
-    return render(request, 'homePage.html', data)
-
-
-
-def pastEventsView(request):
-    data = {
-        'userAuth':request.user.is_authenticated,
-        "userIsJudge": request.user.has_perm('SCS.control_competition')
-    }
-    pastCompetitions = Competition.objects.filter(status=Olympics.StatusChoices.PAST)
-=======
     } | getUserAuthData(request.user))
 
 
 def pastCompetitionsView(request):
     data = getUserAuthData(request.user)
     pastCompetitions = Competition.objects.filter(status=Competition.StatusChoices.PAST)
->>>>>>> main
     pastOlympics = Olympics.objects.filter(status=Olympics.StatusChoices.PAST)
     events = [e.getData() for e in pastOlympics] + [e.getData for e in pastCompetitions]
 
