@@ -7,6 +7,7 @@ class CurrentOlympicsManager(models.Manager):
 
 class Olympics(models.Model):
     current_objects = CurrentOlympicsManager()
+    objects = models.Manager()
     class TypeChoices(models.TextChoices):
         INTERNAL = 'INT', 'Внутреннее'
         INTERCOLLEGIATE = 'IC', 'Межвузовское'

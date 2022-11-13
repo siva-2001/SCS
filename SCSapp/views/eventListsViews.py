@@ -18,7 +18,7 @@ def homePageView(request):
     } | getUserAuthData(request.user))
 
 
-def pastCompetitionsView(request):
+def pastEventsView(request):
     data = getUserAuthData(request.user)
     pastCompetitions = Competition.objects.filter(status=Competition.StatusChoices.PAST)
     pastOlympics = Olympics.objects.filter(status=Olympics.StatusChoices.PAST)

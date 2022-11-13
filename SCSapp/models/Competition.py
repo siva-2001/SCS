@@ -23,6 +23,7 @@ class Competition(models.Model):
 
     current_objects = CurrentCompetitionManager()
     announced_objects = AnnouncedCompetitionManager()
+    objects = models.Manager()
     class TypeChoices(models.TextChoices):
         INTERNAL = 'INT', 'Внутреннее'
         INTERCOLLEGIATE = 'IC', 'Межвузовское'
