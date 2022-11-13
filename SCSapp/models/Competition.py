@@ -8,6 +8,7 @@ from .Participant import AbstractParticipant
 from .Match import AbstractMatch
 from .MatchTeamResult import AbstractMatchTeamResult
 from .Team import Team
+import unittest
 
 class CurrentCompetitionManager(models.Manager):
     def get_queryset(self):
@@ -71,7 +72,7 @@ class Competition(models.Model):
         verbose_name_plural = 'Соревнования'
 
     def __str__(self):
-        if self.olympics: return self.sportType.get_display_name()
+        if self.olympics: return f"{self.SportTypeChoices(self.sportType).label} __ в __ {self.olympics}"
         return self.name
 
 
@@ -111,10 +112,11 @@ class Competition(models.Model):
             'name':self.name,
             'description':self.description,
             'status':self.get_status_display(),
-            'dateStartCompetition':self.dateTimeStartCompetition,
+            'dateTimeStart':self.dateTimeStartCompetition,
             'sportType':self.sportType,
             'type':self.type,
             'dateTimeFinishCompetition':self.dateTimeFinishCompetition,
+            'isOlympics':False,
         }
         if self.dateTimeFinishCompetition: data["dateTimeFinishCompetition"] = self.dateTimeFinishCompetition
         if self.protocol: data['protocol'] = self.protocol.url
