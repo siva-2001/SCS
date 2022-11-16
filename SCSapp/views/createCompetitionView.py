@@ -19,5 +19,6 @@ class CreateCompetitionView(TemplateView):
             competition = competitionForm.save(commit=False)
             competition.organizer = self.request.user
             competition.save()
-            return redirect(competition)
+            #return redirect(competition)
+            return redirect('homePage')
         return self.render_to_response({"form":CreateCompetitionsForm()} | getUserAuthData(self.request.user))

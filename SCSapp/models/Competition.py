@@ -21,9 +21,10 @@ class AnnouncedCompetitionManager(models.Manager):
 
 class Competition(models.Model):
 
+    objects = models.Manager()
     current_objects = CurrentCompetitionManager()
     announced_objects = AnnouncedCompetitionManager()
-    objects = models.Manager()
+
     class TypeChoices(models.TextChoices):
         INTERNAL = 'INT', 'Внутреннее'
         INTERCOLLEGIATE = 'IC', 'Межвузовское'
@@ -65,7 +66,7 @@ class Competition(models.Model):
     organizer = models.ForeignKey(User, on_delete=models.CASCADE, verbose_name="Организатор")
     protocol = models.FileField(upload_to='protocols', null=True, blank=True, verbose_name="Протокол")
     regulations = models.FileField(upload_to='regulations', null=True, blank=True, verbose_name="Регламент соревнований")
-    olympics = models.ForeignKey('SCSapp.olympics', on_delete=models.CASCADE, verbose_name='Спартакиада', null=True, default=None)
+    olympics = models.ForeignKey('SCSapp.olympics', on_delete=models.CASCADE, verbose_name='Спартакиада', null=True, default=None, blank=True)
     isHighLevelSportEvent = models.BooleanField(default=True)
 
     class Meta:
@@ -73,7 +74,7 @@ class Competition(models.Model):
         verbose_name_plural = 'Соревнования'
 
     def __str__(self):
-        if self.olympics: return f"{self.SportTypeChoices(self.sportType).label} __ в __ {self.olympics}"
+        if self.olympics: return f"{self.SportTypeChoices(self.sportType).label} в < {self.olympics} >"
         return self.name
 
 
@@ -81,7 +82,7 @@ class Competition(models.Model):
         return reverse('competition', args=[str(self.id)])
 
     @classmethod
-    def create(cls, name, description, sportType, isHighLevel, type, startDate, organizer, regulations, olympics):
+    def create(cls, name, description, sportType, isHighLevel, type, startDate, organizer, regulations, olympics = None):
         object = cls()
         object.name = name
         object.description = description
@@ -90,7 +91,7 @@ class Competition(models.Model):
         object.isHighLevelSportEvent = isHighLevel
         object.organizer = organizer
         object.type = type
-        # object.olympics = olympics
+        object.olympics = olympics
         object.regulations = regulations
         object.status = cls.StatusChoices.ANNOUNSED
         object.save()
