@@ -211,6 +211,28 @@ textarea {
     }
 }
 
+.event-item {
+    max-width: 560px;
+    border-radius: $input-border-radius;
+    &.current-event-item {
+        background-color: #FFCB44;
+    }
+    &.announced-event-item {
+        background-color: #DEDEDE;
+    }
+    .current-event-btn {
+        border: 1px solid black;
+        border-radius: $input-border-radius;
+        background-color: transparent;
+    }
+    .announced-event-btn {
+        border: 1px solid #003566;
+        border-radius: $input-border-radius;
+        background-color: #003566;
+        color: $white;
+    }
+}
+
 .createCompBtn{
     padding-left:       1.8rem;
     padding-right:      1.8rem;
