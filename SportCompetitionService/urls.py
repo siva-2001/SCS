@@ -24,6 +24,7 @@ from SCSapp.views.matchView import matchView
 from SCSapp.views.createCompetitionView import CreateCompetitionView
 from django.conf.urls.static import static
 from django.conf import settings
+from SCSapp.views.api_views import OlympicsAPIView
 
 urlpatterns = [
     path('admin/', admin.site.urls),
@@ -33,6 +34,7 @@ urlpatterns = [
     path('logout/', logoutUser, name="logout"),
     path('past/', pastEventsView, name='history'),
     path('', homePageView, name='homePage'),
+    path('api/v1/olympicsList', OlympicsAPIView.as_view(), name='APIOlympics'),
     path('createCompetition/', CreateCompetitionView.as_view(), name='createCompetition'),
     path('competition/<comp_id>/', competitionView, name='competition'),
     path('createOlympics/', CreateOlympicsView.as_view(), name='createOlympics'),
