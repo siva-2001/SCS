@@ -64,7 +64,7 @@ textarea {
     resize: none;
 }
 
-.menu, .competition-item, .competition-form {
+.footer, .competition-item, .competition-form {
     background-color: #071935;
 }
 
@@ -102,6 +102,89 @@ textarea {
             color: $menu-item-hover-color;
         }
     }
+}
+
+.footer-actions {
+    position: relative;
+    .menu-btn {
+        min-width: 170px;
+        border-radius: $btn-border-radius;
+        border: 1px solid #FFCB44;
+        line-height: 1;
+        &.menu-log-in-btn {
+            background-color: transparent;
+            color: #FFCB44;
+        }
+        &.menu-new-event-btn {
+            background-color: #FFCB44;
+            color: black;
+        }
+    }
+    .hover-menu {
+        display: none;
+        position: absolute;
+        top: 65px;
+        right: -48px;
+        background-color: $white;
+        border-radius: $btn-border-radius;
+        .user-name {
+            color: #767B83;
+        }
+        .user-action {
+            color: black;
+        }
+    }
+    .user-profile-item {
+        .item-icons {
+            background-color: $white;
+            border-radius: $btn-border-radius;
+            height: 54px;
+            .arrow {
+                transform: rotate(0deg);
+            }
+        }
+        &:hover .item-icons .role-icon path {
+            fill: #003566;
+        }
+        &:hover .item-icons .arrow path {
+            stroke: #003566;
+        }
+    }
+}
+
+.popup-container {
+    display: none;
+    position: fixed;
+    background-color: rgba(0, 0, 0, 0.6);
+    left: 0;
+    top: 0;
+    right: 0;
+    bottom: 0;
+    z-index: 999999;
+    align-items: center;
+    justify-content: center;
+    .create-event-popup {
+        position: fixed;
+        background-color: $white;
+        border-radius: $btn-border-radius;
+        .event-types {
+            gap: 20px;
+            .choose-event-type-btn {
+                width: 530px;
+                border-radius: $btn-border-radius;
+                &.competition-event-btn {
+                    background-color: #071935;
+                }
+                &.olympics-event-btn {
+                    background-color: #000814;
+                }
+            }
+        }
+    }
+}
+
+.rotator {
+    transform: rotate(180deg);
 }
 
 .white-container {
@@ -212,7 +295,8 @@ textarea {
 }
 
 .event-item {
-    max-width: 560px;
+    box-sizing: border-box;
+    width: 560px;
     border-radius: $input-border-radius;
     &.current-event-item {
         background-color: #FFCB44;
@@ -220,17 +304,24 @@ textarea {
     &.announced-event-item {
         background-color: #DEDEDE;
     }
-    .current-event-btn {
-        border: 1px solid black;
-        border-radius: $input-border-radius;
-        background-color: transparent;
+    .event-btn {
+        text-decoration: none;
+        &.current-event-btn {
+            border: 1px solid black;
+            border-radius: $input-border-radius;
+            background-color: transparent;
+            span {
+                color: black;
+            }
+        }
+        &.announced-event-btn {
+            border: 1px solid #003566;
+            border-radius: $input-border-radius;
+            background-color: #003566;
+            color: $white;
+        }
     }
-    .announced-event-btn {
-        border: 1px solid #003566;
-        border-radius: $input-border-radius;
-        background-color: #003566;
-        color: $white;
-    }
+
 }
 
 .createCompBtn{
