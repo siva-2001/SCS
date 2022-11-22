@@ -90,10 +90,13 @@ class Competition(models.Model):
         object.isHighLevelSportEvent = isHighLevel
         object.organizer = organizer
         object.type = type
-        # object.olympics = olympics
+        object.olympics = olympics
         object.regulations = regulations
         object.status = cls.StatusChoices.ANNOUNSED
         object.save()
+
+
+
         return object
 
     def editCompetition(self, name, description, startDate):
@@ -146,3 +149,29 @@ class Competition(models.Model):
 
     def getRelatedPlayersByParticipant(self):
         pass
+
+
+class cacheScore(models.Model):
+    participantScore = models.IntegerField()
+    participantRaiting = models.FloatField()
+    participantPlace = models.IntegerField()
+    competition = models.ForeignKey('SCSapp.Competition')
+    participant = models.ForeignKey('SCSapp.AbstractParticipant')
+
+
+    @classmethod
+    def create(cls, participant, competition):
+        object = cls()
+        object.participantScore = 0
+        object.participantPlace = 0
+        object.participantRaiting = 0
+        object.competition = competition
+        object.participant = participant
+        object.save()
+        return object
+
+    def update(self, score, raiting, place):
+        self.participantRaiting = raiting
+        self.participantScore = score
+        self.participantPlace = place
+        self.save()
