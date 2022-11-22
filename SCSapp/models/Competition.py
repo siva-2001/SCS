@@ -20,10 +20,10 @@ class AnnouncedCompetitionManager(models.Manager):
 
 
 class Competition(models.Model):
-
+    objects = models.Manager()
     current_objects = CurrentCompetitionManager()
     announced_objects = AnnouncedCompetitionManager()
-    objects = models.Manager()
+
     class TypeChoices(models.TextChoices):
         INTERNAL = 'INT', 'Внутреннее'
         INTERCOLLEGIATE = 'IC', 'Межвузовское'
@@ -65,7 +65,7 @@ class Competition(models.Model):
     organizer = models.ForeignKey(User, on_delete=models.CASCADE, verbose_name="Организатор")
     protocol = models.FileField(upload_to='protocols', null=True, blank=True, verbose_name="Протокол")
     regulations = models.FileField(upload_to='regulations', null=True, blank=True, verbose_name="Регламент соревнований")
-    olympics = models.ForeignKey('SCSapp.olympics', on_delete=models.CASCADE, verbose_name='Спартакиада', null=True, default=None)
+    olympics = models.ForeignKey('SCSapp.olympics', on_delete=models.CASCADE, verbose_name='Спартакиада', null=True, default=None, blank=True)
     isHighLevelSportEvent = models.BooleanField(default=True)
 
     class Meta:
@@ -151,12 +151,12 @@ class Competition(models.Model):
         pass
 
 
-class cacheScore(models.Model):
+class CacheScore(models.Model):
     participantScore = models.IntegerField()
     participantRaiting = models.FloatField()
     participantPlace = models.IntegerField()
-    competition = models.ForeignKey('SCSapp.Competition')
-    participant = models.ForeignKey('SCSapp.AbstractParticipant')
+    competition = models.ForeignKey('SCSapp.Competition', on_delete=models.CASCADE)
+    participant = models.ForeignKey('SCSapp.AbstractParticipant', on_delete=models.CASCADE)
 
 
     @classmethod
