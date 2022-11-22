@@ -3,7 +3,9 @@ from SCSapp.models.Competition import Competition
 from SCSapp.forms import CreateCompetitionsForm
 from django.views.generic import TemplateView
 from SCSapp.func import getUserAuthData
+from SCSapp.serializers import CompetitionSerializer
 from django.contrib.auth.decorators import login_required
+from rest_framework.generics import CreateAPIView
 
 #@login_required
 
@@ -22,3 +24,5 @@ class CreateCompetitionView(TemplateView):
             #return redirect(competition)
             return redirect('homePage')
         return self.render_to_response({"form":CreateCompetitionsForm()} | getUserAuthData(self.request.user))
+
+

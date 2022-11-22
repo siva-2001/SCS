@@ -41,6 +41,7 @@ class Competition(models.Model):
     )
 
     type = models.CharField(
+        verbose_name='Тип',
         max_length=3,
         choices = TypeChoices.choices,
         default = TypeChoices.INTERCOLLEGIATE,
@@ -81,7 +82,7 @@ class Competition(models.Model):
         return reverse('competition', args=[str(self.id)])
 
     @classmethod
-    def create(cls, name, description, sportType, isHighLevel, type, startDate, organizer, regulations, olympics = None):
+    def create(cls, name, description, sportType, isHighLevel, type, startDate, organizer, regulations = None, olympics = None):
         object = cls()
         object.name = name
         object.description = description
@@ -94,9 +95,6 @@ class Competition(models.Model):
         object.regulations = regulations
         object.status = cls.StatusChoices.ANNOUNSED
         object.save()
-
-
-
         return object
 
     def editCompetition(self, name, description, startDate):
