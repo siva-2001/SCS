@@ -20,10 +20,10 @@ class AnnouncedCompetitionManager(models.Manager):
 
 
 class Competition(models.Model):
-
+    objects = models.Manager()
     current_objects = CurrentCompetitionManager()
     announced_objects = AnnouncedCompetitionManager()
-    objects = models.Manager()
+
     class TypeChoices(models.TextChoices):
         INTERNAL = 'INT', 'Внутреннее'
         INTERCOLLEGIATE = 'IC', 'Межвузовское'
@@ -41,6 +41,7 @@ class Competition(models.Model):
     )
 
     type = models.CharField(
+        verbose_name='Тип',
         max_length=3,
         choices = TypeChoices.choices,
         default = TypeChoices.INTERCOLLEGIATE,
@@ -81,14 +82,14 @@ class Competition(models.Model):
         return reverse('competition', args=[str(self.id)])
 
     @classmethod
-    def create(cls, name, description, sportType, isHighLevel, type, startDate, organizer, regulations, olympics):
+    def create(cls, name, description, sportType, isHighLevel, type, startDate, organizer=None, regulations=None, olympics=None):
         object = cls()
         object.name = name
         object.description = description
         object.sportType = sportType
         object.dateTimeStartCompetition = startDate
         object.isHighLevelSportEvent = isHighLevel
-        object.organizer = organizer
+        #object.organizer = organizer
         object.type = type
         # object.olympics = olympics
         object.regulations = regulations
