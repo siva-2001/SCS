@@ -73,7 +73,7 @@ class Competition(models.Model):
         verbose_name_plural = 'Соревнования'
 
     def __str__(self):
-        if self.olympics: return f"{self.SportTypeChoices(self.sportType).label} __ в __ {self.olympics}"
+        if self.olympics: return f"{self.SportTypeChoices(self.sportType).label} в < {self.olympics} >"
         return self.name
 
 
@@ -81,7 +81,7 @@ class Competition(models.Model):
         return reverse('competition', args=[str(self.id)])
 
     @classmethod
-    def create(cls, name, description, sportType, isHighLevel, type, startDate, organizer, regulations, olympics):
+    def create(cls, name, description, sportType, isHighLevel, type, startDate, organizer, regulations, olympics = None):
         object = cls()
         object.name = name
         object.description = description

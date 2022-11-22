@@ -3,7 +3,7 @@
 
 <div class="container">
     <div class="create-competition-title h1 text-center pt-5 mb-5">Соревнование</div>
-    <form method="POST" enctype="multipart/form-data" action="http://127.0.0.1:8000/createOlympics/">
+    <form method="POST" enctype="multipart/form-data" action=".">
         <div class="h2 fw-bold mb-5">Основная информация</div>
         {% csrf_token %}
         <div class="row">
@@ -59,10 +59,12 @@
         {% endblock %}
 
         {% block createCompetition %}
-        <div class="container">
-            <div class="h2 text-center fw-bold">Всё готово? Нажмите кнопку ниже</div>
-            <div class="row d-flex justify-content-center">
-                <button type="submit" class="btn btn-warning col-4 pt-4 pb-4 mt-5">Создать соревнование</button>
+        <div class="gray-container">
+            <div class="container">
+                <div class="h2 text-center fw-bold">Всё готово? Нажмите кнопку ниже</div>
+                <div class="row d-flex justify-content-center">
+                    <button type="submit" class="btn btn-warning col-4 pt-4 pb-4 mt-5">Создать соревнование</button>
+                </div>
             </div>
         </div>
     </form>

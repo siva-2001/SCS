@@ -35,14 +35,17 @@
         <input type="hidden" name="form-MAX_NUM_FORMS" value="10" id="id_form-MAX_NUM_FORMS">
         {{competitionFormSet.management_form}}
         <div id="competitions-container" class="competitions-container">
-        {% for form in competitionFormSet %}
+            {% for form in competitionFormSet %}
             <div class="competition-form my-4 col-8 p-4">
                 <div class="competition-actions">
                     <button type="button" class="competition-btn save">
                         <svg width="26" height="19" viewBox="0 0 26 19" fill="none" xmlns="http://www.w3.org/2000/svg">
-                            <path d="M10.2304 16.5751L23.5084 3.65165L22.248 2.42493L10.2304 14.1216L4.04577 8.1021L2.78539 9.32883L10.2304 16.5751ZM10.2304 19L0.293945 9.32883L4.04577 5.67718L10.2304 11.6967L22.248 0L25.9998 3.65165L10.2304 19Z" fill="white"/>
-                            <rect x="4.20776" y="7.12744" width="11.7183" height="2.72692" transform="rotate(45.6413 4.20776 7.12744)" fill="white"/>
-                            <rect x="24.1638" y="3.0437" width="19.0052" height="2.1078" transform="rotate(135 24.1638 3.0437)" fill="white"/>
+                            <path d="M10.2304 16.5751L23.5084 3.65165L22.248 2.42493L10.2304 14.1216L4.04577 8.1021L2.78539 9.32883L10.2304 16.5751ZM10.2304 19L0.293945 9.32883L4.04577 5.67718L10.2304 11.6967L22.248 0L25.9998 3.65165L10.2304 19Z"
+                                  fill="white"/>
+                            <rect x="4.20776" y="7.12744" width="11.7183" height="2.72692"
+                                  transform="rotate(45.6413 4.20776 7.12744)" fill="white"/>
+                            <rect x="24.1638" y="3.0437" width="19.0052" height="2.1078"
+                                  transform="rotate(135 24.1638 3.0437)" fill="white"/>
                         </svg>
                     </button>
                 </div>
@@ -66,7 +69,8 @@
                     <div class="col-10 mb-3">
                         <label class="form-label text-white">Загрузить регламент</label>
                         <div class="dashed-block white-dashed-block mb-0 p-5 text-center">
-                            <svg width="88" height="64" viewBox="0 0 88 64" fill="none" xmlns="http://www.w3.org/2000/svg">
+                            <svg width="88" height="64" viewBox="0 0 88 64" fill="none"
+                                 xmlns="http://www.w3.org/2000/svg">
                                 <path fill-rule="evenodd" clip-rule="evenodd"
                                       d="M63.5269 64H46.8172L46.3478 35.6595L53.3393 41.501L56.875 36.8121L42.5824 25.3853L29.3585 36.9894L32.7244 41.6094L39.9056 35.8861L40.0055 63.9507C32.0153 63.9507 24.2947 63.9507 18.242 63.9507C-3.49149 63.9507 -5.91853 35.2163 11.5702 28.9906C11.4703 14.5495 20.9088 0 40.0654 0C54.0484 0 63.1373 7.6934 67.0326 17.4357C95.3781 20.2432 95.7276 64 63.5269 64Z"
                                       fill="#ffffff"/>
@@ -79,7 +83,7 @@
                     </div>
                 </div>
             </div>
-        {% endfor %}
+            {% endfor %}
         </div>
         <button type="button" id="add-form"
                 class="add-competition-button col-4 fs-5 p-4 d-flex align-items-center justify-content-center">Добавить
@@ -200,10 +204,14 @@
         {% endblock %}
 
         {% block createCompetition %}
-        <div class="container">
-            <div class="h2 text-center fw-bold">Всё готово? Нажмите кнопку ниже</div>
-            <div class="row d-flex justify-content-center">
-                <button type="submit" class="btn btn-warning create-competition-btn col-4 pt-4 pb-4 mt-5">Создать спартакиаду</button>
+        <div class="gray-container">
+            <div class="container">
+                <div class="h2 text-center fw-bold">Всё готово? Нажмите кнопку ниже</div>
+                <div class="row d-flex justify-content-center">
+                    <button type="submit" class="btn btn-warning create-competition-btn col-4 pt-4 pb-4 mt-5">Создать
+                        спартакиаду
+                    </button>
+                </div>
             </div>
         </div>
     </form>
