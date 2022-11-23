@@ -18,7 +18,7 @@ class Email:
             return 'Successful'
         except Exception as _ex: return f"{_ex}"
 
-    def send_email(self, title, message, recipient, filePath):
+    def send_email(self, title, message, recipient, filePathes):
 
         server = smtplib.SMTP(self.SERVER_ADRES, self.PORT)
         server.starttls()
@@ -28,29 +28,39 @@ class Email:
         msg = MIMEMultipart()
         msg["Subject"] = title
         msg.attach(MIMEText(message))
-        file_type, subtype = mimetypes.guess_type(filePath)[0].split("/")
 
-        with open(filePath, "rb") as f:
-            file = MIMEBase(file_type, subtype)
-            file.set_payload(f.read())
-            encoders.encode_base64(file)
+        for file in filePathes:
 
-        file.add_header('content-disposition', 'attachment', filename = os.path.basename(filePath))
-        msg.attach(file)
+            filename = os.path.basename(file)
+            ftype, encoding = mimetypes.guess_type(file)
+            file_type, subtype = ftype.split("/")
+
+            with open(file, "rb") as f:
+                file = MIMEBase(file_type, subtype)
+                file.set_payload(f.read())
+                encoders.encode_base64(file)
+
+            file.add_header('content-disposition', 'attachment', filename=filename)
+            msg.attach(file)
         print(server.sendmail(self.SENDER_ADRES, recipient, msg.as_string()))
 
 def main():
     title = "SCS. Тестирование рассылки мейлов"
     message = "some text"
     recipients = [
+        'pomogator2@mail.ru',
         'slava.kutolvas@gmail.com',
         'migunovdd@gmail.com',
         'igran2001@gmail.com',
         'georgii2911@gmail.com',
     ]
-    filePath = "screen.png"
+    filePath = "D:/chechen.png"
+    filePathes = [
+        "D:/chechen.png",
+        "D:/gun.png"
+    ]
     sender = Email()
-    print(sender.send_emails(title, message, recipients, filePath))
+    print(sender.send_emails(title, message, recipients, filePathes))
 
 if __name__ == '__main__':
     main()
