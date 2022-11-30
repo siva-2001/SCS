@@ -38,7 +38,7 @@ class PDFProtocolCreator():
         pdf.cell(70, 8, txt='ФИО игрока', border=1)
         pdf.ln(8)
 
-        for row in range(1, 15):
+        for row in range(1, 13):
             pdf.cell(20, 8, txt=str(row), border=1)
             if (len(d['firstCommand']['players']) > row-1):
                 if (len(d['firstCommand']['players'][row-1]) > 35):
@@ -129,15 +129,15 @@ class PDFProtocolCreator():
         pdf.cell(50, 8, txt=d['secondJudjeFIO'], border='B')
         pdf.set_font_size(10)
         pdf.ln(8)
-        pdf.cell(40, 8, txt="Представитель (А)", border=False)
+        pdf.cell(40, 8, txt="Секретарь", border=False)
         pdf.cell(50, 8, txt="", border='B')
         pdf.cell(10, 8, txt='', border=False)
-        pdf.cell(40, 8, txt="Представитель (Б)", border=False)
-        pdf.cell(50, 8, txt="", border='B')
+        # pdf.cell(40, 8, txt="Представитель (Б)", border=False)
+        # pdf.cell(50, 8, txt="", border='B')
 
         pdf.ln(16)
         pdf.cell(8, 8, txt='', border=0, align="C")
-        pdf.cell(0, 8, txt="Счет игры по пратиям", border=1, align='C')
+       # pdf.cell(0, 8, txt="Счет игры по пратиям", border=1, align='C')
         pdf.ln(8)
 
         pdf.cell(8, 8, txt='', border=0, align="C")
@@ -169,65 +169,65 @@ class PDFProtocolCreator():
         pdf.cell(17, 8, txt="Б", border=1, align="C")
         pdf.ln(8)
 
-        for row in range(1, 31):
-            pdf.cell(8, 8, txt='', border=0, align="C")
-            if(row <= d['firstCommand']['roundsScore'][0]):
-                pdf.cell(17, 8, txt=str(row), border=1, align="C")
-            else:
-                pdf.cell(17, 8, txt=str(row), border=1, align="C", fill=True)
-            if (row <= d['secondCommand']['roundsScore'][0]):
-                pdf.cell(17, 8, txt=str(row), border=1, align="C")
-            else:
-                pdf.cell(17, 8, txt=str(row), border=1, align="C", fill=True)
-            pdf.cell(3, 8, txt='', border=False)
-            if (row <= d['firstCommand']['roundsScore'][1]):
-                pdf.cell(17, 8, txt=str(row), border=1, align="C")
-            else:
-                pdf.cell(17, 8, txt=str(row), border=1, align="C", fill=True)
-            if (row <= d['secondCommand']['roundsScore'][1]):
-                pdf.cell(17, 8, txt=str(row), border=1, align="C")
-            else:
-                pdf.cell(17, 8, txt=str(row), border=1, align="C", fill=True)
-            pdf.cell(3, 8, txt='', border=False)
-            if (row <= d['firstCommand']['roundsScore'][2]):
-                pdf.cell(17, 8, txt=str(row), border=1, align="C")
-            else:
-                pdf.cell(17, 8, txt=str(row), border=1, align="C", fill=True)
-            if ((row <= d['secondCommand']['roundsScore'][2])):
-                pdf.cell(17, 8, txt=str(row), border=1, align="C")
-            else:
-                pdf.cell(17, 8, txt=str(row), border=1, align="C", fill=True)
-            pdf.cell(3, 8, txt='', border=False)
-            if (len(d['firstCommand']['roundsScore']) > 3):
-                if (row <= d['firstCommand']['roundsScore'][3]):
-                    pdf.cell(17, 8, txt=str(row), border=1, align="C")
-                else:
-                    pdf.cell(17, 8, txt=str(row), border=1, align="C", fill=True)
-            else:
-                pdf.cell(17, 8, txt=str(row), border=1, align="C", fill=True)
-            if (len(d['secondCommand']['roundsScore']) > 3):
-                if ((row <= d['secondCommand']['roundsScore'][3])):
-                    pdf.cell(17, 8, txt=str(row), border=1, align="C")
-                else:
-                    pdf.cell(17, 8, txt=str(row), border=1, align="C", fill=True)
-            else:
-                pdf.cell(17, 8, txt=str(row), border=1, align="C", fill=True)
-            pdf.cell(3, 8, txt='', border=False)
-            if (len(d['firstCommand']['roundsScore']) > 4):
-                if (row <= d['firstCommand']['roundsScore'][4]):
-                    pdf.cell(17, 8, txt=str(row), border=1, align="C")
-                else:
-                    pdf.cell(17, 8, txt=str(row), border=1, align="C", fill=True)
-            else:
-                pdf.cell(17, 8, txt=str(row), border=1, align="C", fill=True)
-            if (len(d['secondCommand']['roundsScore']) > 4):
-                if ((row <= d['secondCommand']['roundsScore'][4])):
-                    pdf.cell(17, 8, txt=str(row), border=1, align="C")
-                else:
-                    pdf.cell(17, 8, txt=str(row), border=1, align="C", fill=True)
-            else:
-                pdf.cell(17, 8, txt=str(row), border=1, align="C", fill=True)
-            pdf.ln(8)
+        # for row in range(1, 31):
+        #     pdf.cell(8, 8, txt='', border=0, align="C")
+        #     if(row <= d['firstCommand']['roundsScore'][0]):
+        #         pdf.cell(17, 8, txt=str(row), border=1, align="C")
+        #     else:
+        #         pdf.cell(17, 8, txt=str(row), border=1, align="C", fill=True)
+        #     if (row <= d['secondCommand']['roundsScore'][0]):
+        #         pdf.cell(17, 8, txt=str(row), border=1, align="C")
+        #     else:
+        #         pdf.cell(17, 8, txt=str(row), border=1, align="C", fill=True)
+        #     pdf.cell(3, 8, txt='', border=False)
+        #     if (row <= d['firstCommand']['roundsScore'][1]):
+        #         pdf.cell(17, 8, txt=str(row), border=1, align="C")
+        #     else:
+        #         pdf.cell(17, 8, txt=str(row), border=1, align="C", fill=True)
+        #     if (row <= d['secondCommand']['roundsScore'][1]):
+        #         pdf.cell(17, 8, txt=str(row), border=1, align="C")
+        #     else:
+        #         pdf.cell(17, 8, txt=str(row), border=1, align="C", fill=True)
+        #     pdf.cell(3, 8, txt='', border=False)
+        #     if (row <= d['firstCommand']['roundsScore'][2]):
+        #         pdf.cell(17, 8, txt=str(row), border=1, align="C")
+        #     else:
+        #         pdf.cell(17, 8, txt=str(row), border=1, align="C", fill=True)
+        #     if ((row <= d['secondCommand']['roundsScore'][2])):
+        #         pdf.cell(17, 8, txt=str(row), border=1, align="C")
+        #     else:
+        #         pdf.cell(17, 8, txt=str(row), border=1, align="C", fill=True)
+        #     pdf.cell(3, 8, txt='', border=False)
+        #     if (len(d['firstCommand']['roundsScore']) > 3):
+        #         if (row <= d['firstCommand']['roundsScore'][3]):
+        #             pdf.cell(17, 8, txt=str(row), border=1, align="C")
+        #         else:
+        #             pdf.cell(17, 8, txt=str(row), border=1, align="C", fill=True)
+        #     else:
+        #         pdf.cell(17, 8, txt=str(row), border=1, align="C", fill=True)
+        #     if (len(d['secondCommand']['roundsScore']) > 3):
+        #         if ((row <= d['secondCommand']['roundsScore'][3])):
+        #             pdf.cell(17, 8, txt=str(row), border=1, align="C")
+        #         else:
+        #             pdf.cell(17, 8, txt=str(row), border=1, align="C", fill=True)
+        #     else:
+        #         pdf.cell(17, 8, txt=str(row), border=1, align="C", fill=True)
+        #     pdf.cell(3, 8, txt='', border=False)
+        #     if (len(d['firstCommand']['roundsScore']) > 4):
+        #         if (row <= d['firstCommand']['roundsScore'][4]):
+        #             pdf.cell(17, 8, txt=str(row), border=1, align="C")
+        #         else:
+        #             pdf.cell(17, 8, txt=str(row), border=1, align="C", fill=True)
+        #     else:
+        #         pdf.cell(17, 8, txt=str(row), border=1, align="C", fill=True)
+        #     if (len(d['secondCommand']['roundsScore']) > 4):
+        #         if ((row <= d['secondCommand']['roundsScore'][4])):
+        #             pdf.cell(17, 8, txt=str(row), border=1, align="C")
+        #         else:
+        #             pdf.cell(17, 8, txt=str(row), border=1, align="C", fill=True)
+        #     else:
+        #         pdf.cell(17, 8, txt=str(row), border=1, align="C", fill=True)
+        #     pdf.ln(8)
 
         pdf.ln(8)
         pdf.cell(8, 8, txt='', border=0, align="C")
