@@ -67,7 +67,7 @@
                 </div>
                 <div class="event-action">
                     {% if not event.isOlympics %}
-                    <a href="{% url 'homePage' %}" type="button" class="event-btn current-event-btn p-2">
+                    <a href="{% url 'homePage'%}" type="button" class="event-btn current-event-btn p-2">
                         <span>Посмотреть</span>
                         <svg width="25" height="13" viewBox="0 0 25 13" fill="none" xmlns="http://www.w3.org/2000/svg">
                             <path fill-rule="evenodd" clip-rule="evenodd"
@@ -90,6 +90,10 @@
         </div>
         {% endfor %}
     </div>
+
+
+
+
     <div class="announced-events d-flex flex-column">
         <div class="h2 fw-bold mb-3">Анонсированные события</div>
         {% for event in announcedEvents %}
