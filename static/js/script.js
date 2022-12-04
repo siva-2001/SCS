@@ -68,22 +68,50 @@ $(document).ready(() => {
     $('.menu-new-event-btn').click(() => {
         $('.popup-container').css("display", "flex");
     });
-
-    $.ajax({
-        method: "GET",
-        url: "http://127.0.0.1:8000/api/v1/test",
-        data: { name: name.val(), last_name: lastName.val(), type: type.val() }
-    })
-        .done(function( msg ) {
-            loader.hide();
-            if (msg.success) {
-                alert('Заказ создан!');
-            } else {
-                alert('Заказ не создан!');
+    if (window.location.pathname == '/') {
+        $.ajax({
+            method: "GET",
+            url: "http://127.0.0.1:8000/api/v1/test",
+            dataType: "json",
+            success: function (data) {
+                console.log(data[0].name);
             }
         });
+    }
 
-    if(window.location.toString().indexOf('createOlympics.html') > 0) {
+    if (window.location.pathname == '/createCompetition/') {
+        let sportType = $('#competition-sport');
+        let type = $('input[name=type]');
+        let name = $('#competition-title');
+        let description = $('#competition-description');
+        let date = $('#competition-date');
+        let regulations = $('#regulations');
+
+        $('#create-competition-btn').click((e) => {
+            e.preventDefault();
+            $.ajax({
+                method: "POST",
+                url: "http://127.0.0.1:8000/api/v1/test",
+                data: {
+                    "name": name.val(),
+                    "description": description.val(),
+                    "dateTimeStartCompetition": date.val(),
+                    "sportType": sportType.val(),
+                    "type": type.val(),
+                    "regulations": null
+                },
+            })
+                .done(function( msg ) {
+                    if (msg.success) {
+                        alert('Соревнование создано');
+                    } else {
+                        alert('Соревнование не создано');
+                    }
+                });
+        });
+    }
+
+    if (window.location.toString().indexOf('createOlympics.html') > 0) {
         let competitionForm = document.querySelectorAll(".competition-form");
         let container = document.querySelector("#form-container");
         let addButton = document.querySelector("#add-form");
@@ -96,7 +124,7 @@ $(document).ready(() => {
             console.log(competitionFormDescription[0].value);
         }, 1000);
 
-        let formNum = competitionForm.length-1;
+        let formNum = competitionForm.length - 1;
         addButton.addEventListener('click', addForm);
 
         function hideFormHandler(flag = false) {
@@ -187,7 +215,7 @@ $(document).ready(() => {
 
             let newFormFlag = false;
             let newForm = competitionForm[0].cloneNode(true); //Clone the bird form
-            let formRegex = RegExp(`form-(\\d){1}-`,'g'); //Regex to find all instances of the form number
+            let formRegex = RegExp(`form-(\\d){1}-`, 'g'); //Regex to find all instances of the form number
 
             newForm.style.visibility = 'visible';
             newForm.style.position = 'relative';
@@ -199,7 +227,7 @@ $(document).ready(() => {
 
             hideFormHandler(newFormFlag);
 
-            totalForms.setAttribute('value', `${formNum+1}`); //Increment the number of total forms in the management form
+            totalForms.setAttribute('value', `${formNum + 1}`); //Increment the number of total forms in the management form
         }
     }
 });
