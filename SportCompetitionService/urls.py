@@ -23,14 +23,19 @@ from SCSapp.views.eventListsViews import pastEventsView
 from SCSapp.views.matchView import matchView
 from SCSapp.views.createCompetitionView import CreateCompetitionView
 from django.conf.urls.static import static
+from django.urls import include
 from django.conf import settings
-from SCSapp.views.api_views import OlympicsAPIView, CompetitionAPIView
+from SCSapp.views.api_views import OlympicsAPIView, CurrentCompetitionAPIView, CurrentOlympicsAPIView, AnnouncedEventsAPIView, JudgeMatchesAPIView
 
 urlpatterns = [
     path('admin/', admin.site.urls),
 
-    path('api/v1/test', CompetitionAPIView.as_view(), name='test'),
+    path('api/v1/judgeMatches/', JudgeMatchesAPIView.as_view(), name='judgeCompetitions'),
+    path('api/v1/currentCompetitions', CurrentCompetitionAPIView.as_view(), name='currentCompetitions'),
+    path('api/v1/currentOlympics', CurrentOlympicsAPIView.as_view(), name='currentOlympics'),
+    path('api/v1/announcedEvents', AnnouncedEventsAPIView.as_view(), name='announcedEvents'),
 
+    path('api/v1/auth/', include('rest_framework.urls')),
     path('login/', logInUserView, name='login'),
     path('signup/', signUpUserView, name='signup'),
     path('logout/', logoutUser, name="logout"),
