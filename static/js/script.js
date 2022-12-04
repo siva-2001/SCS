@@ -69,6 +69,20 @@ $(document).ready(() => {
         $('.popup-container').css("display", "flex");
     });
 
+    $.ajax({
+        method: "GET",
+        url: "http://127.0.0.1:8000/api/v1/test",
+        data: { name: name.val(), last_name: lastName.val(), type: type.val() }
+    })
+        .done(function( msg ) {
+            loader.hide();
+            if (msg.success) {
+                alert('Заказ создан!');
+            } else {
+                alert('Заказ не создан!');
+            }
+        });
+
     if(window.location.toString().indexOf('createOlympics.html') > 0) {
         let competitionForm = document.querySelectorAll(".competition-form");
         let container = document.querySelector("#form-container");
