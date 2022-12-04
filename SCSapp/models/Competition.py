@@ -20,7 +20,6 @@ class AnnouncedCompetitionManager(models.Manager):
 
 
 class Competition(models.Model):
-
     objects = models.Manager()
     current_objects = CurrentCompetitionManager()
     announced_objects = AnnouncedCompetitionManager()
@@ -42,6 +41,7 @@ class Competition(models.Model):
     )
 
     type = models.CharField(
+        verbose_name='Тип',
         max_length=3,
         choices = TypeChoices.choices,
         default = TypeChoices.INTERCOLLEGIATE,
@@ -82,7 +82,7 @@ class Competition(models.Model):
         return reverse('competition', args=[str(self.id)])
 
     @classmethod
-    def create(cls, name, description, sportType, isHighLevel, type, startDate, organizer, regulations, olympics = None):
+    def create(cls, name, description, sportType, isHighLevel, type, startDate, organizer, regulations = None, olympics = None):
         object = cls()
         object.name = name
         object.description = description
@@ -147,3 +147,29 @@ class Competition(models.Model):
 
     def getRelatedPlayersByParticipant(self):
         pass
+
+
+class CacheScore(models.Model):
+    participantScore = models.IntegerField()
+    participantRaiting = models.FloatField()
+    participantPlace = models.IntegerField()
+    competition = models.ForeignKey('SCSapp.Competition', on_delete=models.CASCADE)
+    participant = models.ForeignKey('SCSapp.AbstractParticipant', on_delete=models.CASCADE)
+
+
+    @classmethod
+    def create(cls, participant, competition):
+        object = cls()
+        object.participantScore = 0
+        object.participantPlace = 0
+        object.participantRaiting = 0
+        object.competition = competition
+        object.participant = participant
+        object.save()
+        return object
+
+    def update(self, score, raiting, place):
+        self.participantRaiting = raiting
+        self.participantScore = score
+        self.participantPlace = place
+        self.save()

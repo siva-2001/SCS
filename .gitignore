@@ -5,3 +5,5 @@ gulpfile.js
 *.pyc
 auth.txt
 /SCSapp/migrations/
+/SCSapp/screen.png
+

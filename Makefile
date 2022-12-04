@@ -1,5 +1,5 @@
 migrate: manage.py
-	python manage.py makemigrations
+	python manage.py makemigrations SCSapp
 	python manage.py migrate
 
 run: manage.py
