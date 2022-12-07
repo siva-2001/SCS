@@ -71,7 +71,7 @@ $(document).ready(() => {
     if (window.location.pathname == '/') {
         $.ajax({
             method: "GET",
-            url: "http://127.0.0.1:8000/api/v1/test",
+            url: "http://127.0.0.1:8000/api/v1/test/",
             dataType: "json",
             success: function (data) {
                 console.log(data[0].name);
@@ -91,7 +91,7 @@ $(document).ready(() => {
             e.preventDefault();
             $.ajax({
                 method: "POST",
-                url: "http://127.0.0.1:8000/api/v1/test",
+                url: "http://127.0.0.1:8000/api/v1/test/",
                 data: {
                     "name": name.val(),
                     "description": description.val(),
