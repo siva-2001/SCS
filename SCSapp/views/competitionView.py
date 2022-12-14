@@ -12,6 +12,15 @@ def competitionView(request, comp_id):
     return render(request, 'competition.html', competition.getData())
 
 
+
+
+
+
+
+
+
+
+
 # def competitionView(request, comp_id):
 #
 #     #------------------------------------------------------------------------------------------------------------------

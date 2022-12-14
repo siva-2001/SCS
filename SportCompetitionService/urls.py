@@ -25,11 +25,13 @@ from SCSapp.views.createCompetitionView import CreateCompetitionView
 from django.conf.urls.static import static
 from django.conf import settings
 from SCSapp.views.api_views import OlympicsAPIView, CompetitionAPIView
+from django.urls import include
 
 urlpatterns = [
     path('admin/', admin.site.urls),
 
-    path('api/v1/test', CompetitionAPIView.as_view(), name='test'),
+    path('api/v1/test/', CompetitionAPIView.as_view(), name='test'),
+    path('api/v1/auth/', include('rest_framework.urls')),
 
     path('login/', logInUserView, name='login'),
     path('signup/', signUpUserView, name='signup'),

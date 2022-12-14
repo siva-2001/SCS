@@ -60,24 +60,31 @@ $(document).ready(() => {
 
     });*/
 
+    //  разворачивает меню пользователя при нажатии на иконку с ролью
     $('.user-profile-item').click(() => {
         $('.icon-container').toggleClass("rotator");
         $('.hover-menu').toggle();
     });
 
+    //  раскрытие плашки выбора создаваемого события при нажатии на кнопку нового события
     $('.menu-new-event-btn').click(() => {
         $('.popup-container').css("display", "flex");
     });
+    
+    //  для тестирования
     if (window.location.pathname == '/') {
+        console.log('we are here')
         $.ajax({
             method: "GET",
-            url: "http://127.0.0.1:8000/api/v1/test",
+            url: "http://127.0.0.1:8000/api/v1/test/",
             dataType: "json",
             success: function (data) {
-                console.log(data[0].name);
+                console.log(data[0].name + ' : This func is worked');
             }
         });
     }
+
+    //________________________ДЛЯ СТРАНИЦЫ СОЗДАНИЯ СОРЕВНОВАНИЙ_________________________________________________________________
 
     if (window.location.pathname == '/createCompetition/') {
         let sportType = $('#competition-sport');
@@ -87,27 +94,22 @@ $(document).ready(() => {
         let date = $('#competition-date');
         let regulations = $('#regulations');
         let formData = new FormData();
+        let $crf_token = $('[name="csrfmiddlewaretoken"]').attr('value');
 
-        /*setInterval(() => {
-            console.log(regulations.val());
-        }, 1000);*/
-
+        // вставка названия файла в поле его загрузки
         regulations.change(function(){
-            if (window.FormData === undefined) {
-                alert('В вашем браузере FormData не поддерживается')
-            } else {
-                formData.append('file', regulations[0].files[0]);
-            }
+            if (window.FormData === undefined) alert('В вашем браузере FormData не поддерживается')
+            else formData.append('file', regulations[0].files[0]);
+
             $('.regulation-label-text').text(regulations[0].files[0].name);
         });
 
-        let $crf_token = $('[name="csrfmiddlewaretoken"]').attr('value');
-
+        //  отправка POST-запроса к API
         $('#create-competition-btn').click((e) => {
+
             e.preventDefault();
-            if (name.val() === "" || description.val() === "" || date.val() === "") {
-                alert("Заполните пустые поля");
-            } else {
+            if (name.val() === "" || description.val() === "" || date.val() === "") alert("Заполните пустые поля");
+            else {
                 $.ajax({
                     method: "POST",
                     url: "http://127.0.0.1:8000/api/v1/test",
@@ -129,6 +131,8 @@ $(document).ready(() => {
             }
         });
     }
+
+    //________________________ДЛЯ СТРАНИЦЫ СОЗДАНИЯ СПАРТАКАИД______________________________________________________________________
 
     if (window.location.toString().indexOf('createOlympics.html') > 0) {
         let competitionForm = document.querySelectorAll(".competition-form");

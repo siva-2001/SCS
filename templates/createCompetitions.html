@@ -4,8 +4,9 @@
 <div class="container">
     <div class="create-competition-title h1 text-center pt-5 mb-5">Соревнование</div>
     <form method="POST" enctype="multipart/form-data" action=".">
-        <div class="h2 fw-bold mb-5">Основная информация</div>
         {% csrf_token %}
+        <div class="h2 fw-bold mb-5">Основная информация</div>
+
         <div class="row">
             <div class="row flex-nowrap">
                 <div class="col-4">
