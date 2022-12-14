@@ -86,28 +86,47 @@ $(document).ready(() => {
         let description = $('#competition-description');
         let date = $('#competition-date');
         let regulations = $('#regulations');
+        let formData = new FormData();
+
+        /*setInterval(() => {
+            console.log(regulations.val());
+        }, 1000);*/
+
+        regulations.change(function(){
+            if (window.FormData === undefined) {
+                alert('В вашем браузере FormData не поддерживается')
+            } else {
+                formData.append('file', regulations[0].files[0]);
+            }
+            $('.regulation-label-text').text(regulations[0].files[0].name);
+        });
+
+        let $crf_token = $('[name="csrfmiddlewaretoken"]').attr('value');
 
         $('#create-competition-btn').click((e) => {
             e.preventDefault();
-            $.ajax({
-                method: "POST",
-                url: "http://127.0.0.1:8000/api/v1/test",
-                data: {
-                    "name": name.val(),
-                    "description": description.val(),
-                    "dateTimeStartCompetition": date.val(),
-                    "sportType": sportType.val(),
-                    "type": type.val(),
-                    "regulations": null
-                },
-            })
-                .done(function( msg ) {
-                    if (msg.success) {
-                        alert('Соревнование создано');
-                    } else {
-                        alert('Соревнование не создано');
-                    }
-                });
+            if (name.val() === "" || description.val() === "" || date.val() === "") {
+                alert("Заполните пустые поля");
+            } else {
+                $.ajax({
+                    method: "POST",
+                    url: "http://127.0.0.1:8000/api/v1/test",
+                    dataType : 'json',
+                    data: {
+                        "name": name.val(),
+                        "description": description.val(),
+                        "dateTimeStartCompetition": date.val().toString(),
+                        "sportType": sportType.val(),
+                        "type": type.val(),
+                        "regulations": null,
+                    },
+                    headers:{"X-CSRFToken": $crf_token},
+                })
+                    .done(function() {
+                        alert('Соревнование успешно создано');
+                        $(location).attr('href',"http://127.0.0.1:8000/");
+                    });
+            }
         });
     }
 
