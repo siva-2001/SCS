@@ -1,10 +1,10 @@
-asgiref==3.5.0
-dj-database-url==0.5.0
-Django==4.0.3
 djangorestframework==3.14.0
 -e git+https://github.com/siva-2001/SCS.git@420392d2f785ff728bf4d724006f2e8a5c7c38fd#egg=fpdf&subdirectory=PIPdistributions/pyfpdf-binary
 gunicorn==20.1.0
 psycopg2-binary==2.9.3
-pytz==2021.3
-sqlparse==0.4.2
 whitenoise==6.0.0
+asgiref==3.6.0
+dj-database-url==1.2.0
+Django==4.1.6
+pytz==2022.7.1
+sqlparse==0.4.3

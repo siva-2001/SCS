@@ -111,3 +111,4 @@ class CreateOlympicsForm(forms.ModelForm):
                 'required': '',
             }),
         }
+
