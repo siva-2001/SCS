@@ -22,6 +22,7 @@ from SCSapp.views.eventListsViews import pastEventsView
 from SCSapp.views.matchView import matchView
 from SCSapp.views.createCompetitionView import CreateCompetitionView
 from django.conf.urls.static import static
+
 from django.urls import include, path, re_path
 from django.conf import settings
 from SCSapp.views.api_views import OlympicsAPIView, CurrentCompetitionAPIView, CurrentOlympicsAPIView, AnnouncedEventsAPIView, JudgeMatchesAPIView
@@ -29,6 +30,7 @@ from SCSapp.views.api_views import OlympicsAPIView, CurrentCompetitionAPIView, C
 urlpatterns = [
     #   admin url's
     path('admin/', admin.site.urls),
+
 
     #   auth & register url's
     path('login/', loginView.as_view(), name='loginPage'),
