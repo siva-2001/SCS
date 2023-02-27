@@ -60,6 +60,23 @@ $(document).ready(() => {
 
     });*/
 
+    function set_cookie ( name, value, exp_y, exp_m, exp_d, path, domain, secure ){
+        var cookie_string = name + " = " + value;
+        
+        if (exp_y){
+            var expires = new Date ( exp_y, exp_m, exp_d );
+            cookie_string += "; expires=" + expires.toGMTString();
+        }
+        if (path) cookie_string += "; path=" + path;
+        if (domain) cookie_string += "; domain=" + domain;
+        if (secure) сookie_string += "; secure";
+        cookie_string += ';';
+        document.cookie = cookie_string;
+        console.log(cookie_string);
+        setTimeout(() => { console.log("мир"); }, 10000);
+    }
+    
+
     //  разворачивает меню пользователя при нажатии на иконку с ролью
     $('.user-profile-item').click(() => {
         $('.icon-container').toggleClass("rotator");
@@ -71,18 +88,78 @@ $(document).ready(() => {
         $('.popup-container').css("display", "flex");
     });
     
-    //  для тестирования
-    if (window.location.pathname == '/') {
-        console.log('we are here')
-        $.ajax({
-            method: "GET",
-            url: "http://127.0.0.1:8000/api/v1/test/",
-            dataType: "json",
-            success: function (data) {
-                console.log(data[0].name + ' : This func is worked');
-            }
-        });
+    if (window.location.pathname == '/'){
+        console.log(document.cookie);
     }
+
+    if (window.location.pathname == '/signup/'){
+        let username = $('input[name=username]');
+        let password1 = $('input[name=password1]');
+        let password2 = $('input[name=password2]');
+        let $crf_token = $('[name="csrfmiddlewaretoken"]').attr('value');
+
+        $('#signup-btn').click((e) => {
+            e.preventDefault();
+            if (username.val() === "" || password1.val() === "" || password2.val() === "") alert("Заполните пустые поля");
+            else if (password1.val() != password2.val()) alert("Введённые пароли не совпадают");
+            else {
+                let request = $.ajax({
+                    method: "POST",
+                    url: "http://127.0.0.1:8000/api/v1/auth/users/",
+                    dataType : 'json',
+                    data: {
+                        "username": username.val(),
+                        "password": password1.val(),
+                    },
+                    headers:{"X-CSRFToken": $crf_token},
+                    success: function(data, status){    // при успехе авторизуемся
+                        console.log(data);
+                        alert("Пользователь зарегистрирован");
+                        // $(location).attr('href',"http://127.0.0.1:8000/"); 
+                        return;
+                    },
+                    error: function(params){
+                        for(param_name in params) console.log(param_name + " " + params[param_name]);
+                    }
+                });
+            }
+        }); 
+
+    }
+
+    if (window.location.pathname == '/login/'){
+        let username = $('input[name=username]');
+        let password = $('input[name=password]');
+        let $crf_token = $('[name="csrfmiddlewaretoken"]').attr('value');
+
+        let cookie = document.cookie;
+        console.log(cookie);
+
+        $('#login-btn').click((e) => {
+
+            e.preventDefault();
+            if (username.val() === "" || password.val() === "") alert("Заполните пустые поля");
+            else {
+                $.ajax({
+                    method: "POST",
+                    url: "http://127.0.0.1:8000/auth/token/login",
+                    dataType : 'json',
+                    data: {
+                        "username": username.val(),
+                        "password": password.val(),
+                    },
+                    headers:{"X-CSRFToken": $crf_token},
+                    success: function(data, status){
+                        alert(data['auth_token']);
+                        //set_cookie('Authorization', "Token " + data['auth_token'], exp_m=2, path="/"));
+                        //document.cookie = `Authorization=Token ${data['auth_token']}; path=/;`
+                        $(location).attr('href',"http://127.0.0.1:8000/"); 
+                    },
+                })
+            }
+        }); 
+    }
+
 
     //________________________ДЛЯ СТРАНИЦЫ СОЗДАНИЯ СОРЕВНОВАНИЙ_________________________________________________________________
 

@@ -57,7 +57,7 @@
         </nav>
         <div class="footer-actions d-flex align-items-center">
             {% if not userAuth %}
-            <a href="{% url 'login' %}" class="menu-btn menu-log-in-btn p-3 d-block text-center text-decoration-none">
+            <a href="{% url 'loginPage' %}" class="menu-btn menu-log-in-btn p-3 d-block text-center text-decoration-none">
                 Войти
             </a>
             {% else %}
@@ -99,6 +99,7 @@
     </div>
 </footer>
 
+<!-- табличка выбора типа проводимых мероприятий -->
 <div class="popup-container">
     <div class="create-event-popup p-5">
         <h2 class="fw-bold mb-5">Выберите тип события</h2>
@@ -114,6 +115,19 @@
         </div>
     </div>
 </div>
+
+<!--    Комментированный код был здесь  -->
+
+<div class="white-container">
+    <h3 class="my-4">{{ error }}</h3>
+    {% block content %}{% endblock %}
+</div>
+
+{% block createCompetition %}{% endblock %}
+
+</body>
+</html>
+
 
 <!--<nav class="navbar navbar-expand-md bg-warning">
     <div class="col">
@@ -201,13 +215,3 @@
         </div>
     </div>
 </nav>-->
-
-<div class="white-container">
-    <h3 class="my-4">{{ error }}</h3>
-    {% block content %}{% endblock %}
-</div>
-
-{% block createCompetition %}{% endblock %}
-
-</body>
-</html>

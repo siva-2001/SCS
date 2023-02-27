@@ -14,33 +14,35 @@ Including another URLconf
     2. Add a URL to urlpatterns:  path('blog/', include('blog.urls'))
 """
 from django.contrib import admin
-from django.urls import path
 from SCSapp.views.eventListsViews import homePageView
-from SCSapp.views.authViews import signUpUserView, logoutUser, logInUserView
+from SCSapp.views.authViews import signUpUserView, logoutUser, loginView
 from SCSapp.views.competitionView import competitionView
 from SCSapp.views.createOlympicsView import CreateOlympicsView
 from SCSapp.views.eventListsViews import pastEventsView
 from SCSapp.views.matchView import matchView
 from SCSapp.views.createCompetitionView import CreateCompetitionView
 from django.conf.urls.static import static
-from django.urls import include
+from django.urls import include, path, re_path
 from django.conf import settings
 from SCSapp.views.api_views import OlympicsAPIView, CurrentCompetitionAPIView, CurrentOlympicsAPIView, AnnouncedEventsAPIView, JudgeMatchesAPIView
 
 urlpatterns = [
+    #   admin url's
     path('admin/', admin.site.urls),
 
-    path('api/v1/test/', CompetitionAPIView.as_view(), name='test'),
-    path('api/v1/auth/', include('rest_framework.urls')),
+    #   auth & register url's
+    path('login/', loginView.as_view(), name='loginPage'),
+    path('api/v1/auth/', include('djoser.urls')),
+    re_path(r'^auth/', include('djoser.urls.authtoken')),
+    path('signup/', signUpUserView.as_view(), name='signup'),
+    path('logout/', logoutUser, name="logout"),
+
+
     path('api/v1/judgeMatches/', JudgeMatchesAPIView.as_view(), name='judgeCompetitions'),
     path('api/v1/currentCompetitions', CurrentCompetitionAPIView.as_view(), name='currentCompetitions'),
     path('api/v1/currentOlympics', CurrentOlympicsAPIView.as_view(), name='currentOlympics'),
     path('api/v1/announcedEvents', AnnouncedEventsAPIView.as_view(), name='announcedEvents'),
-
-    path('api/v1/auth/', include('rest_framework.urls')),
-    path('login/', logInUserView, name='login'),
-    path('signup/', signUpUserView, name='signup'),
-    path('logout/', logoutUser, name="logout"),
+    
     path('past/', pastEventsView, name='history'),
     path('', homePageView, name='homePage'),
     path('api/v1/olympicsList', OlympicsAPIView.as_view(), name='APIOlympics'),

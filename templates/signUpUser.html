@@ -4,7 +4,7 @@
 <div class="row justify-content-start">
     <div class="col-12 col-sm-9 col-lg-8 ms-sm-5 login_signupForm">
         <p class="h1 mb-5">Регистрация</p>
-        <form method="POST">
+        <!-- <form method="POST"> -->
             {% csrf_token %}
 
             <div class="input-group-lg mb-3">
@@ -39,12 +39,12 @@
             </div>
             <div class="row justify-content-end">
                 <div class="col-auto">
-                    <button type="submit" class="btn border-2 btn-warning">
+                    <button type="submit" id="signup-btn" class="btn border-2 btn-warning">
                         Зарегистрироваться
                     </button>
                 </div>
             </div>
-        </form>
+        <!-- </form> -->
     </div>
 </div>
 {% endblock %}
