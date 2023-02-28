@@ -9,11 +9,9 @@ from SCSapp.models.Competition import Competition
 from SCSapp.models.Match import AbstractMatch
 from SCSapp.serializers import CompetitionSerializer
 from SCSapp.serializers import MatchSerializer
-<<<<<<< HEAD
 from rest_framework.authentication import SessionAuthentication, BasicAuthentication
 from rest_framework.permissions import IsAuthenticated
-=======
->>>>>>> fcda42ab6a85928468017381b83b43db6bf6565e
+
 
 class OlympicsAPIView(generics.ListAPIView):
     queryset = Olympics.objects.all()

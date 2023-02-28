@@ -57,8 +57,11 @@
         </nav>
         <div class="footer-actions d-flex align-items-center">
             {% if not userAuth %}
-            <a href="{% url 'loginPage' %}" class="menu-btn menu-log-in-btn p-3 d-block text-center text-decoration-none">
+            <a href="{% url 'loginPage' %}" class="menu-btn menu-log-in-btn p-3 me-3 d-block text-center text-decoration-none">
                 Войти
+            </a>
+            <a href="{% url 'signupPage' %}" class="menu-btn menu-log-in-btn p-3 d-block text-center text-decoration-none">
+                Регистрация
             </a>
             {% else %}
             <button type="button" class="menu-btn menu-new-event-btn p-3 d-block text-center text-decoration-none fs-5">
@@ -120,7 +123,9 @@
 
 <div class="white-container">
     <h3 class="my-4">{{ error }}</h3>
-    {% block content %}{% endblock %}
+    <!-- ДАЛЕЕ ИДЁТ БЛОК КОНТЕНТА -->
+    <div class="container">{% block content %}{% endblock %}</div>
+    <!-- РАННЕЕ ИДЁТ БЛОК КОНТЕНТА -->
 </div>
 
 {% block createCompetition %}{% endblock %}
@@ -161,7 +166,7 @@
                     </div>
                     {% else %}
                     <div class="col-auto d-none d-md-block">
-                        <a class="nav-link my-md-3 mx-md-3" href="{% url 'signup' %}">Регистрация</a>
+                        <a class="nav-link my-md-3 mx-md-3" href="{% url 'signupPage' %}">Регистрация</a>
                     </div>
                     <div class="col-auto d-none d-md-block">
                         <a class="nav-link my-md-3 mx-md-3" href="{% url 'login' %}">Вход</a>
@@ -198,7 +203,7 @@
                                 {% else %}
                                 <li class="nav-item">
                                     <div class="col-auto  text-end">
-                                        <a class="nav-link my-md-3 mx-md-3" href="{% url 'signup' %}">Регистрация</a>
+                                        <a class="nav-link my-md-3 mx-md-3" href="{% url 'signupPage' %}">Регистрация</a>
                                     </div>
                                 </li>
                                 <li class="nav-item">

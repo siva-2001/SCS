@@ -36,7 +36,7 @@ urlpatterns = [
     path('login/', loginView.as_view(), name='loginPage'),
     path('api/v1/auth/', include('djoser.urls')),
     re_path(r'^auth/', include('djoser.urls.authtoken')),
-    path('signup/', signUpUserView.as_view(), name='signup'),
+    path('signup/', signUpUserView.as_view(), name='signupPage'),
     path('logout/', logoutUser, name="logout"),
 
 
