@@ -1,8 +1,6 @@
 from django import forms
 from SCSapp.models.Competition import Competition
 from SCSapp.models.Olympics import Olympics
-from SCSapp.models.Player import Player
-#from SCSapp.models.Match import Match
 from django.forms.widgets import DateTimeInput, TextInput, Textarea, RadioSelect, Select, FileInput
 from django.forms import modelformset_factory
 

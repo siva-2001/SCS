@@ -1,6 +1,7 @@
 from django.db import models
-from django.contrib.auth.models import User
-import datetime
+
+from SCSapp.models import User
+
 class CurrentOlympicsManager(models.Manager):
     def get_queryset(self):
         return super().get_queryset().filter(status=Olympics.StatusChoices.CURRENT)

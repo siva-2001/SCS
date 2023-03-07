@@ -1,7 +1,8 @@
 from django.db import models
-from django.contrib.auth.models import User
+
 from SCSapp.models.MatchTeamResult import AbstractMatchTeamResult
 from SCSapp.models.MatchActions import MatchAction
+from SCSapp.models import User
 
 class AbstractMatch(models.Model):
     isAnnounced = models.BooleanField(default=True)

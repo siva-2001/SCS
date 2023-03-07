@@ -1,14 +1,9 @@
-import json
 from django.urls import reverse
 from django.db import models
-from django.contrib.auth.models import User
 
-from django.core.serializers import serialize
-from .Participant import AbstractParticipant
+from SCSapp.models import User
 from .Match import AbstractMatch
-from .MatchTeamResult import AbstractMatchTeamResult
 from .Team import Team
-import unittest
 
 class CurrentCompetitionManager(models.Manager):
     def get_queryset(self):

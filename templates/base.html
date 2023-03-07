@@ -56,17 +56,22 @@
             </a>
         </nav>
         <div class="footer-actions d-flex align-items-center">
+
+
             {% if not userAuth %}
-            <a href="{% url 'loginPage' %}" class="menu-btn menu-log-in-btn p-3 me-3 d-block text-center text-decoration-none">
+            <a href="{% url 'loginPage' %}" id="login-head-button" class="menu-btn menu-log-in-btn p-3 me-3 d-block text-center text-decoration-none">
                 Войти
             </a>
             <a href="{% url 'signupPage' %}" class="menu-btn menu-log-in-btn p-3 d-block text-center text-decoration-none">
                 Регистрация
             </a>
             {% else %}
+
+            <!--  КНОПКА ДОСТУПНА ТОЛЬКО ОРГАНИЗАТОРАМ -->
             <button type="button" class="menu-btn menu-new-event-btn p-3 d-block text-center text-decoration-none fs-5">
                 Новое событие
             </button>
+
             <div class="user-profile-item ms-2">
                 <div class="item-icons d-flex align-items-center px-2">
                     <svg class="me-3 role-icon" width="49" height="35" viewBox="0 0 49 35" fill="none" xmlns="http://www.w3.org/2000/svg">
@@ -89,7 +94,7 @@
                         </svg>
                         Профиль
                     </a>
-                    <a href="#" class="user-action exit d-flex align-items-center text-decoration-none">
+                    <a href="{% url 'logout' %}" class="user-action exit d-flex align-items-center text-decoration-none">
                         <svg class="me-2" width="14" height="14" viewBox="0 0 14 14" fill="none" xmlns="http://www.w3.org/2000/svg">
                             <path d="M1.16667 14C0.855556 14 0.583333 13.8833 0.35 13.65C0.116667 13.4167 0 13.1444 0 12.8333V1.16667C0 0.855556 0.116667 0.583333 0.35 0.35C0.583333 0.116667 0.855556 0 1.16667 0H6.825V1.16667H1.16667V12.8333H6.825V14H1.16667ZM10.6167 10.4028L9.78056 9.56667L11.7639 7.58333H4.95833V6.41667H11.725L9.74167 4.43333L10.5778 3.59722L14 7.01944L10.6167 10.4028Z" fill="#000814"/>
                         </svg>
@@ -133,90 +138,3 @@
 </body>
 </html>
 
-
-<!--<nav class="navbar navbar-expand-md bg-warning">
-    <div class="col">
-        <div class="row justify-content-center">
-            <div class="col col-xl-8">
-                <div class="row justify-content-between">
-                    <div class="col-auto my-md-3">
-                        <button class="navbar-toggler shadow-none" type="button" data-bs-toggle="collapse"
-                                data-bs-target="#navbarID" aria-controls="navbarID" aria-expanded="false"
-                                aria-label="Toggle navigation">
-                            <img src="{% static 'volleyball.png' %}" alt="" width="60" height="52">
-                        </button>
-                        <a class="navbar-brand nav-link d-none d-md-block" href="{% url 'homePage' %}">
-                            <img src="{% static 'volleyball.png' %}" alt="" width="60" height="52">
-                            На главную
-                        </a>
-                    </div>
-
-                    {% if userIsJudge %}
-                    <div class="col-auto d-none d-md-block">
-                        <a href="{% url 'createCompetition' %}">
-                            <button type="button" class="btn my-2 border-2 btn-lg btn-outline-primary mx-2">Создать
-                                соревнование
-                            </button>
-                        </a>
-                    </div>
-                    {% endif %}
-                    {% if userAuth %}
-                    <div class="col-auto d-none d-md-block">
-                        <a class="nav-link my-md-3 mx-md-3" href="{% url 'logout' %}">Выход</a>
-                    </div>
-                    {% else %}
-                    <div class="col-auto d-none d-md-block">
-                        <a class="nav-link my-md-3 mx-md-3" href="{% url 'signupPage' %}">Регистрация</a>
-                    </div>
-                    <div class="col-auto d-none d-md-block">
-                        <a class="nav-link my-md-3 mx-md-3" href="{% url 'login' %}">Вход</a>
-                    </div>
-                    {% endif %}
-                    <div class="col d-md-none">
-                        <div class="collapse navbar-collapse" id="navbarID">
-                            <ul class="navbar-nav me-auto mb-2 mb-lg-0">
-                                {% if userIsJudge %}
-                                <li class="nav-item d-md-none">
-                                    <div class="col-auto text-end">
-                                        <a href="{% url 'createCompetition' %}">
-                                            <button type="button"
-                                                    class="btn my-2 border-2 btn-lg btn-outline-primary mx-2">Создать
-                                                соревнование
-                                            </button>
-                                        </a>
-                                    </div>
-                                </li>
-                                {% endif %}
-                                <li class="nav-item d-md-none">
-                                    <div class="col-auto text-end">
-                                        <a class="nav-link" href="{% url 'homePage' %}">
-                                            На главную
-                                        </a>
-                                    </div>
-                                </li>
-                                {% if userAuth %}
-                                <li class="nav-item">
-                                    <div class="col-auto text-end">
-                                        <a class="nav-link my-md-3 mx-md-3" href="{% url 'logout' %}">Выход</a>
-                                    </div>
-                                </li>
-                                {% else %}
-                                <li class="nav-item">
-                                    <div class="col-auto  text-end">
-                                        <a class="nav-link my-md-3 mx-md-3" href="{% url 'signupPage' %}">Регистрация</a>
-                                    </div>
-                                </li>
-                                <li class="nav-item">
-                                    <div class="col-auto text-end">
-                                        <a class="nav-link my-md-3 mx-md-3" href="{% url 'login' %}">Вход</a>
-                                    </div>
-                                </li>
-                                {% endif %}
-                            </ul>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </div>
-</nav>-->

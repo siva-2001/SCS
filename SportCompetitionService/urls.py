@@ -14,8 +14,9 @@ Including another URLconf
     2. Add a URL to urlpatterns:  path('blog/', include('blog.urls'))
 """
 from django.contrib import admin
+from django.contrib.auth.decorators import login_required
 from SCSapp.views.eventListsViews import homePageView
-from SCSapp.views.authViews import signUpUserView, logoutUser, loginView
+from SCSapp.views.authViews import signUpUserView, logoutUser, loginView, loginPageView
 from SCSapp.views.competitionView import competitionView
 from SCSapp.views.createOlympicsView import CreateOlympicsView
 from SCSapp.views.eventListsViews import pastEventsView
@@ -25,7 +26,9 @@ from django.conf.urls.static import static
 
 from django.urls import include, path, re_path
 from django.conf import settings
-from SCSapp.views.api_views import OlympicsAPIView, CurrentCompetitionAPIView, CurrentOlympicsAPIView, AnnouncedEventsAPIView, JudgeMatchesAPIView
+from SCSapp.views.api_views import OlympicsAPIView, CurrentCompetitionAPIView, CurrentOlympicsAPIView
+from SCSapp.views.api_views import AnnouncedEventsAPIView, JudgeMatchesAPIView, SignUpAPIView, PermissionsAPIView
+from rest_framework.authtoken import views
 
 urlpatterns = [
     #   admin url's
@@ -33,12 +36,17 @@ urlpatterns = [
 
 
     #   auth & register url's
-    path('login/', loginView.as_view(), name='loginPage'),
-    path('api/v1/auth/', include('djoser.urls')),
-    re_path(r'^auth/', include('djoser.urls.authtoken')),
+    path('loginPage/', loginPageView.as_view(), name='loginPage'),
+    path('login/', loginView, name='login'),
+    path('api-token-auth/', views.obtain_auth_token, name="authToken"),
+    
     path('signup/', signUpUserView.as_view(), name='signupPage'),
+    path('api/v1/auth/users', SignUpAPIView.as_view(), name='signup'),
+
     path('logout/', logoutUser, name="logout"),
 
+    #   permission url
+    path('permission/', PermissionsAPIView.as_view(), name="permission"),
 
     path('api/v1/judgeMatches/', JudgeMatchesAPIView.as_view(), name='judgeCompetitions'),
     path('api/v1/currentCompetitions', CurrentCompetitionAPIView.as_view(), name='currentCompetitions'),

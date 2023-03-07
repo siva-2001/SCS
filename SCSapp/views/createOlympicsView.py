@@ -1,6 +1,5 @@
-from django.shortcuts import render, redirect
+from django.shortcuts import redirect
 from SCSapp.models.Competition import Competition
-from SCSapp.models.Olympics import Olympics
 from django.views.generic import TemplateView
 from SCSapp.forms import CompetitionFormSet
 from SCSapp.forms import CreateOlympicsForm

@@ -1,4 +1,4 @@
-from django.shortcuts import render, redirect, get_object_or_404
+from django.shortcuts import render, get_object_or_404
 from SCSapp.models.Competition import Competition
 from django.views.generic import View
 from SCSapp.func import getUserAuthData

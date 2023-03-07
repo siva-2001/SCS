@@ -41,11 +41,13 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
-    'SCSapp',
     'rest_framework',
     'rest_framework.authtoken',
-    'djoser',
+    'SCSapp',
 ]
+
+AUTH_USER_MODEL = "SCSapp.User"
+
 
 REST_FRAMEWORK = {
     'DEFAULT_AUTHENTICATION_CLASSES': (
