@@ -27,7 +27,8 @@ from django.conf.urls.static import static
 from django.urls import include, path, re_path
 from django.conf import settings
 from SCSapp.views.api_views import OlympicsAPIView, CurrentCompetitionAPIView, CurrentOlympicsAPIView
-from SCSapp.views.api_views import AnnouncedEventsAPIView, JudgeMatchesAPIView, SignUpAPIView, PermissionsAPIView
+from SCSapp.views.api_views import JudgeMatchesAPIView, SignUpAPIView, PermissionsAPIView, TestAPIView#, AnnouncedEventsAPIView
+from SCSapp.views.createTestDataView import CreateTestDataView
 from rest_framework.authtoken import views
 
 urlpatterns = [
@@ -40,7 +41,7 @@ urlpatterns = [
     path('login/', loginView, name='login'),
     path('api-token-auth/', views.obtain_auth_token, name="authToken"),
     
-    path('signup/', signUpUserView.as_view(), name='signupPage'),
+    path('signupPage/', signUpUserView.as_view(), name='signupPage'),
     path('api/v1/auth/users', SignUpAPIView.as_view(), name='signup'),
 
     path('logout/', logoutUser, name="logout"),
@@ -51,7 +52,10 @@ urlpatterns = [
     path('api/v1/judgeMatches/', JudgeMatchesAPIView.as_view(), name='judgeCompetitions'),
     path('api/v1/currentCompetitions', CurrentCompetitionAPIView.as_view(), name='currentCompetitions'),
     path('api/v1/currentOlympics', CurrentOlympicsAPIView.as_view(), name='currentOlympics'),
-    path('api/v1/announcedEvents', AnnouncedEventsAPIView.as_view(), name='announcedEvents'),
+    
+    # path('api/v1/announcedEvents', AnnouncedEventsAPIView.as_view(), name='announcedEvents'),
+    path('api/v1/test', TestAPIView.as_view(), name='test'),
+    path('createTestDataset', CreateTestDataView, name='createTestDataView'),
     
     path('past/', pastEventsView, name='history'),
     path('', homePageView, name='homePage'),

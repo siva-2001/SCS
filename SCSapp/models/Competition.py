@@ -77,7 +77,7 @@ class Competition(models.Model):
         return reverse('competition', args=[str(self.id)])
 
     @classmethod
-    def create(cls, name, description, sportType, isHighLevel, type, startDate, organizer, regulations = None, olympics = None):
+    def create(cls, name, description, sportType, isHighLevel=True, type=None, startDate=None, organizer=None, regulations = None, olympics = None):
         object = cls()
         object.name = name
         object.description = description

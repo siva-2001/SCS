@@ -1,4 +1,3 @@
-from django.shortcuts import redirect
 from SCSapp.forms import CreateCompetitionsForm
 from django.views.generic import TemplateView
 from SCSapp.func import getUserAuthData
