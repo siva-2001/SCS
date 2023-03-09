@@ -27,5 +27,6 @@ class signUpUserView(TemplateView):
 
 @login_required
 def logoutUser(request):
+    request.user.auth_token.delete()
     logout(request)
     return redirect('homePage')

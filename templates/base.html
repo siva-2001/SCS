@@ -57,22 +57,12 @@
         </nav>
         <div class="footer-actions d-flex align-items-center">
 
-
-            {% if not userAuth %}
-            <a href="{% url 'loginPage' %}" id="login-head-button" class="menu-btn menu-log-in-btn p-3 me-3 d-block text-center text-decoration-none">
-                Войти
-            </a>
-            <a href="{% url 'signupPage' %}" class="menu-btn menu-log-in-btn p-3 d-block text-center text-decoration-none">
-                Регистрация
-            </a>
-            {% else %}
-
             <!--  КНОПКА ДОСТУПНА ТОЛЬКО ОРГАНИЗАТОРАМ -->
-            <button type="button" class="menu-btn menu-new-event-btn p-3 d-block text-center text-decoration-none fs-5">
+            <!-- <button type="button" class="menu-btn menu-new-event-btn p-3 d-block text-center text-decoration-none fs-5">
                 Новое событие
-            </button>
+            </button> -->
 
-            <div class="user-profile-item ms-2">
+            <!-- <div class="user-profile-item ms-2">
                 <div class="item-icons d-flex align-items-center px-2">
                     <svg class="me-3 role-icon" width="49" height="35" viewBox="0 0 49 35" fill="none" xmlns="http://www.w3.org/2000/svg">
                         <path fill-rule="evenodd" clip-rule="evenodd" d="M4.36792 16.5184L4.79631 15.0433L5.88128 15.1201L6.60193 14.4371L9.14821 17.2297C8.94251 17.6445 8.82032 18.0962 8.7887 18.5589C8.7571 19.0216 8.81669 19.4861 8.96405 19.9254L11.7666 20.1234L14.2768 22.8797L16.4828 20.859L8.27943 12.8771L9.05213 12.1618L8.98807 11.1191L10.4894 10.8483L11.4583 9.95108L7.97516 6.11575L7.02631 6.92404L6.5699 8.40321L5.40485 8.32238L2.32209 10.9776L2.39015 12.1173L0.596531 12.4689L0 12.9781L3.74336 17.0842L4.36792 16.5184ZM26.2235 21.1621L24.8223 34.5918L49 34.8383L47.5307 18.1148C45.8372 16.5589 43.2548 15.5242 40.3803 14.9908L40.1961 16.7367L37.5537 16.6639L40.2281 26.0401L31.5243 25.349L34.1987 16.5791L31.5003 16.5104L31.2521 14.6998L30.3993 14.7321C30.3993 14.7321 15.1256 14.9261 12.8716 14.9261C12.6774 14.9271 12.4835 14.9406 12.291 14.9665L19.2773 20.669L26.2235 21.1621ZM30.6515 12.2103H32.0568C33.8944 14.9019 37.7699 14.7362 39.8998 12.2709H41.5453C44.8403 12.2951 45.3127 8.32642 42.7704 7.19077C43.8834 5.74393 43.2428 3.23015 40.7686 2.8745C38.979 -0.698142 33.5902 -1.19524 31.7365 2.83409C29.1101 2.9715 28.3655 5.6631 29.5305 7.16248C27.1083 8.2658 27.4647 12.186 30.6515 12.2103ZM1.3412 31.6941L0.192169 35L13.2039 34.8181L11.8667 31.6496L1.3412 31.6941Z" fill="#000814"/>
@@ -101,8 +91,7 @@
                         Выход
                     </a>
                 </div>
-            </div>
-            {% endif %}
+            </div> -->
         </div>
     </div>
 </footer>

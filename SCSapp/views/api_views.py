@@ -26,6 +26,8 @@ class PermissionsAPIView(APIView):
                 data["FIO"] = user.last_name + ' ' + ((user.first_name[0]+'.') if user.first_name else "") 
             else: data["FIO"] = 'NoName'
             data["isOrganizer"] = user.groups.filter(name="organizer").exists()
+
+        print(data)
         return Response(data)
 
 
@@ -41,7 +43,8 @@ class CompetitionAPIView(generics.ListCreateAPIView):
     queryset = Competition.objects.all()
     serializer_class = CompetitionSerializer
 
-class AnnouncedEventsAPIView(generics.ListAPIView):
+# class AnnouncedEventsAPIView(generics.ListAPIView):
+class TestAPIView(generics.ListAPIView):
     authentication_classes = [TokenAuthentication]
     permission_classes = [IsAuthenticated]
 
