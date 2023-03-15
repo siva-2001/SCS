@@ -15,7 +15,7 @@ class CompetitionSerializer(serializers.ModelSerializer):
     organizer = serializers.HiddenField(default=serializers.CurrentUserDefault())
     class Meta:
         model = Competition
-        fields = ['name', 'description', 'organizer', 'dateTimeStartCompetition', 'sportType', 'type', 'regulations']
+        fields = ['id', 'name', 'description', 'organizer', 'dateTimeStartCompetition', 'sportType', 'type', 'regulations']
 
 class MatchSerializer(serializers.ModelSerializer):
     class Meta:

@@ -55,7 +55,7 @@ urlpatterns = [
     # ---------------------------------------------------------------------------------------------
 
     # path('api-token-auth/', JudgeObtainAuthToken.as_view(), name="authToken"),
-    path('api/v1/judgeCompetitions', JudgeCompetitionsAPIView.as_view(), name='judgeCompetitions'),
+    path('api/v1/judgeCompetitions/', JudgeCompetitionsAPIView.as_view(), name='judgeCompetitions'),
     path('api/v1/judgeMatches/', JudgeMatchesAPIView.as_view(), name='judgeMatches'),
 
 
@@ -67,16 +67,16 @@ urlpatterns = [
 
 
 
-    path('api/v1/currentCompetitions', CurrentCompetitionAPIView.as_view(), name='currentCompetitions'),
-    path('api/v1/currentOlympics', CurrentOlympicsAPIView.as_view(), name='currentOlympics'),
+    path('api/v1/currentCompetitions/', CurrentCompetitionAPIView.as_view(), name='currentCompetitions'),
+    path('api/v1/currentOlympics/', CurrentOlympicsAPIView.as_view(), name='currentOlympics'),
     
     # path('api/v1/announcedEvents', AnnouncedEventsAPIView.as_view(), name='announcedEvents'),
-    path('api/v1/test', TestAPIView.as_view(), name='test'),
-    path('createTestDataset', CreateTestDataView, name='createTestDataView'),
+    path('api/v1/test/', TestAPIView.as_view(), name='test'),
+    path('createTestDataset/', CreateTestDataView, name='createTestDataView'),
     
     path('past/', pastEventsView, name='history'),
     path('', homePageView, name='homePage'),
-    path('api/v1/olympicsList', OlympicsAPIView.as_view(), name='APIOlympics'),
+    path('api/v1/olympicsList/', OlympicsAPIView.as_view(), name='APIOlympics'),
     path('createCompetition/', CreateCompetitionView.as_view(), name='createCompetition'),
     path('competition/<comp_id>/', competitionView, name='competition'),
     path('createOlympics/', CreateOlympicsView.as_view(), name='createOlympics'),
