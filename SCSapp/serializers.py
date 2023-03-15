@@ -22,6 +22,9 @@ class MatchSerializer(serializers.ModelSerializer):
         model = AbstractMatch
         fields = ["id", "isAnnounced", "competition", "matchDateTime", "place", "protocol", "judge"]
 
+
+
+
 class UserSerializer(serializers.ModelSerializer):
     class Meta:
         model = User

@@ -56,7 +56,6 @@ class AbstractMatch(models.Model):
             data['judge'] = self.judge.first_name + " " + self.judge.last_name
         return data
 
-
     def startMatch(self):
         pass
         #   Начало трансляции ?
@@ -72,3 +71,8 @@ class AbstractMatch(models.Model):
         for res in AbstractMatchTeamResult.objects.filter(match=self):
             res.teamScore = 0
             res.save()
+
+
+# class VolleyballMatch(AbstractMatch):
+#     def startRound(self):
+#         pass

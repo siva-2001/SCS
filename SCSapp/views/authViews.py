@@ -2,12 +2,19 @@ from django.contrib.auth import logout, authenticate, login
 from django.contrib.auth.decorators import login_required
 from django.shortcuts import redirect
 from django.views.generic import TemplateView
+from rest_framework.authtoken.views import ObtainAuthToken
 
 from django.http import HttpResponse
 
-
 class loginPageView(TemplateView):
     template_name = 'logInUser.html'
+
+class JudgeObtainAuthToken(ObtainAuthToken):
+    # переопределение класса создающего токен для авторизации только судей
+
+    def post(request, *args, **kwargs):
+        super().post(request, *args, **kwargs)
+        
 
 def loginView(request):
     if request.method == "POST":

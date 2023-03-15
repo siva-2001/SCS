@@ -1,8 +1,20 @@
 from SCSapp.models.Competition import Competition
+from SCSapp.models.Match import AbstractMatch
+from SCSapp.models.MatchTeamResult import AbstractMatchTeamResult
+from SCSapp.models.Team import Team
 from SCSapp.models.User import User
+from SCSapp.models.Participant import AbstractParticipant
 from django.shortcuts import redirect
 
+
 def CreateTestDataView(request):
+    user = User.objects.create(
+        username = "user",
+    )
+    user.set_password("aaaa1234")
+    user.save()
+
+
     competition_1 = Competition.objects.create(
         name = "Межфакультетские соревнования. Кубок по волейболу ТУСУР", 
         description = "Лучшие соревнования за последние 10, а то и 15 лет!",
@@ -16,7 +28,7 @@ def CreateTestDataView(request):
         description = "Вторые лучшие соревнования за последние 10, а то и 15 лет!",
         sportType = Competition.SportTypeChoices.FOOTBALL,
         type = Competition.TypeChoices.INTERNAL, 
-        organizer = User.objects.get(username="admin")
+        organizer = User.objects.get(username="user")
     )
 
     competition_3 = Competition.objects.create(
@@ -24,7 +36,7 @@ def CreateTestDataView(request):
         description = "Лучшие соревнования за последние 20, а то и 50 лет!",
         sportType = Competition.SportTypeChoices.FOOTBALL,
         type = Competition.TypeChoices.INTERCOLLEGIATE, 
-        organizer = User.objects.get(username="admin")
+        organizer = User.objects.get(username="user")
     )
 
     competition_4 = Competition.objects.create(
@@ -34,9 +46,83 @@ def CreateTestDataView(request):
         type = Competition.TypeChoices.INTERCOLLEGIATE, 
         organizer = User.objects.get(username="admin")
     )
+
     competition_1.status = Competition.StatusChoices.PAST
     competition_3.status = Competition.StatusChoices.CURRENT
+    competition_2.status = Competition.StatusChoices.CURRENT
     competition_1.save()
     competition_3.save()
+
+    match_1 = AbstractMatch.objects.create(
+        competition = competition_2,
+        judge = User.objects.get(username="admin")
+    )  
+
+    match_2 = AbstractMatch.objects.create(
+        competition = competition_3,
+        judge = User.objects.get(username="user")
+    )
+
+    match_3 = AbstractMatch.objects.create(
+        competition = competition_3,
+        judge = User.objects.get(username="admin")
+    )
+
+    match_4 = AbstractMatch.objects.create(
+        competition = competition_2,
+        judge = User.objects.get(username="user")
+    )
+
+    participant_1 = AbstractParticipant.objects.create(name="ФСУ")
+    participant_2 = AbstractParticipant.objects.create(name="ФБ")
+    participant_3 = AbstractParticipant.objects.create(name="ГФ")
+    participant_4 = AbstractParticipant.objects.create(name="РТФ")
+
+    team_1 = Team.objects.create(participant=participant_1)
+    team_2 = Team.objects.create(participant=participant_2)
+    team_3 = Team.objects.create(participant=participant_3)
+    team_4 = Team.objects.create(participant=participant_4)
+    
+    match_team_res_1 = AbstractMatchTeamResult.objects.create(
+        team = team_1,
+        match = match_1
+    )
+
+    match_team_res_2 = AbstractMatchTeamResult.objects.create(
+        team = team_2,
+        match = match_1
+    )
+
+    match_team_res_3 = AbstractMatchTeamResult.objects.create(
+        team = team_3,
+        match = match_2
+    )
+
+    match_team_res_4 = AbstractMatchTeamResult.objects.create(
+        team = team_4,
+        match = match_2
+    )
+
+    match_team_res_5 = AbstractMatchTeamResult.objects.create(
+        team = team_1,
+        match = match_3
+    )
+
+    match_team_res_6 = AbstractMatchTeamResult.objects.create(
+        team = team_2,
+        match = match_3
+    )
+
+    match_team_res_7 = AbstractMatchTeamResult.objects.create(
+        team = team_3,
+        match = match_4
+    )
+
+    match_team_res_8 = AbstractMatchTeamResult.objects.create(
+        team = team_4,
+        match = match_4
+    )
+
+
 
     return redirect('homePage')

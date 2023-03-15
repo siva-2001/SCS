@@ -20,16 +20,16 @@ class Competition(models.Model):
     announced_objects = AnnouncedCompetitionManager()
 
     class TypeChoices(models.TextChoices):
-        INTERNAL = 'INT', 'Внутреннее'
-        INTERCOLLEGIATE = 'IC', 'Межвузовское'
+        INTERNAL = 'INTERNAL', 'Внутреннее'
+        INTERCOLLEGIATE = 'INTERCOLLEGIATE', 'Межвузовское'
 
     class StatusChoices(models.TextChoices):
-        ANNOUNSED = "AN", 'Анонсированное'
-        CURRENT = 'CR', 'Текущее'
-        PAST = 'P', 'Прошедшее'
+        ANNOUNSED = "ANNONCED", 'Анонсированное'
+        CURRENT = 'CURRENT', 'Текущее'
+        PAST = 'PAST', 'Прошедшее'
 
     status = models.CharField(
-        max_length=2,
+        max_length=128,
         choices = StatusChoices.choices,
         default = StatusChoices.ANNOUNSED,
         verbose_name = 'Статус',
@@ -37,14 +37,14 @@ class Competition(models.Model):
 
     type = models.CharField(
         verbose_name='Тип',
-        max_length=3,
+        max_length=128,
         choices = TypeChoices.choices,
         default = TypeChoices.INTERCOLLEGIATE,
     )
 
     class SportTypeChoices(models.TextChoices):
-        FOOTBALL = 'BB', 'Баскетбол'
-        VOLLEYBALL = 'VB', 'Волейбол'
+        FOOTBALL = 'BASKETBALL', 'Баскетбол'
+        VOLLEYBALL = 'VOLLEYBALL', 'Волейбол'
 
 
     sportType = models.CharField(

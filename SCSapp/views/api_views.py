@@ -10,13 +10,12 @@ from SCSapp.models.Olympics import Olympics
 from SCSapp.serializers import OlympicsSerializer, UserSerializer
 from SCSapp.models.Competition import Competition
 from SCSapp.models.Match import AbstractMatch
-from SCSapp.serializers import CompetitionSerializer
-from SCSapp.serializers import MatchSerializer
+from SCSapp.serializers import MatchSerializer, CompetitionSerializer
 from SCSapp.models.User import User
+from SCSapp.models.MatchTeamResult import AbstractMatchTeamResult
 
 
 class PermissionsAPIView(APIView):
-
     def get(self, request):
         data = {}
         user = request.user
@@ -35,15 +34,6 @@ class SignUpAPIView(generics.CreateAPIView):
     queryset = User.objects.all()
     serializer_class = UserSerializer
 
-class OlympicsAPIView(generics.ListAPIView):
-    queryset = Olympics.objects.all()
-    serializer_class = OlympicsSerializer
-
-class CompetitionAPIView(generics.ListCreateAPIView):
-    queryset = Competition.objects.all()
-    serializer_class = CompetitionSerializer
-
-# class AnnouncedEventsAPIView(generics.ListAPIView):
 class TestAPIView(generics.ListAPIView):
     authentication_classes = [TokenAuthentication]
     permission_classes = [IsAuthenticated]
@@ -59,17 +49,65 @@ class CurrentCompetitionAPIView(generics.ListAPIView):
     queryset =  Competition.current_objects.all()
     serializer_class = CompetitionSerializer
 
-class JudgeMatchesAPIView(APIView):
+class JudgeCompetitionsAPIView(APIView):
+    authentication_classes = [TokenAuthentication]
+    permission_classes = [IsAuthenticated]
 
-    # authentication_classes = [authentication.TokenAuthentication]
-    # permission_classes = [permissions.IsAdminUser]
     def get(self, request):
-        matches = [match for match in AbstractMatch.objects.all() if request.user == match.judge]
-        serializer = MatchSerializer(matches, many=True)
+        if not request.GET.get("olympics_id"):
+            competitions = [match.competition for match in AbstractMatch.objects.all() 
+                if request.user == match.judge and
+                match.competition.status == Competition.StatusChoices.CURRENT]       
+        else:
+            competitions = [match.competition for match in AbstractMatch.objects.all() 
+                if request.user == match.judge and
+                int(request.GET.get("olympics_id")) == match.competition.olympics.id and
+                match.competition.status == Competition.StatusChoices.CURRENT] 
+
+        serializer = CompetitionSerializer(competitions, many=True)
         return Response(serializer.data)
 
 
 
+class JudgeMatchesAPIView(APIView):
+    authentication_classes = [TokenAuthentication]
+    permission_classes = [IsAuthenticated]
+
+    def get(self, request):
+        if not request.GET.get("competition_id"): return Response({"error":"Не указан competition_id параметр HTTP-запроса"})
+        
+        matches = [match for match in AbstractMatch.objects.all() 
+            if (request.user == match.judge and 
+            int(request.GET.get("competition_id")) == match.competition.id and 
+            match.isAnnounced)]
+        serializer = MatchSerializer(matches, many=True)
+        
+        for matchDataDict in serializer.data:
+            abstrTeamRes = AbstractMatchTeamResult.objects.filter(match = matchDataDict["id"])
+            matchDataDict["firstTeam"] = abstrTeamRes[0].team.participant.name
+            matchDataDict["secondTeam"] = abstrTeamRes[1].team.participant.name
+
+        return Response(serializer.data)
+
+
+
+
+
+
+class OlympicsAPIView(generics.ListAPIView):
+    queryset = Olympics.objects.all()
+    serializer_class = OlympicsSerializer
+
+class CompetitionAPIView(generics.ListCreateAPIView):
+    queryset = Competition.objects.all()
+    serializer_class = CompetitionSerializer
+
+class AnnouncedEventsAPIView(generics.ListAPIView):
+    authentication_classes = [TokenAuthentication]
+    permission_classes = [IsAuthenticated]
+
+    queryset = Competition.announced_objects.all()
+    serializer_class = CompetitionSerializer
 
 
 

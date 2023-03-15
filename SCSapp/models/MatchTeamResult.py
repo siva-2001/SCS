@@ -12,14 +12,6 @@ class AbstractMatchTeamResult(models.Model):
         object.match = match
         object.save()
 
-    def getData(self):
-        return {
-            'teamScore':self.teamScore,
-            'team':self.team,
-        }
-
-
-
 class VolleyballMatchTeamResult(AbstractMatchTeamResult):
     firstRoundScore = models.IntegerField(default=None, null=True, blank=True)
     secondRoundScore = models.IntegerField(default=None, null=True, blank=True)
