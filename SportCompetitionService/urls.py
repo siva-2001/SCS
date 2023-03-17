@@ -27,9 +27,9 @@ from django.conf.urls.static import static
 from django.urls import include, path, re_path
 from django.conf import settings
 from SCSapp.views.api_views import OlympicsAPIView, CurrentCompetitionAPIView, CurrentOlympicsAPIView, JudgeCompetitionsAPIView
-from SCSapp.views.api_views import JudgeMatchesAPIView, SignUpAPIView, PermissionsAPIView, TestAPIView#, AnnouncedEventsAPIView
+from SCSapp.views.api_views import JudgeMatchesAPIView, SignUpAPIView, PermissionsAPIView, TestGetMatchEventList #, AnnouncedEventsAPIView
 from SCSapp.views.createTestDataView import CreateTestDataView
-from rest_framework.authtoken import views
+from rest_framework.authtoken import views as drf_views
 
 urlpatterns = [
     #   admin url's
@@ -38,7 +38,7 @@ urlpatterns = [
     #   auth url's
     path('loginPage/', loginPageView.as_view(), name='loginPage'),
     path('login/', loginView, name='login'),
-    path('api-token-auth/', views.obtain_auth_token, name="authToken"),
+    path('api-token-auth/', drf_views.obtain_auth_token, name="authToken"),
     
     #   register url's
     path('signupPage/', signUpUserView.as_view(), name='signupPage'),
@@ -54,10 +54,10 @@ urlpatterns = [
     #   нужно отдельное логирование для мобилки, только для судей
     # ---------------------------------------------------------------------------------------------
 
-    # path('api-token-auth/', JudgeObtainAuthToken.as_view(), name="authToken"),
+    path('mobile-api-token-auth/', JudgeObtainAuthToken.as_view(), name="judgeAuthToken"),
     path('api/v1/judgeCompetitions/', JudgeCompetitionsAPIView.as_view(), name='judgeCompetitions'),
     path('api/v1/judgeMatches/', JudgeMatchesAPIView.as_view(), name='judgeMatches'),
-
+    path('testApi/getMatchEventList/', TestGetMatchEventList.as_view(), name='judgeMatches'),
 
     # ---------------------------------------------------------------------------------------------
     # ---------------------------------------------------------------------------------------------
@@ -71,7 +71,6 @@ urlpatterns = [
     path('api/v1/currentOlympics/', CurrentOlympicsAPIView.as_view(), name='currentOlympics'),
     
     # path('api/v1/announcedEvents', AnnouncedEventsAPIView.as_view(), name='announcedEvents'),
-    path('api/v1/test/', TestAPIView.as_view(), name='test'),
     path('createTestDataset/', CreateTestDataView, name='createTestDataView'),
     
     path('past/', pastEventsView, name='history'),

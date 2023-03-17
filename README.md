@@ -1,8 +1,8 @@
 <!-- Создание базы данных и админа, запуск сервера -->
+pip install -r requirements.txt
 python manage.py makemigrations
 python manage.py migrate
 python manage.py createsuperuser
-pip install -r requirements.txt
 python manage.py runserver
 
 
@@ -11,8 +11,3 @@ http://127.0.0.1:8000/createTestDataset/
 
 <!-- Авторизация -->
 http://127.0.0.1:8000/api-token-auth/
-
-<!-- Получение данных соревнований -->
-http://127.0.0.1:8000/api/v1/test
-
-<!-- котакбас -->

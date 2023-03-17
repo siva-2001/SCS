@@ -3,17 +3,25 @@ from django.contrib.auth.decorators import login_required
 from django.shortcuts import redirect
 from django.views.generic import TemplateView
 from rest_framework.authtoken.views import ObtainAuthToken
+from rest_framework.views import APIView
 
 from django.http import HttpResponse
+from rest_framework.response import Response
+from rest_framework.authtoken.models import Token
+
 
 class loginPageView(TemplateView):
     template_name = 'logInUser.html'
 
 class JudgeObtainAuthToken(ObtainAuthToken):
-    # переопределение класса создающего токен для авторизации только судей
 
-    def post(request, *args, **kwargs):
-        super().post(request, *args, **kwargs)
+    def post(self, request, *args, **kwargs):
+        response = super().post(request, args, *kwargs)
+        token = [token for token in Token.objects.all() if response.data["token"] == token.key][0]
+        if "judges" in [group.name for group in token.user.groups.all()]:
+            return response
+        return Response({"ERROR":"User isn't Judge"})
+
         
 
 def loginView(request):

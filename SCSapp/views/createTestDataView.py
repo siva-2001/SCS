@@ -4,8 +4,10 @@ from SCSapp.models.MatchTeamResult import AbstractMatchTeamResult
 from SCSapp.models.Team import Team
 from SCSapp.models.User import User
 from SCSapp.models.Participant import AbstractParticipant
-from django.shortcuts import redirect
 
+from django.shortcuts import redirect
+from django.db import models
+from django.contrib.auth.models import Group
 
 def CreateTestDataView(request):
     user = User.objects.create(
@@ -123,6 +125,9 @@ def CreateTestDataView(request):
         match = match_4
     )
 
-
+    group = Group.objects.create()
+    group.name = "judges"
+    group.save()
+    user.groups.add(group)
 
     return redirect('homePage')
