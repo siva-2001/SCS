@@ -13,6 +13,7 @@ from SCSapp.models.Match import AbstractMatch
 from SCSapp.serializers import MatchSerializer, CompetitionSerializer
 from SCSapp.models.User import User
 from SCSapp.models.MatchTeamResult import AbstractMatchTeamResult
+from SCSapp.matchActionsDict import actionsDict
 
 
 class PermissionsAPIView(APIView):
@@ -82,7 +83,7 @@ class JudgeMatchesAPIView(APIView):
 
         return Response(serializer.data)
 
-class TestGetMatchEventList(APIView):
+class GetMatchEventList(APIView):
     authentication_classes = [TokenAuthentication]
     permission_classes = [IsAuthenticated]
 
@@ -91,59 +92,19 @@ class TestGetMatchEventList(APIView):
             return Response({"ERROR":"Судейство в этом матче недоступно под этой учётной записью"})
     
         sportType = AbstractMatch.objects.get(id=request.GET.get("match_id")).competition.sportType 
-        
-        response = {
-            "info":[
+    
+        if sportType == Competition.SportTypeChoices.VOLLEYBALL: 
+            response = actionsDict["volleyball"]
+        # elif sportType == Competition.SportTypeChoices.BASKETBALL: 
+        #     pass
+        else: response = {"ERROR":"Нет события для этого вида спорта"}
+
+        # FOR_DEBUG
+        response["info"] = [
                 "Обмен данными происходит по технологии websocket. В сообщении скорей всего мобилка будет передавать JSON-запись с указанием сигнала и, для событий команд - название команды (участника)",
                 "None в button_color окрашивает кнопку в стандартный серый цвет. '_FFFFFF' - нижнее подчёркивание говорит что текст кнопки должен быть белым. Кнопка отмены окрашивается отдельно, смотри фигму",
-            ],
-            "general_events":[
-                {
-                    "signal":"START_ROUND",
-                    "button_string":"Начать раунд",
-                    "button_color":"67CD6B",
-                    "description":"Запускает новый игровой раунд. Кнопка не должна сущестововать одновременно с CONTINUE_ROUND и PAUSE_ROUND кнопкой. Должно иметь всплывающее окно подтверждения действия",
-                },
-                {
-                    "signal":"PAUSE_ROUND",
-                    "button_string":"Остановить игру",
-                    "button_color":"_E26D00",
-                    "description":"Останавливает счёт времени игрового раунда. Кнопка не должна сущестововать одновременно с CONTINUE_ROUND кнопкой.  Должно иметь всплывающее окно подтверждения действия",
-                },
-                {
-                    "signal":"CONTINUE_ROUND",
-                    "button_string":"Продолжить игру",
-                    "button_color":"67CD6B",
-                    "description":"Возобнавляет счёт времени игрового раунда. Кнопка не должна сущестововать одновременно с PAUSE_ROUND кнопкой. Должно иметь всплывающее окно подтверждения действия",
-                },
-                {
-                    "signal":"STOP_MATCH",
-                    "button_string":"Завершить матч",
-                    "button_color":"_C50404",
-                    "description":"Преждевременно завершает матч. Кнопка не должна сущестововать одновременно с START_ROUND кнопкой. Должно иметь всплывающее окно подтверждения действия",
-                }   
-            ],
-        }
-        if sportType == Competition.SportTypeChoices.VOLLEYBALL: 
-            response["team_events"] = [
-                {
-                    "signal":"GOAL",
-                    "button_string":"Гол",
-                    "button_color":"67CD6B",
-                    "description":"Засчитывает гол указанной команде"
-                },
-                {
-                    "signal":"CANCEL",
-                    "button_string":"Отмена",
-                    "description":"Отменяет последнее событие. Обязательно для любого вида спорта"
-                },
-                {
-                    "signal":"BREAK",
-                    "button_string":"Перерыв",
-                    "description":"Должно также указываться сколько их осталось"
-                }
             ]
-        else: response = {"ERROR":"Нет события для этого вида спорта"}
+
         return Response(response)
 
 

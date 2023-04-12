@@ -5,19 +5,9 @@ class MatchAction(models.Model):
         verbose_name = 'Событие'
         verbose_name_plural = 'События'
 
-    class EventTypeChoices(models.TextChoices):
-        GOAL = 'Goal'
-        PLAYER_REPLACEMENT = 'Player replacement'
-        PART = 'Part'
-        INTERVAL = 'Interval'
-        END = 'Game over'
-        NONE = 0
-        FIRST = 1
-        SECOND = 2
 
     eventType = models.CharField(
         max_length=20,
-        choices=EventTypeChoices.choices,
         verbose_name='Тип события'
     )
 

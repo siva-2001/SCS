@@ -7,7 +7,7 @@ from SCSapp.models import User
 class AbstractMatch(models.Model):
     isAnnounced = models.BooleanField(default=True)
     competition = models.ForeignKey("SCSapp.Competition", on_delete=models.CASCADE, null=True)
-    matchDateTime = models.DateTimeField(null=True)
+    matchDateTime = models.DateTimeField(null=True, blank=True)
     place = models.CharField(max_length=128, null=True, blank=True)
     protocol = models.FileField(upload_to='media/protocols/match', default=None, null=True, blank=True)
     judge = models.ForeignKey(User, on_delete=models.SET_NULL, default=None, blank=True, null=True)
@@ -33,29 +33,6 @@ class AbstractMatch(models.Model):
         self.judge = judge
         self.save()
 
-    def getData(self):
-        matchTeamResults = AbstractMatchTeamResult.objects.filter(match=self)
-        gameData = {
-            'firstParticipantName':matchTeamResults[0].team.participant.name,
-            'secondParticipantName':matchTeamResults[1].team.participant.name,
-            'isAnnounced':True,
-        }
-        if not self.isAnnounced:
-            gameData['firstTeamScore'] = matchTeamResults[0].teamScore
-            gameData['secondTeamScore'] = matchTeamResults[1].teamScore
-            gameData['isAnnounced'] = False
-        data = {
-            'matchDate':self.matchDateTime,
-            'place':self.place,
-            'gameData':gameData
-        }
-        if self.protocol: data['protocol'] = self.protocol.url
-
-        #   Изменить способ определения наличия судьи
-        if self.judge.first_name or self.judge.last_name:
-            data['judge'] = self.judge.first_name + " " + self.judge.last_name
-        return data
-
     def startMatch(self):
         pass
         #   Начало трансляции ?
@@ -71,7 +48,29 @@ class AbstractMatch(models.Model):
         for res in AbstractMatchTeamResult.objects.filter(match=self):
             res.teamScore = 0
             res.save()
+    
+    # def getData(self):
+    #     matchTeamResults = AbstractMatchTeamResult.objects.filter(match=self)
+    #     gameData = {
+    #         'firstParticipantName':matchTeamResults[0].team.participant.name,
+    #         'secondParticipantName':matchTeamResults[1].team.participant.name,
+    #         'isAnnounced':True,
+    #     }
+    #     if not self.isAnnounced:
+    #         gameData['firstTeamScore'] = matchTeamResults[0].teamScore
+    #         gameData['secondTeamScore'] = matchTeamResults[1].teamScore
+    #         gameData['isAnnounced'] = False
+    #     data = {
+    #         'matchDate':self.matchDateTime,
+    #         'place':self.place,
+    #         'gameData':gameData
+    #     }
+    #     if self.protocol: data['protocol'] = self.protocol.url
 
+    #     #   Изменить способ определения наличия судьи
+    #     if self.judge.first_name or self.judge.last_name:
+    #         data['judge'] = self.judge.first_name + " " + self.judge.last_name
+    #     return data
 
 # class VolleyballMatch(AbstractMatch):
 #     def startRound(self):

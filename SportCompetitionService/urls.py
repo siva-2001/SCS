@@ -27,7 +27,7 @@ from django.conf.urls.static import static
 from django.urls import include, path, re_path
 from django.conf import settings
 from SCSapp.views.api_views import OlympicsAPIView, CurrentCompetitionAPIView, CurrentOlympicsAPIView, JudgeCompetitionsAPIView
-from SCSapp.views.api_views import JudgeMatchesAPIView, SignUpAPIView, PermissionsAPIView, TestGetMatchEventList #, AnnouncedEventsAPIView
+from SCSapp.views.api_views import JudgeMatchesAPIView, SignUpAPIView, PermissionsAPIView, GetMatchEventList #, AnnouncedEventsAPIView
 from SCSapp.views.createTestDataView import CreateTestDataView
 from rest_framework.authtoken import views as drf_views
 
@@ -57,15 +57,10 @@ urlpatterns = [
     path('mobile-api-token-auth/', JudgeObtainAuthToken.as_view(), name="judgeAuthToken"),
     path('api/v1/judgeCompetitions/', JudgeCompetitionsAPIView.as_view(), name='judgeCompetitions'),
     path('api/v1/judgeMatches/', JudgeMatchesAPIView.as_view(), name='judgeMatches'),
-    path('testApi/getMatchEventList/', TestGetMatchEventList.as_view(), name='judgeMatches'),
+    path('api/v1/getMatchEventList/', GetMatchEventList.as_view(), name='judgeMatches'),
 
     # ---------------------------------------------------------------------------------------------
     # ---------------------------------------------------------------------------------------------
-
-
-
-
-
 
     path('api/v1/currentCompetitions/', CurrentCompetitionAPIView.as_view(), name='currentCompetitions'),
     path('api/v1/currentOlympics/', CurrentOlympicsAPIView.as_view(), name='currentOlympics'),
