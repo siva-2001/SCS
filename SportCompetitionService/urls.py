@@ -20,16 +20,17 @@ from SCSapp.views.authViews import signUpUserView, logoutUser, loginView, loginP
 from SCSapp.views.competitionView import competitionView
 from SCSapp.views.createOlympicsView import CreateOlympicsView
 from SCSapp.views.eventListsViews import pastEventsView
-from SCSapp.views.matchView import matchView
 from SCSapp.views.createCompetitionView import CreateCompetitionView
 from django.conf.urls.static import static
 
 from django.urls import include, path, re_path
 from django.conf import settings
 from SCSapp.views.api_views import OlympicsAPIView, CurrentCompetitionAPIView, CurrentOlympicsAPIView, JudgeCompetitionsAPIView
-from SCSapp.views.api_views import JudgeMatchesAPIView, SignUpAPIView, PermissionsAPIView, GetMatchEventList #, AnnouncedEventsAPIView
+from SCSapp.views.api_views import JudgeMatchesAPIView, SignUpAPIView, PermissionsAPIView, GetMatchEventList, CompetitionAPIView
 from SCSapp.views.createTestDataView import CreateTestDataView
 from rest_framework.authtoken import views as drf_views
+
+from SCSapp.views.room import roomView
 
 urlpatterns = [
     #   admin url's
@@ -60,21 +61,41 @@ urlpatterns = [
     path('api/v1/getMatchEventList/', GetMatchEventList.as_view(), name='judgeMatches'),
 
     # ---------------------------------------------------------------------------------------------
+    #   Вебсокет
     # ---------------------------------------------------------------------------------------------
+
+    path('liveStream/<str:match_id>/', roomView, name="match"),
+
+    # ---------------------------------------------------------------------------------------------
+    # --------------------------------------  Готовое  --------------------------------------------
+
+    path('createTestDataset/', CreateTestDataView, name='createTestDataView'),
+    path('createCompetition/', CreateCompetitionView.as_view(), name='createCompetition'),
+    
+
+    # ---------------------------------------------------------------------------------------------
+    # ---------------------------------------------------------------------------------------------
+
+    path('createOlympics/', CreateOlympicsView.as_view(), name='createOlympics'),
+    path('competition/<comp_id>/', competitionView, name='competition'),
+    
+    path('api/v1/competitions/', CompetitionAPIView.as_view(), name='competition'),
+    
+
 
     path('api/v1/currentCompetitions/', CurrentCompetitionAPIView.as_view(), name='currentCompetitions'),
     path('api/v1/currentOlympics/', CurrentOlympicsAPIView.as_view(), name='currentOlympics'),
-    
-    # path('api/v1/announcedEvents', AnnouncedEventsAPIView.as_view(), name='announcedEvents'),
-    path('createTestDataset/', CreateTestDataView, name='createTestDataView'),
-    
-    path('past/', pastEventsView, name='history'),
-    path('', homePageView, name='homePage'),
     path('api/v1/olympicsList/', OlympicsAPIView.as_view(), name='APIOlympics'),
-    path('createCompetition/', CreateCompetitionView.as_view(), name='createCompetition'),
-    path('competition/<comp_id>/', competitionView, name='competition'),
-    path('createOlympics/', CreateOlympicsView.as_view(), name='createOlympics'),
-    path('match/<match_id>/', matchView, name='match')
+
+    # path('api/v1/announcedEvents', AnnouncedEventsAPIView.as_view(), name='announcedEvents'),
+    # 
+    path('past/', pastEventsView, name='history'),      #   to REST 
+    path('', homePageView, name='homePage'),            #       API
+
+    
+    
+    
+    
 ]
 
 urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)

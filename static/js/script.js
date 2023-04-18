@@ -7,20 +7,6 @@ $(document).ready(() => {
         delete_cookie("session_id")
     }
 
-    if (window.location.pathname == '/'){
-        $.ajax({
-            method: "GET",
-            url: "http://127.0.0.1:8000/api/v1/test",
-            dataType : 'json',
-            headers:{ 
-                "Authorization": cookieStrToObject(document.cookie).Authorization 
-            },
-            success: function(data, status){
-                console.log(data)
-            },
-        })
-    }
-
     //      Отправляет данные для регистрации, после авторизует пользователя
     if (window.location.pathname == '/signup/'){
         let username = $('input[name=username]');
@@ -85,11 +71,12 @@ $(document).ready(() => {
         $('#create-competition-btn').click((e) => {
 
             e.preventDefault();
+            console.log(regulations.val())
             if (name.val() === "" || description.val() === "" || date.val() === "") alert("Заполните пустые поля");
             else {
                 $.ajax({
                     method: "POST",
-                    url: "http://127.0.0.1:8000/api/v1/test",
+                    url: "http://127.0.0.1:8000/api/v1/competitions/",
                     dataType : 'json',
                     data: {
                         "name": name.val(),
@@ -97,9 +84,12 @@ $(document).ready(() => {
                         "dateTimeStartCompetition": date.val().toString(),
                         "sportType": sportType.val(),
                         "type": type.val(),
-                        "regulations": null,
+                        "regulations": regulations.val(),
                     },
-                    headers:{"X-CSRFToken": scrf_token},
+                    headers:{
+                        "X-CSRFToken": scrf_token,
+                        "Authorization": cookieStrToObject(document.cookie).Authorization 
+                    },
                 })
                     .done(function() {
                         alert('Соревнование успешно создано');

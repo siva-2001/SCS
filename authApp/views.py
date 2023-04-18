@@ -22,8 +22,6 @@ class JudgeObtainAuthToken(ObtainAuthToken):
             return response
         return Response({"ERROR":"User isn't Judge"})
 
-        
-
 def loginView(request):
     if request.method == "POST":
         username = request.POST['username']
@@ -35,7 +33,6 @@ def loginView(request):
             return HttpResponse('{"hello":"answer"}')
         else:
             print("login failed")
-            redirect("homePage")
 
 
 class signUpUserView(TemplateView):
@@ -46,3 +43,24 @@ def logoutUser(request):
     request.user.auth_token.delete()
     logout(request)
     return redirect('homePage')
+
+# API views
+
+class PermissionsAPIView(APIView):
+    def get(self, request):
+        data = {}
+        user = request.user
+        data["isAnonymousUser"] = True if (type(user) == AnonymousUser) else False
+        if not data["isAnonymousUser"]:
+            if user.last_name:
+                data["FIO"] = user.last_name + ' ' + ((user.first_name[0]+'.') if user.first_name else "") 
+            else: data["FIO"] = 'NoName'
+            data["isOrganizer"] = user.groups.filter(name="organizer").exists()
+
+        print(data)
+        return Response(data)
+
+
+class SignUpAPIView(generics.CreateAPIView):
+    queryset = User.objects.all()
+    serializer_class = UserSerializer

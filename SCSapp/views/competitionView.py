@@ -8,7 +8,6 @@ class comptitionView(View):
 
 def competitionView(request, comp_id):
     competition = get_object_or_404(Competition, pk=comp_id)
-    #data = getUserAuthData()
     return render(request, 'competition.html', competition.getData())
 
 

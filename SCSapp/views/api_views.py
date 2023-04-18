@@ -61,8 +61,6 @@ class JudgeCompetitionsAPIView(APIView):
         serializer = CompetitionSerializer(competitions, many=True)
         return Response(serializer.data)
 
-
-
 class JudgeMatchesAPIView(APIView):
     authentication_classes = [TokenAuthentication]
     permission_classes = [IsAuthenticated]
@@ -107,9 +105,6 @@ class GetMatchEventList(APIView):
 
         return Response(response)
 
-
-
-
 class OlympicsAPIView(generics.ListAPIView):
     queryset = Olympics.objects.all()
     serializer_class = OlympicsSerializer
@@ -117,6 +112,17 @@ class OlympicsAPIView(generics.ListAPIView):
 class CompetitionAPIView(generics.ListCreateAPIView):
     queryset = Competition.objects.all()
     serializer_class = CompetitionSerializer
+    # authentication_classes = [TokenAuthentication]
+    # permission_classes = [IsAuthenticated]    
+
+    def post(self, request):
+        user = self.request.auth.user
+        # regulations = request.FILES['regulations']
+        print(user)
+
+
+    def perform_create(self, serializer):
+        serializer.save(self.request.auth.user)
 
 class AnnouncedEventsAPIView(generics.ListAPIView):
     authentication_classes = [TokenAuthentication]

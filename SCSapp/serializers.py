@@ -2,6 +2,7 @@ from rest_framework import serializers
 from SCSapp.models.Olympics import Olympics
 from SCSapp.models.Match import AbstractMatch
 from SCSapp.models.Competition import Competition
+from SCSapp.models.MatchActions import MatchAction
 from SCSapp.models.User import User
 
 class OlympicsSerializer(serializers.ModelSerializer):
@@ -17,13 +18,14 @@ class CompetitionSerializer(serializers.ModelSerializer):
         model = Competition
         fields = ['id', 'name', 'description', 'organizer', 'dateTimeStartCompetition', 'sportType', 'type', 'regulations']
 
+    def save(self, user):
+        organizer = user
+        super().save()
+
 class MatchSerializer(serializers.ModelSerializer):
     class Meta:
         model = AbstractMatch
         fields = ["id", "isAnnounced", "competition", "matchDateTime", "place", "protocol", "judge"]
-
-
-
 
 class UserSerializer(serializers.ModelSerializer):
     class Meta:
@@ -47,3 +49,8 @@ class UserSerializer(serializers.ModelSerializer):
         user.set_password(validated_data['password'])
         user.save()
         return user
+
+class MatchActionSerializer(serializers.ModelSerializer):
+    class Meta:
+            model = MatchAction
+            fields = ["eventType", "match", "team"]
