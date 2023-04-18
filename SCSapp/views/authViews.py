@@ -36,9 +36,6 @@ def loginView(request):
         else:
             print("login failed")
             redirect("homePage")
-    
-        
-
 
 class signUpUserView(TemplateView):
     template_name = 'signUpUser.html'

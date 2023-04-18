@@ -79,12 +79,14 @@ $(document).ready(() => {
             }
             console.log(regulations.val())
 
+
             if (name.val() === "" || description.val() === "" || date.val() === "") alert("Заполните пустые поля");
             else {
                 $.ajax({
                     method: "POST",
                     url: "http://127.0.0.1:8000/api/v1/competitions/",
                     dataType : 'json',
+
                     contentType: false,
                     processData: false,
                     cache: false,
@@ -97,6 +99,7 @@ $(document).ready(() => {
                     //     "type": type.val(),
                     //     "regulations": regulations.val(),
                     // },
+
                     headers:{
                         "X-CSRFToken": scrf_token,
                         "Authorization": cookieStrToObject(document.cookie).Authorization 

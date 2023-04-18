@@ -118,6 +118,7 @@ class CompetitionAPIView(generics.ListCreateAPIView):
         print(request.data, self.request.data)
 
 
+
     def perform_create(self, serializer):
         serializer.save(self.request.auth.user)
 
