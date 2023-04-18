@@ -7,20 +7,6 @@ $(document).ready(() => {
         delete_cookie("session_id")
     }
 
-    if (window.location.pathname == '/'){
-        $.ajax({
-            method: "GET",
-            url: "http://127.0.0.1:8000/api/v1/test",
-            dataType : 'json',
-            headers:{ 
-                "Authorization": cookieStrToObject(document.cookie).Authorization 
-            },
-            success: function(data, status){
-                console.log(data)
-            },
-        })
-    }
-
     //      Отправляет данные для регистрации, после авторизует пользователя
     if (window.location.pathname == '/signup/'){
         let username = $('input[name=username]');
@@ -83,23 +69,38 @@ $(document).ready(() => {
 
         //  отправка POST-запроса к API
         $('#create-competition-btn').click((e) => {
-
             e.preventDefault();
+
+            if (window.FormData === undefined) {
+                alert('В вашем браузере FormData не поддерживается')
+            } else {
+                var formData = new FormData();
+                formData.append('regulations', $("#regulations")[0].files[0]);
+            }
+            console.log(regulations.val())
+
             if (name.val() === "" || description.val() === "" || date.val() === "") alert("Заполните пустые поля");
             else {
                 $.ajax({
                     method: "POST",
-                    url: "http://127.0.0.1:8000/api/v1/test",
+                    url: "http://127.0.0.1:8000/api/v1/competitions/",
                     dataType : 'json',
-                    data: {
-                        "name": name.val(),
-                        "description": description.val(),
-                        "dateTimeStartCompetition": date.val().toString(),
-                        "sportType": sportType.val(),
-                        "type": type.val(),
-                        "regulations": null,
+                    contentType: false,
+                    processData: false,
+                    cache: false,
+                    data: formData,
+                    // data: {
+                    //     "name": name.val(),
+                    //     "description": description.val(),
+                    //     "dateTimeStartCompetition": date.val().toString(),
+                    //     "sportType": sportType.val(),
+                    //     "type": type.val(),
+                    //     "regulations": regulations.val(),
+                    // },
+                    headers:{
+                        "X-CSRFToken": scrf_token,
+                        "Authorization": cookieStrToObject(document.cookie).Authorization 
                     },
-                    headers:{"X-CSRFToken": scrf_token},
                 })
                     .done(function() {
                         alert('Соревнование успешно создано');

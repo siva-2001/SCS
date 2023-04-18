@@ -1,5 +1,6 @@
 from django.contrib import admin
 from SCSapp.models.Match import AbstractMatch
+from SCSapp.models.MatchActions import MatchAction
 from SCSapp.models.MatchTeamResult import AbstractMatchTeamResult, VolleyballMatchTeamResult
 from SCSapp.models.Competition import Competition, CacheScore
 from SCSapp.models.Olympics import Olympics
@@ -15,3 +16,4 @@ admin.site.register(Team)
 admin.site.register(AbstractMatchTeamResult)
 admin.site.register(AbstractParticipant)
 admin.site.register(CacheScore)
+admin.site.register(MatchAction)

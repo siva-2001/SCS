@@ -1,0 +1,1 @@
+from authApp.models import User

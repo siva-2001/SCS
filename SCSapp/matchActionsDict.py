@@ -1,5 +1,8 @@
 
 actionsDict = {
+
+    # signal не должен превышать 20 символов
+
     "volleyball":{
         "general_events":[
             {

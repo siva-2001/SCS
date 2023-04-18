@@ -26,8 +26,7 @@ class PermissionsAPIView(APIView):
                 data["FIO"] = user.last_name + ' ' + ((user.first_name[0]+'.') if user.first_name else "") 
             else: data["FIO"] = 'NoName'
             data["isOrganizer"] = user.groups.filter(name="organizer").exists()
-
-        print(data)
+            
         return Response(data)
 
 
@@ -60,8 +59,6 @@ class JudgeCompetitionsAPIView(APIView):
 
         serializer = CompetitionSerializer(competitions, many=True)
         return Response(serializer.data)
-
-
 
 class JudgeMatchesAPIView(APIView):
     authentication_classes = [TokenAuthentication]
@@ -107,9 +104,6 @@ class GetMatchEventList(APIView):
 
         return Response(response)
 
-
-
-
 class OlympicsAPIView(generics.ListAPIView):
     queryset = Olympics.objects.all()
     serializer_class = OlympicsSerializer
@@ -117,6 +111,15 @@ class OlympicsAPIView(generics.ListAPIView):
 class CompetitionAPIView(generics.ListCreateAPIView):
     queryset = Competition.objects.all()
     serializer_class = CompetitionSerializer
+    # authentication_classes = [TokenAuthentication]
+    # permission_classes = [IsAuthenticated]    
+
+    def post(self, request):
+        print(request.data, self.request.data)
+
+
+    def perform_create(self, serializer):
+        serializer.save(self.request.auth.user)
 
 class AnnouncedEventsAPIView(generics.ListAPIView):
     authentication_classes = [TokenAuthentication]

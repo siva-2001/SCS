@@ -5,7 +5,6 @@ class MatchAction(models.Model):
         verbose_name = 'Событие'
         verbose_name_plural = 'События'
 
-
     eventType = models.CharField(
         max_length=20,
         verbose_name='Тип события'
@@ -17,5 +16,5 @@ class MatchAction(models.Model):
     match = models.ForeignKey('SCSapp.AbstractMatch', on_delete=models.CASCADE, verbose_name="Матч")
 
     def __str__(self):
-        return f"{self.eventType}, team {self.Team} in {self.EventTime}"
+        return f"{self.eventType}, {self.team.participant.name} in {self.eventTime}"
 
