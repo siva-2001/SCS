@@ -80,24 +80,40 @@ class JudgeMatchesAPIView(APIView):
 
         return Response(serializer.data)
 
-class GetMatchEventList(APIView):
+class MatchManagmentView(APIView):
     authentication_classes = [TokenAuthentication]
     permission_classes = [IsAuthenticated]
 
     def get(self, request):
-        if AbstractMatch.objects.get(id=request.GET.get("match_id")).judge != self.request.auth.user: 
+        try:
+            match = AbstractMatch.objects.get(id=request.GET.get("match_id"))
+        except:
+            return Response({"ERROR":"Матч с указанным ID не существует"})
+
+        if match.judge != self.request.auth.user: 
             return Response({"ERROR":"Судейство в этом матче недоступно под этой учётной записью"})
     
-        sportType = AbstractMatch.objects.get(id=request.GET.get("match_id")).competition.sportType 
-    
-        if sportType == Competition.SportTypeChoices.VOLLEYBALL: 
+        if match.competition.sportType == Competition.SportTypeChoices.VOLLEYBALL: 
             response = actionsDict["volleyball"]
-        # elif sportType == Competition.SportTypeChoices.BASKETBALL: 
+        # elif match.competition.sportType == Competition.SportTypeChoices.BASKETBALL: 
         #     pass
         else: response = {"ERROR":"Нет события для этого вида спорта"}
 
-        # FOR_DEBUG
-        response["info"] = [
+        teamsResults = [tr for tr in AbstractMatchTeamResult.objects.all().filter(match=match)]
+        if len(teamsResults) != 2: return Response({"ERROR":"Ошибка сервера: количество команд не равно 2"})
+           
+        response["teams_data"] = {
+            "first":{
+                "team_result_id":teamsResults[0].id,
+                "participant_name":teamsResults[0].team.participant.name
+            },
+            "second":{
+                "team_result_id":teamsResults[1].id,
+                "participant_name":teamsResults[1].team.participant.name
+            },
+        }
+
+        response["info"] = [    # FOR_DEBUG
                 "Обмен данными происходит по технологии websocket. В сообщении скорей всего мобилка будет передавать JSON-запись с указанием сигнала и, для событий команд - название команды (участника)",
                 "None в button_color окрашивает кнопку в стандартный серый цвет. '_FFFFFF' - нижнее подчёркивание говорит что текст кнопки должен быть белым. Кнопка отмены окрашивается отдельно, смотри фигму",
             ]

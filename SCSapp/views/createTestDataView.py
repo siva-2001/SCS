@@ -37,7 +37,7 @@ def CreateTestDataView(request):
     competition_3 = Competition.objects.create(
         name = "Межвузовские соревнования. Кубок по футболу ТУСУР-ТПУ-ТГУ", 
         description = "Лучшие соревнования за последние 20, а то и 50 лет!",
-        sportType = Competition.SportTypeChoices.FOOTBALL,
+        sportType = Competition.SportTypeChoices.VOLLEYBALL,
         type = Competition.TypeChoices.INTERCOLLEGIATE, 
         organizer = User.objects.get(username="user")
     )

@@ -36,31 +36,41 @@ class ChatConsumer(WebsocketConsumer):
             if(elem[0] == b'cookie'): cookie_mass = elem[1].decode("utf-8").split(";")
         for cookie in cookie_mass:
             if ("Authorization" in cookie) or ("Authorization=Token" in cookie): token_key = cookie.split(" ")[-1]
-        try: token = Token.objects.all().get(key=token_key)
-        except ObjectDoesNotExist: token = None
+        try: 
+            token = Token.objects.all().get(key=token_key)
+        except: 
+            async_to_sync(self.channel_layer.group_send)(
+                self.room_group_name, {"type": "chat_message", "message": "Пользователь не авторизован"}
+            )
+            return       
+        
+        if self.match.judge == token.user:
+            message = json.loads(text_data)['message']
+            if message["team_result_id"]:
+                team = AbstractMatchTeamResult.objects.all().get(id=message["team_result_id"]).team
+            else: team = None
 
-        if token:
-            if self.match.judge == token.user:
-                message = json.loads(text_data)['message']
-                teamResults = AbstractMatchTeamResult.objects.all().filter(match=self.match)
-                team = [teamRes.team for teamRes in teamResults if teamRes.team.participant.name == message['team_participant_name']][0]
-
-                matchAction = MatchAction.objects.create(
-                    eventType = message["signal"],
-                    match = self.match,
-                    team = team,
-                )
+            matchAction = MatchAction.objects.create(
+                eventType = message["signal"],
+                match = self.match,
+                team = team,
+            )
                 
-                answerMessage = json.dumps({
-                    "id":matchAction.id,
-                    "signal": message["signal"],
-                    "team": team.participant.name,
-                    "datetime": str(matchAction.eventTime)
-                }, ensure_ascii=False)
+            answerMessage = json.dumps({
+                "id":matchAction.id,
+                "signal": message["signal"],
+                "team": team.participant.name,
+                "datetime": str(matchAction.eventTime)
+            }, ensure_ascii=False)
 
-                async_to_sync(self.channel_layer.group_send)(
-                    self.room_group_name, {"type": "chat_message", "message": answerMessage}
-                )
+            async_to_sync(self.channel_layer.group_send)(
+                self.room_group_name, {"type": "chat_message", "message": answerMessage}
+            )
+        else:
+            async_to_sync(self.channel_layer.group_send)(
+                self.room_group_name, {"type": "chat_message", "message": "Вы не имеете судейских прав"}
+            ) 
+
                 
     def chat_message(self, event):
         self.send(text_data=json.dumps({"message": event["message"]}))
