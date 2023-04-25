@@ -26,7 +26,6 @@ class PermissionsAPIView(APIView):
                 data["FIO"] = user.last_name + ' ' + ((user.first_name[0]+'.') if user.first_name else "") 
             else: data["FIO"] = 'NoName'
             data["isOrganizer"] = user.groups.filter(name="organizer").exists()
-            
         return Response(data)
 
 
@@ -89,14 +88,11 @@ class MatchManagmentView(APIView):
             match = AbstractMatch.objects.get(id=request.GET.get("match_id"))
         except:
             return Response({"ERROR":"Матч с указанным ID не существует"})
-
         if match.judge != self.request.auth.user: 
             return Response({"ERROR":"Судейство в этом матче недоступно под этой учётной записью"})
     
         if match.competition.sportType == Competition.SportTypeChoices.VOLLEYBALL: 
-            response = actionsDict["volleyball"]
-        # elif match.competition.sportType == Competition.SportTypeChoices.BASKETBALL: 
-        #     pass
+            response = actionsDict["volleyball"]    # Другие виды спорта
         else: response = {"ERROR":"Нет события для этого вида спорта"}
 
         teamsResults = [tr for tr in AbstractMatchTeamResult.objects.all().filter(match=match)]
@@ -127,13 +123,6 @@ class OlympicsAPIView(generics.ListAPIView):
 class CompetitionAPIView(generics.ListCreateAPIView):
     queryset = Competition.objects.all()
     serializer_class = CompetitionSerializer
-    # authentication_classes = [TokenAuthentication]
-    # permission_classes = [IsAuthenticated]    
-
-    def post(self, request):
-        print(request.data, self.request.data)
-
-
 
     def perform_create(self, serializer):
         serializer.save(self.request.auth.user)

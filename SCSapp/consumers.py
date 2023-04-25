@@ -6,6 +6,7 @@ from SCSapp.models.MatchActions import MatchAction
 from SCSapp.models.MatchTeamResult import AbstractMatchTeamResult
 from SCSapp.models.Match import AbstractMatch
 from SCSapp.models.Team import Team
+from SCSapp.func import getTokenFromASGIScope
 from rest_framework.authtoken.models import Token
 from django.core.exceptions import ObjectDoesNotExist
 
@@ -21,23 +22,18 @@ class ChatConsumer(WebsocketConsumer):
         )
         self.accept()
 
-        async_to_sync(self.channel_layer.group_send)(
-                self.room_group_name, {"type": "chat_message", "message": "Connecconnection established"}
+        async_to_sync(self.channel_layer.send)(
+                self.channel_name, {"type": "chat_message", "message": "Connecconnection established"}
             )
 
         matchActions = MatchAction.objects.all().filter(match=self.match)
-        for action in matchActions:#[(len(matchActions) - self.number_of_sending_events):]:
-            async_to_sync(self.channel_layer.group_send)(
-                self.room_group_name, {"type": "chat_message", "message": f"{action.eventType}"}
+        for action in matchActions:
+            async_to_sync(self.channel_layer.send)(
+                self.channel_name, {"type": "chat_message", "message": f"{action.eventType}"}
             )
 
     def receive(self, text_data):
-        for elem in self.scope['headers']:
-            if(elem[0] == b'cookie'): cookie_mass = elem[1].decode("utf-8").split(";")
-        for cookie in cookie_mass:
-            if ("Authorization" in cookie) or ("Authorization=Token" in cookie): token_key = cookie.split(" ")[-1]
-        try: 
-            token = Token.objects.all().get(key=token_key)
+        try: token = getTokenFromASGIScope(self.scope)
         except: 
             async_to_sync(self.channel_layer.group_send)(
                 self.room_group_name, {"type": "chat_message", "message": "Пользователь не авторизован"}
@@ -70,8 +66,7 @@ class ChatConsumer(WebsocketConsumer):
             async_to_sync(self.channel_layer.group_send)(
                 self.room_group_name, {"type": "chat_message", "message": "Вы не имеете судейских прав"}
             ) 
-
-                
+        
     def chat_message(self, event):
         self.send(text_data=json.dumps({"message": event["message"]}))
         

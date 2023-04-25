@@ -56,18 +56,9 @@ class Olympics(models.Model):
         return object
 
     def getData(self):
-        data = {
-            'name': self.name,
-            'description': self.description,
-            'dateTimeStart': self.dateTimeStartOlympics,
-            #'dateTimeFinishOlympics': self.dateTimeFinishOlympics,
-            'organizer': self.organizer,
-            'status': self.status,
-            'type':self.type,
-            'isOlympics': True,
-        }
-        if self.dateTimeFinishOlympics: data["dateTimeFinishCompetition"] = self.dateTimeFinishOlympics
+        data = self.__dict__
         if self.protocol: data['protocol'] = self.protocol.url
+        data["isOlympics"] = True
         return data
 
     def editOlympics(self, status, name, description, startDate):
