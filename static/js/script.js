@@ -50,65 +50,44 @@ $(document).ready(() => {
     //________________________ДЛЯ СТРАНИЦЫ СОЗДАНИЯ СОРЕВНОВАНИЙ_________________________________________________________________
 
     if (window.location.pathname == '/createCompetition/') {
-        let sportType = $('#competition-sport');
-        let type = $('input[name=type]');
-        let name = $('#competition-title');
-        let description = $('#competition-description');
-        let date = $('#competition-date');
-        let regulations = $('#regulations');
         let formData = new FormData();
-        let scrf_token = $('[name="csrfmiddlewaretoken"]').attr('value');
 
-        // вставка названия файла в поле его загрузки
-        regulations.change(function(){
-            if (window.FormData === undefined) alert('В вашем браузере FormData не поддерживается')
-            else formData.append('file', regulations[0].files[0]);
-
-            $('.regulation-label-text').text(regulations[0].files[0].name);
+        $('#regulations').change(function(){
+            if (window.FormData === undefined) alert('В вашем браузере FormData не поддерживается, что приведёт к ошибкам при загрузке файла регламента');
+            $('.regulation-label-text').text($('#regulations')[0].files[0].name);
         });
 
-        //  отправка POST-запроса к API
         $('#create-competition-btn').click((e) => {
             e.preventDefault();
 
-            if (window.FormData === undefined) {
-                alert('В вашем браузере FormData не поддерживается')
-            } else {
-                var formData = new FormData();
-                formData.append('regulations', $("#regulations")[0].files[0]);
-            }
-            console.log(regulations.val())
+            formData.append('name', $('#competition-title').val());
+            formData.append('description', $('#competition-description').val());
+            formData.append('dateTimeStartCompetition', $('#competition-date').val().toString());
+            formData.append('sportType', $('#competition-sport').val());
+            formData.append('type', $('input[name=type]').val());
+            formData.append('regulations', $('#regulations')[0].files[0]);
 
-
-            if (name.val() === "" || description.val() === "" || date.val() === "") alert("Заполните пустые поля");
+            if ($('#competition-title').val() === "" 
+                || $('#competition-description').val() === "" 
+                || $('#competition-date').val() === "") alert("Заполните пустые поля");
             else {
                 $.ajax({
                     method: "POST",
                     url: "http://127.0.0.1:8000/api/v1/competitions/",
                     dataType : 'json',
-
                     contentType: false,
                     processData: false,
                     cache: false,
                     data: formData,
-                    // data: {
-                    //     "name": name.val(),
-                    //     "description": description.val(),
-                    //     "dateTimeStartCompetition": date.val().toString(),
-                    //     "sportType": sportType.val(),
-                    //     "type": type.val(),
-                    //     "regulations": regulations.val(),
-                    // },
-
                     headers:{
-                        "X-CSRFToken": scrf_token,
+                        "X-CSRFToken": $('[name="csrfmiddlewaretoken"]').attr('value'),
                         "Authorization": cookieStrToObject(document.cookie).Authorization 
                     },
                 })
-                    .done(function() {
-                        alert('Соревнование успешно создано');
-                        $(location).attr('href',"http://127.0.0.1:8000/");
-                    });
+                .done(function() {
+                    alert('Соревнование успешно создано');
+                    $(location).attr('href',"http://127.0.0.1:8000/");
+                });
             }
         });
     }

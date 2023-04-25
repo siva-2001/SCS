@@ -105,18 +105,9 @@ class Competition(models.Model):
 
 
     def getData(self):
-        data = {
-            'name':self.name,
-            'description':self.description,
-            'status':self.get_status_display(),
-            'dateTimeStart':self.dateTimeStartCompetition,
-            'sportType':self.sportType,
-            'type':self.type,
-            'dateTimeFinishCompetition':self.dateTimeFinishCompetition,
-            'isOlympics':False,
-        }
-        if self.dateTimeFinishCompetition: data["dateTimeFinishCompetition"] = self.dateTimeFinishCompetition
+        data = self.__dict__
         if self.protocol: data['protocol'] = self.protocol.url
+        data["isOlympics"] = False
         return data
 
     def getRelatedMatchesData(self):

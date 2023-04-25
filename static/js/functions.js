@@ -42,14 +42,23 @@ function checkAccessPermissions(){
 
 function addCreateEventButton(){
     $(".footer-actions").append(
-      "<button type=\"button\" class=\"menu-btn menu-new-event-btn p-3 d-block text-center text-decoration-none fs-5\">"
-            + "Новое событие"
-      + "</button>"
+        "<button type=\"button\" class=\"menu-btn menu-new-event-btn p-3 d-block text-center text-decoration-none fs-5\">"
+            + "Новое соревнование"
+        + "</button>"
     )
-
     $('.menu-new-event-btn').click(() => {
-        $('.popup-container').css("display", "flex");
+        $(location).attr('href',"http://127.0.0.1:8000/createCompetition/");
     });
+    
+        // ДЛЯ СПАРТАКИАД
+    // $(".footer-actions").append(
+    //   "<button type=\"button\" class=\"menu-btn menu-new-event-btn p-3 d-block text-center text-decoration-none fs-5\">"
+    //         + "Новое событие"
+    //   + "</button>"
+    // )
+    // $('.menu-new-event-btn').click(() => {
+    //     $('.popup-container').css("display", "flex");
+    // });
 }
 
 function addProfileElement(){

@@ -58,15 +58,12 @@ urlpatterns = [
     path('mobile-api-token-auth/', JudgeObtainAuthToken.as_view(), name="judgeAuthToken"),
     path('api/v1/judgeCompetitions/', JudgeCompetitionsAPIView.as_view(), name='judgeCompetitions'),
     path('api/v1/judgeMatches/', JudgeMatchesAPIView.as_view(), name='judgeMatches'),
-    path('api/v1/matchManagment/', MatchManagmentView.as_view(), name='judgeMatches'),
+    path('api/v1/matchManagment/', MatchManagmentView.as_view(), name='matchManagment'),
 
     # ---------------------------------------------------------------------------------------------
-    #   Вебсокет
-    # ---------------------------------------------------------------------------------------------
+    #   WebSocket
 
     path('liveStream/<str:match_id>/', roomView, name="match"),
-
-    # ---------------------------------------------------------------------------------------------
     # --------------------------------------  Готовое  --------------------------------------------
 
     path('createTestDataset/', CreateTestDataView, name='createTestDataView'),
@@ -79,7 +76,7 @@ urlpatterns = [
     path('createOlympics/', CreateOlympicsView.as_view(), name='createOlympics'),
     path('competition/<comp_id>/', competitionView, name='competition'),
     
-    path('api/v1/competitions/', CompetitionAPIView.as_view(), name='competition'),
+    path('api/v1/competitions/', CompetitionAPIView.as_view(), name='competitionAPI'),
     
 
 
