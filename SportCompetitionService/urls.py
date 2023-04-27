@@ -62,9 +62,10 @@ urlpatterns = [
 
     # ---------------------------------------------------------------------------------------------
     #   WebSocket
-
+    
     path('liveStream/<str:match_id>/', translationView, name="liveStream"),
     path('liveStreamTest/<str:match_id>/', roomView, name="match"),
+
     # --------------------------------------  Готовое  --------------------------------------------
 
     path('createTestDataset/', CreateTestDataView, name='createTestDataView'),

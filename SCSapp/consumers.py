@@ -6,7 +6,11 @@ from SCSapp.models.MatchActions import MatchAction
 from SCSapp.models.MatchTeamResult import MatchTeamResult
 from SCSapp.models.Match import AbstractMatch
 from SCSapp.models.Team import Team
+<<<<<<< HEAD
 from SCSapp.func import getTokenFromASGIScope, getMatchTranslationData
+=======
+from SCSapp.func import getTokenFromASGIScope
+>>>>>>> 40d76351a481bc7010b5c4a359f73cd93b7a74ea
 from rest_framework.authtoken.models import Token
 from django.core.exceptions import ObjectDoesNotExist
 
@@ -30,14 +34,13 @@ class ChatConsumer(WebsocketConsumer):
                     }, ensure_ascii=False)}
             )
 
-        async_to_sync(self.channel_layer.send)(
-            self.channel_name, {"type": "chat_message", "message": json.dumps({
-                "message_type" : ""
-            })}
-        )
+        # async_to_sync(self.channel_layer.send)(
+        #     self.channel_name, {"type": "chat_message", "message": json.dumps({
+        #         "message_type" : ""
+        #     })}
+        # )
 
         
-
 
     def receive(self, text_data):
         try: token = getTokenFromASGIScope(self.scope)
