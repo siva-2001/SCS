@@ -15,6 +15,16 @@ class ChatConsumer(WebsocketConsumer):
     def chat_message(self, event):
         self.send(text_data=json.dumps(event))
 
+    def send_to_channel(self, message):
+        async_to_sync(self.channel_layer.send)(
+            self.channel_name, {"type": "chat_message", "message": message}
+        )
+
+    def send_to_group(self, message):
+        async_to_sync(self.channel_layer.group_send)(
+            self.room_group_name, {"type": "chat_message", "message": message}
+        )
+
     def getActionMessage(self, action):
         return {
             "message_type" : "action_info",
@@ -52,52 +62,32 @@ class ChatConsumer(WebsocketConsumer):
     def connect(self):
         self.match = AbstractMatch.objects.all().get(id=self.scope["url_route"]["kwargs"]["match_id"])
         self.room_group_name = "match_%s" % self.scope["url_route"]["kwargs"]["match_id"]
-
         async_to_sync(self.channel_layer.group_add)( self.room_group_name, self.channel_name )
         self.accept()
 
         for action in MatchAction.objects.all().filter(match=self.match):
-            async_to_sync(self.channel_layer.send)(
-                self.channel_name, {"type": "chat_message", "message": json.dumps( 
-                    self.getActionMessage(action), ensure_ascii=False)}
-            )
+            self.send_to_channel(json.dumps(self.getActionMessage(action), ensure_ascii=False))
+        self.send_to_channel(json.dumps(self.getMatchTranslationData(), ensure_ascii=False))
 
-        async_to_sync(self.channel_layer.send)(
-            self.channel_name, {"type": "chat_message", "message": json.dumps(
-                self.getMatchTranslationData(), ensure_ascii=False)}
-        )
-
-
-
-        
 
 def receive(self, text_data):
-    print("here MUTHER_FUCKER")
-    try: 
-        token = getTokenFromASGIScope()
-        print(token)
+    try: token = getTokenFromASGIScope()
     except: 
-        async_to_sync(self.channel_layer.group_send)(
-            self.room_group_name, {"type": "chat_message", "message": "Пользователь не авторизован"}
-        )
+        self.send_to_group("Пользователь не авторизован")
         return
     if not self.match.judge == token.user:
-        async_to_sync(self.channel_layer.group_send)(
-            self.room_group_name, {"type": "chat_message", "message": "Вы не имеете судейских прав"}
-        ) 
+        self.send_to_group("Вы не имеете судейских прав")
     else:
         message = json.loads(text_data)['message']
         teamResID = MatchTeamResult.objects.all().get(id=message["team_result_id"]) if message["team_result_id"] else None
-           
-        async_to_sync(self.channel_layer.group_send)(
-            self.room_group_name, {"type": "chat_message", "message": self.getActionMessage(
+        self.send_to_group(self.getActionMessage(
                 MatchAction.objects.create(
                     eventType = message["signal"],
                     match = self.match,
                     team = (teamResID.team if teamResID else None),
                 )
-            )}
-        )
+            ))
+
 
 
         
@@ -105,7 +95,6 @@ def receive(self, text_data):
         async_to_sync(self.channel_layer.group_discard)(
             self.room_group_name, self.channel_name
         )
-
 
 
         # {
