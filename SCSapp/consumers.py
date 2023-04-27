@@ -3,34 +3,41 @@ from asgiref.sync import async_to_sync
 from channels.generic.websocket import WebsocketConsumer
 from SCSapp.models.Competition import Competition
 from SCSapp.models.MatchActions import MatchAction
-from SCSapp.models.MatchTeamResult import AbstractMatchTeamResult
+from SCSapp.models.MatchTeamResult import MatchTeamResult
 from SCSapp.models.Match import AbstractMatch
 from SCSapp.models.Team import Team
-from SCSapp.func import getTokenFromASGIScope
+from SCSapp.func import getTokenFromASGIScope, getMatchTranslationData
 from rest_framework.authtoken.models import Token
 from django.core.exceptions import ObjectDoesNotExist
 
 
 class ChatConsumer(WebsocketConsumer):
     def connect(self):
-        self.number_of_sending_events = 15
         self.match = AbstractMatch.objects.all().get(id=self.scope["url_route"]["kwargs"]["match_id"])
         self.room_group_name = "match_%s" % self.scope["url_route"]["kwargs"]["match_id"]
 
-        async_to_sync(self.channel_layer.group_add)(
-            self.room_group_name, self.channel_name
-        )
+        async_to_sync(self.channel_layer.group_add)( self.room_group_name, self.channel_name )
         self.accept()
 
-        async_to_sync(self.channel_layer.send)(
-                self.channel_name, {"type": "chat_message", "message": "Connecconnection established"}
+        for action in MatchAction.objects.all().filter(match=self.match):
+            async_to_sync(self.channel_layer.send)(
+                self.channel_name, {"type": "chat_message", "message": json.dumps({
+                        "id": action.id,
+                        "signal": action.eventType,
+                        "datetime": str(action.eventTime),
+                        "team":(action.team.participant.name if action.team else None),
+                        "teams_data" : getMatchTranslationData(self.match)
+                    }, ensure_ascii=False)}
             )
 
-        matchActions = MatchAction.objects.all().filter(match=self.match)
-        for action in matchActions:
-            async_to_sync(self.channel_layer.send)(
-                self.channel_name, {"type": "chat_message", "message": f"{action.eventType}"}
-            )
+        async_to_sync(self.channel_layer.send)(
+            self.channel_name, {"type": "chat_message", "message": json.dumps({
+                "message_type" : ""
+            })}
+        )
+
+        
+
 
     def receive(self, text_data):
         try: token = getTokenFromASGIScope(self.scope)
@@ -38,35 +45,31 @@ class ChatConsumer(WebsocketConsumer):
             async_to_sync(self.channel_layer.group_send)(
                 self.room_group_name, {"type": "chat_message", "message": "Пользователь не авторизован"}
             )
-            return       
-        
-        if self.match.judge == token.user:
-            message = json.loads(text_data)['message']
-            if message["team_result_id"]:
-                team = AbstractMatchTeamResult.objects.all().get(id=message["team_result_id"]).team
-            else: team = None
-
-            matchAction = MatchAction.objects.create(
-                eventType = message["signal"],
-                match = self.match,
-                team = team,
-            )
-                
-            answerMessage = json.dumps({
-                "id":matchAction.id,
-                "signal": message["signal"],
-                "team": team.participant.name,
-                "datetime": str(matchAction.eventTime)
-            }, ensure_ascii=False)
-
-            async_to_sync(self.channel_layer.group_send)(
-                self.room_group_name, {"type": "chat_message", "message": answerMessage}
-            )
-        else:
+            return
+        if not self.match.judge == token.user:
             async_to_sync(self.channel_layer.group_send)(
                 self.room_group_name, {"type": "chat_message", "message": "Вы не имеете судейских прав"}
             ) 
-        
+        else:
+            message = json.loads(text_data)['message']
+            action = MatchAction.objects.create(
+                eventType = message["signal"],
+                match = self.match,
+                team = (MatchTeamResult.objects.all().get(id=message["team_result_id"]).team if teamResID else None),
+            )
+            
+            async_to_sync(self.channel_layer.group_send)(
+                self.room_group_name, {"type": "chat_message", "message": json.dumps({
+                        "id":action.id,
+                        "signal": action.eventType,
+                        "datetime": str(action.eventTime),
+                        "team":(action.team.participant.name if action.team else None),
+                        "teams_data" : getMatchTranslationData(self.match)
+                    }, ensure_ascii=False )}
+            )
+
+
+
     def chat_message(self, event):
         self.send(text_data=json.dumps({"message": event["message"]}))
         

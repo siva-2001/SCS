@@ -10428,6 +10428,22 @@ textarea {
   margin-top: 10px;
 }
 
+.translation-page {
+  background-color: #FFD60A;
+}
+.translation-page .translation-round-score {
+  font-size: 200px;
+}
+.translation-page .translation-match-score {
+  font-size: 108px;
+}
+.translation-page .translation-text {
+  font-size: 64px;
+}
+.translation-page .translation-table {
+  padding-top: 13rem !important;
+}
+
 .createCompBtn {
   padding-left: 1.8rem;
   padding-right: 1.8rem;

@@ -2,7 +2,6 @@ $(document).ready(() => {
     checkAccessPermissions();
 
     if (window.location.pathname == '/logout/'){
-        print("here")
         delete_cookie("Authorization")
         delete_cookie("session_id")
     }

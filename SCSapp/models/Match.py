@@ -1,6 +1,6 @@
 from django.db import models
 
-from SCSapp.models.MatchTeamResult import AbstractMatchTeamResult
+from SCSapp.models.MatchTeamResult import MatchTeamResult
 from SCSapp.models.MatchActions import MatchAction
 from SCSapp.models import User
 
@@ -45,7 +45,7 @@ class AbstractMatch(models.Model):
 
     def cancelMatch(self):
         for act in MatchAction.objects.filter(match=self): act.delete()
-        for res in AbstractMatchTeamResult.objects.filter(match=self):
+        for res in MatchTeamResult.objects.filter(match=self):
             res.teamScore = 0
             res.save()
     

@@ -3,8 +3,6 @@ from SCSapp.models.Competition import Competition
 from django.views.generic import TemplateView
 from SCSapp.forms import CompetitionFormSet
 from SCSapp.forms import CreateOlympicsForm
-from SCSapp.func import getUserAuthData
-
 
 # #@login_required
 class CreateOlympicsView(TemplateView):
@@ -14,7 +12,7 @@ class CreateOlympicsView(TemplateView):
         data = {
             "competitionFormSet":CompetitionFormSet(queryset=Competition.objects.none()),
             "olympicsForm":CreateOlympicsForm(),
-        } | getUserAuthData(self.request.user)
+        }
         return self.render_to_response(data)
 
     def post(self, *args, **kwargs):
@@ -35,5 +33,5 @@ class CreateOlympicsView(TemplateView):
         return self.render_to_response({
             "competitionFormset": formset,
             "olympicsForm": olympicsForm,
-        } | getUserAuthData(self.request.user))
+        })
 

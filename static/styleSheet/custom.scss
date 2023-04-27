@@ -328,6 +328,26 @@ textarea {
     }
 }
 
+.translation-page{
+    background-color: #FFD60A;
+
+    .translation-round-score{
+        font-size:          200px;    
+    }
+    
+    .translation-match-score{
+        font-size:         108px;    
+    }
+
+    .translation-text{
+        font-size:  64px;
+    }
+
+    .translation-table{
+        padding-top: 13rem !important;
+    }
+}
+
 .createCompBtn{
     padding-left:       1.8rem;
     padding-right:      1.8rem;

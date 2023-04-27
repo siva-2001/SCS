@@ -30,7 +30,7 @@ from SCSapp.views.api_views import JudgeMatchesAPIView, SignUpAPIView, Permissio
 from SCSapp.views.createTestDataView import CreateTestDataView
 from rest_framework.authtoken import views as drf_views
 
-from SCSapp.views.room import roomView
+from SCSapp.views.room import roomView, translationView
 
 urlpatterns = [
     #   admin url's
@@ -63,7 +63,8 @@ urlpatterns = [
     # ---------------------------------------------------------------------------------------------
     #   WebSocket
 
-    path('liveStream/<str:match_id>/', roomView, name="match"),
+    path('liveStream/<str:match_id>/', translationView, name="liveStream"),
+    path('liveStreamTest/<str:match_id>/', roomView, name="match"),
     # --------------------------------------  Готовое  --------------------------------------------
 
     path('createTestDataset/', CreateTestDataView, name='createTestDataView'),

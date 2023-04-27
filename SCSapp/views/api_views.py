@@ -12,8 +12,16 @@ from SCSapp.models.Competition import Competition
 from SCSapp.models.Match import AbstractMatch
 from SCSapp.serializers import MatchSerializer, CompetitionSerializer
 from SCSapp.models.User import User
-from SCSapp.models.MatchTeamResult import AbstractMatchTeamResult
+from SCSapp.models.MatchTeamResult import MatchTeamResult
 from SCSapp.matchActionsDict import actionsDict
+
+
+
+socketINFO = [    # FOR_DEBUG
+        "Обмен данными происходит по технологии websocket. В сообщении скорей всего мобилка будет передавать JSON-запись с указанием сигнала и, для событий команд - название команды (участника)",
+        "None в button_color окрашивает кнопку в стандартный серый цвет. '_FFFFFF' - нижнее подчёркивание говорит что текст кнопки должен быть белым. Кнопка отмены окрашивается отдельно, смотри фигму",
+    ]
+
 
 
 class PermissionsAPIView(APIView):
@@ -73,7 +81,7 @@ class JudgeMatchesAPIView(APIView):
         serializer = MatchSerializer(matches, many=True)
         
         for matchDataDict in serializer.data:
-            abstrTeamRes = AbstractMatchTeamResult.objects.filter(match = matchDataDict["id"])
+            abstrTeamRes = MatchTeamResult.objects.filter(match = matchDataDict["id"])
             matchDataDict["firstTeam"] = abstrTeamRes[0].team.participant.name
             matchDataDict["secondTeam"] = abstrTeamRes[1].team.participant.name
 
@@ -84,10 +92,8 @@ class MatchManagmentView(APIView):
     permission_classes = [IsAuthenticated]
 
     def get(self, request):
-        try:
-            match = AbstractMatch.objects.get(id=request.GET.get("match_id"))
-        except:
-            return Response({"ERROR":"Матч с указанным ID не существует"})
+        try: match = AbstractMatch.objects.get(id=request.GET.get("match_id"))
+        except: return Response({"ERROR":"Матч с указанным ID не существует"})
         if match.judge != self.request.auth.user: 
             return Response({"ERROR":"Судейство в этом матче недоступно под этой учётной записью"})
     
@@ -95,25 +101,12 @@ class MatchManagmentView(APIView):
             response = actionsDict["volleyball"]    # Другие виды спорта
         else: response = {"ERROR":"Нет события для этого вида спорта"}
 
-        teamsResults = [tr for tr in AbstractMatchTeamResult.objects.all().filter(match=match)]
+        teamsResults = [tr for tr in MatchTeamResult.objects.all().filter(match=match)]
         if len(teamsResults) != 2: return Response({"ERROR":"Ошибка сервера: количество команд не равно 2"})
            
-        response["teams_data"] = {
-            "first":{
-                "team_result_id":teamsResults[0].id,
-                "participant_name":teamsResults[0].team.participant.name
-            },
-            "second":{
-                "team_result_id":teamsResults[1].id,
-                "participant_name":teamsResults[1].team.participant.name
-            },
-        }
-
-        response["info"] = [    # FOR_DEBUG
-                "Обмен данными происходит по технологии websocket. В сообщении скорей всего мобилка будет передавать JSON-запись с указанием сигнала и, для событий команд - название команды (участника)",
-                "None в button_color окрашивает кнопку в стандартный серый цвет. '_FFFFFF' - нижнее подчёркивание говорит что текст кнопки должен быть белым. Кнопка отмены окрашивается отдельно, смотри фигму",
-            ]
-
+        response["teams_data"] = getMatchTranslationData(match)
+        response["info"] = socketINFO
+        
         return Response(response)
 
 class OlympicsAPIView(generics.ListAPIView):

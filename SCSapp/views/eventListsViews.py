@@ -3,7 +3,6 @@ from SCSapp.models.Competition import Competition
 from SCSapp.models.Olympics import Olympics
 from django.core.paginator import Paginator
 from SportCompetitionService import settings
-from SCSapp.func import getUserAuthData
 
 
 def homePageView(request):
@@ -15,11 +14,11 @@ def homePageView(request):
     return render(request, 'homePage.html', {
         'announcedEvents':listOfAnnouncedEvents,
         'currentEvents': listOfCurrentEvents,
-    } | getUserAuthData(request.user))
+    })
 
 
 def pastEventsView(request):
-    data = getUserAuthData(request.user)
+    data = {}
     pastCompetitions = Competition.objects.filter(status=Competition.StatusChoices.PAST)
     pastOlympics = Olympics.objects.filter(status=Olympics.StatusChoices.PAST)
     events = [e.getData() for e in pastOlympics] + [e.getData for e in pastCompetitions]

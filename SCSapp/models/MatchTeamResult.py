@@ -1,6 +1,6 @@
 from django.db import models
 
-class AbstractMatchTeamResult(models.Model):
+class MatchTeamResult(models.Model):
     team = models.ForeignKey('SCSapp.Team', on_delete=models.CASCADE)
     teamScore = models.IntegerField(default=None, null=True, blank=True)
     match = models.ForeignKey("SCSapp.AbstractMatch", on_delete=models.CASCADE)
@@ -12,7 +12,7 @@ class AbstractMatchTeamResult(models.Model):
         object.match = match
         object.save()
 
-class VolleyballMatchTeamResult(AbstractMatchTeamResult):
+class VolleyballMatchTeamResult(MatchTeamResult):
     firstRoundScore = models.IntegerField(default=None, null=True, blank=True)
     secondRoundScore = models.IntegerField(default=None, null=True, blank=True)
     thirdRoundScore = models.IntegerField(default=None, null=True, blank=True)

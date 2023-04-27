@@ -10,11 +10,12 @@ class MatchAction(models.Model):
         verbose_name='Тип события'
     )
 
-    team = models.ForeignKey("SCSapp.Team", on_delete=models.SET_NULL, null=True, verbose_name='Команда')
+    team = models.ForeignKey("SCSapp.Team", on_delete=models.SET_NULL, null=True, blank=True, verbose_name='Команда')
 #     player = models.ForeignKey("SCSapp.Player", verbose_name="Игрок", on_delete=models.CASCADE, null=True, blank=True)
     eventTime = models.TimeField(auto_now_add=True, verbose_name="Время события")
     match = models.ForeignKey('SCSapp.AbstractMatch', on_delete=models.CASCADE, verbose_name="Матч")
 
     def __str__(self):
-        return f"{self.eventType}, {self.team.participant.name} in {self.eventTime}"
+        participantName = self.team.participant.name if self.team else "NoTeam"
+        return f"{self.eventType}, {participantName} in {self.eventTime}"
 

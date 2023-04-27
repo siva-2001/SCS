@@ -1,6 +1,6 @@
 from SCSapp.models.Competition import Competition
 from SCSapp.models.Match import AbstractMatch
-from SCSapp.models.MatchTeamResult import AbstractMatchTeamResult
+from SCSapp.models.MatchTeamResult import MatchTeamResult
 from SCSapp.models.Team import Team
 from SCSapp.models.User import User
 from SCSapp.models.Participant import AbstractParticipant
@@ -107,49 +107,49 @@ def CreateTestDataView(request):
         match = match_2
     )
     
-    match_team_res_1 = AbstractMatchTeamResult.objects.create(
+    match_team_res_1 = MatchTeamResult.objects.create(
         team = team_1,
         match = match_1,
         teamScore = 5,
     )
 
-    match_team_res_2 = AbstractMatchTeamResult.objects.create(
+    match_team_res_2 = MatchTeamResult.objects.create(
         team = team_2,
         match = match_1,
         teamScore = 5,
     )
 
-    match_team_res_3 = AbstractMatchTeamResult.objects.create(
+    match_team_res_3 = MatchTeamResult.objects.create(
         team = team_3,
         match = match_2,
         teamScore = 5,
     )
 
-    match_team_res_4 = AbstractMatchTeamResult.objects.create(
+    match_team_res_4 = MatchTeamResult.objects.create(
         team = team_4,
         match = match_2,
         teamScore = 5,
     )
 
-    match_team_res_5 = AbstractMatchTeamResult.objects.create(
+    match_team_res_5 = MatchTeamResult.objects.create(
         team = team_1,
         match = match_3,
         teamScore = 5,
     )
 
-    match_team_res_6 = AbstractMatchTeamResult.objects.create(
+    match_team_res_6 = MatchTeamResult.objects.create(
         team = team_2,
         match = match_3,
         teamScore = 5,
     )
 
-    match_team_res_7 = AbstractMatchTeamResult.objects.create(
+    match_team_res_7 = MatchTeamResult.objects.create(
         team = team_3,
         match = match_4,
         teamScore = 5,
     )
 
-    match_team_res_8 = AbstractMatchTeamResult.objects.create(
+    match_team_res_8 = MatchTeamResult.objects.create(
         team = team_4,
         match = match_4,
         teamScore = 5,
