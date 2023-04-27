@@ -70,23 +70,23 @@ class ChatConsumer(WebsocketConsumer):
         self.send_to_channel(json.dumps(self.getMatchTranslationData(), ensure_ascii=False))
 
 
-def receive(self, text_data):
-    try: token = getTokenFromASGIScope()
-    except: 
-        self.send_to_group("Пользователь не авторизован")
-        return
-    if not self.match.judge == token.user:
-        self.send_to_group("Вы не имеете судейских прав")
-    else:
-        message = json.loads(text_data)['message']
-        teamResID = MatchTeamResult.objects.all().get(id=message["team_result_id"]) if message["team_result_id"] else None
-        self.send_to_group(self.getActionMessage(
-                MatchAction.objects.create(
-                    eventType = message["signal"],
-                    match = self.match,
-                    team = (teamResID.team if teamResID else None),
-                )
-            ))
+    def receive(self, text_data):
+        try: token = getTokenFromASGIScope()
+        except: 
+            self.send_to_group("Пользователь не авторизован")
+            return
+        if not self.match.judge == token.user:
+            self.send_to_group("Вы не имеете судейских прав")
+        else:
+            message = json.loads(text_data)['message']
+            teamResID = MatchTeamResult.objects.all().get(id=message["team_result_id"]) if message["team_result_id"] else None
+            self.send_to_group(self.getActionMessage(
+                    MatchAction.objects.create(
+                        eventType = message["signal"],
+                        match = self.match,
+                        team = (teamResID.team if teamResID else None),
+                    )
+                ))
 
 
 
