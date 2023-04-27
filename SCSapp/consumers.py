@@ -6,16 +6,49 @@ from SCSapp.models.MatchActions import MatchAction
 from SCSapp.models.MatchTeamResult import MatchTeamResult
 from SCSapp.models.Match import AbstractMatch
 from SCSapp.models.Team import Team
-<<<<<<< HEAD
-from SCSapp.func import getTokenFromASGIScope, getMatchTranslationData
-=======
 from SCSapp.func import getTokenFromASGIScope
->>>>>>> 40d76351a481bc7010b5c4a359f73cd93b7a74ea
 from rest_framework.authtoken.models import Token
 from django.core.exceptions import ObjectDoesNotExist
 
 
 class ChatConsumer(WebsocketConsumer):
+    def chat_message(self, event):
+        self.send(text_data=json.dumps(event))
+
+    def getActionMessage(self, action):
+        return {
+            "message_type" : "action_info",
+            "data" : {
+                "id" : action.id,
+                "signal" : action.eventType,
+                "datetime" : str(action.eventTime),
+                "team" : (action.team.participant.name if action.team else None),
+            }
+        }
+
+
+    def getMatchTranslationData(self):
+        teamsResults = [tr for tr in MatchTeamResult.objects.all().filter(match=self.match)]
+        if len(teamsResults) != 2: return Response({"ERROR":"Ошибка сервера: количество команд не равно 2"})
+        matchActions = MatchAction.objects.all().filter(match=self.match).filter(eventType="GOAL")
+        
+        return {
+            "message_type" : "translation_data",
+            "time": "Пока что тут строковая заглушка",
+            "data" : {
+                "first_team":{
+                    "result_id":teamsResults[0].id,
+                    "participant_name":teamsResults[0].team.participant.name,
+                    "score": str(len(matchActions.filter(team=teamsResults[0].team)))
+                },
+                "second_team":{
+                    "result_id":teamsResults[1].id,
+                    "participant_name":teamsResults[1].team.participant.name,
+                    "score": str(len(matchActions.filter(team=teamsResults[1].team)))
+                },
+            }
+        }
+
     def connect(self):
         self.match = AbstractMatch.objects.all().get(id=self.scope["url_route"]["kwargs"]["match_id"])
         self.room_group_name = "match_%s" % self.scope["url_route"]["kwargs"]["match_id"]
@@ -25,58 +58,83 @@ class ChatConsumer(WebsocketConsumer):
 
         for action in MatchAction.objects.all().filter(match=self.match):
             async_to_sync(self.channel_layer.send)(
-                self.channel_name, {"type": "chat_message", "message": json.dumps({
-                        "id": action.id,
-                        "signal": action.eventType,
-                        "datetime": str(action.eventTime),
-                        "team":(action.team.participant.name if action.team else None),
-                        "teams_data" : getMatchTranslationData(self.match)
-                    }, ensure_ascii=False)}
+                self.channel_name, {"type": "chat_message", "message": json.dumps( 
+                    self.getActionMessage(action), ensure_ascii=False)}
             )
 
-        # async_to_sync(self.channel_layer.send)(
-        #     self.channel_name, {"type": "chat_message", "message": json.dumps({
-        #         "message_type" : ""
-        #     })}
-        # )
+        async_to_sync(self.channel_layer.send)(
+            self.channel_name, {"type": "chat_message", "message": json.dumps(
+                self.getMatchTranslationData(), ensure_ascii=False)}
+        )
+
+
 
         
 
-    def receive(self, text_data):
-        try: token = getTokenFromASGIScope(self.scope)
-        except: 
-            async_to_sync(self.channel_layer.group_send)(
-                self.room_group_name, {"type": "chat_message", "message": "Пользователь не авторизован"}
-            )
-            return
-        if not self.match.judge == token.user:
-            async_to_sync(self.channel_layer.group_send)(
-                self.room_group_name, {"type": "chat_message", "message": "Вы не имеете судейских прав"}
-            ) 
-        else:
-            message = json.loads(text_data)['message']
-            action = MatchAction.objects.create(
-                eventType = message["signal"],
-                match = self.match,
-                team = (MatchTeamResult.objects.all().get(id=message["team_result_id"]).team if teamResID else None),
-            )
-            
-            async_to_sync(self.channel_layer.group_send)(
-                self.room_group_name, {"type": "chat_message", "message": json.dumps({
-                        "id":action.id,
-                        "signal": action.eventType,
-                        "datetime": str(action.eventTime),
-                        "team":(action.team.participant.name if action.team else None),
-                        "teams_data" : getMatchTranslationData(self.match)
-                    }, ensure_ascii=False )}
-            )
+def receive(self, text_data):
+    print("here MUTHER_FUCKER")
+    try: 
+        token = getTokenFromASGIScope()
+        print(token)
+    except: 
+        async_to_sync(self.channel_layer.group_send)(
+            self.room_group_name, {"type": "chat_message", "message": "Пользователь не авторизован"}
+        )
+        return
+    if not self.match.judge == token.user:
+        async_to_sync(self.channel_layer.group_send)(
+            self.room_group_name, {"type": "chat_message", "message": "Вы не имеете судейских прав"}
+        ) 
+    else:
+        message = json.loads(text_data)['message']
+        teamResID = MatchTeamResult.objects.all().get(id=message["team_result_id"]) if message["team_result_id"] else None
+           
+        async_to_sync(self.channel_layer.group_send)(
+            self.room_group_name, {"type": "chat_message", "message": self.getActionMessage(
+                MatchAction.objects.create(
+                    eventType = message["signal"],
+                    match = self.match,
+                    team = (teamResID.team if teamResID else None),
+                )
+            )}
+        )
 
 
-
-    def chat_message(self, event):
-        self.send(text_data=json.dumps({"message": event["message"]}))
         
     def disconnect(self, close_code):
         async_to_sync(self.channel_layer.group_discard)(
             self.room_group_name, self.channel_name
         )
+
+
+
+        # {
+        #     "message" : {
+        #         "message_type" : "action_info",
+        #         "data" : {
+        #             "id" : action.id,
+        #             "signal" : action.eventType,
+        #             "datetime" : str(action.eventTime),
+        #             "team" : (action.team.participant.name if action.team else None),
+        #         }
+        #     }
+        # }
+
+        # {
+        #     "message" : {
+        #         "message_type" : "translation_data",
+        #         "time": "Пока что тут строковая заглушка",
+        #         "data" : {
+        #             "first_team":{
+        #                 "result_id":teamsResults[0].id,
+        #                 "participant_name":teamsResults[0].team.participant.name,
+        #                 "score": str(len(matchActions.filter(team=teamsResults[0].team)))
+        #             },
+        #             "second_team":{
+        #                 "result_id":teamsResults[1].id,
+        #                 "participant_name":teamsResults[1].team.participant.name,
+        #                 "score": str(len(matchActions.filter(team=teamsResults[1].team)))
+        #             },
+        #         }
+        #     }
+        # }

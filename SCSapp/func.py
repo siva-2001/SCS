@@ -3,27 +3,8 @@ import pytz
 import smtplib
 from email.message import EmailMessage
 from rest_framework.authtoken.models import Token
-<<<<<<< HEAD
 from SCSapp.models.MatchTeamResult import MatchTeamResult
 
-def getMatchTranslationData(match):
-        teamsResults = [tr for tr in MatchTeamResult.objects.all().filter(match=match)]
-        if len(teamsResults) != 2: return Response({"ERROR":"Ошибка сервера: количество команд не равно 2"})
-        
-        
-
-        return {
-            "first":{
-                "team_result_id":teamsResults[0].id,
-                "participant_name":teamsResults[0].team.participant.name,
-                "team_score":teamsResults[0].teamScore,
-            },
-            "second":{
-                "team_result_id":teamsResults[1].id,
-                "participant_name":teamsResults[1].team.participant.name,
-                "team_score":teamsResults[1].teamScore,
-            },
-        }
 
 def getTokenFromASGIScope(scope):
     for elem in scope['headers']:
