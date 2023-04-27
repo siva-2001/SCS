@@ -6,11 +6,7 @@ from SCSapp.models.MatchActions import MatchAction
 from SCSapp.models.MatchTeamResult import MatchTeamResult
 from SCSapp.models.Match import AbstractMatch
 from SCSapp.models.Team import Team
-<<<<<<< HEAD
 from SCSapp.func import getTokenFromASGIScope, getMatchTranslationData
-=======
-from SCSapp.func import getTokenFromASGIScope
->>>>>>> 40d76351a481bc7010b5c4a359f73cd93b7a74ea
 from rest_framework.authtoken.models import Token
 from django.core.exceptions import ObjectDoesNotExist
 

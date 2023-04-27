@@ -3,7 +3,6 @@ import pytz
 import smtplib
 from email.message import EmailMessage
 from rest_framework.authtoken.models import Token
-<<<<<<< HEAD
 from SCSapp.models.MatchTeamResult import MatchTeamResult
 
 def getMatchTranslationData(match):
