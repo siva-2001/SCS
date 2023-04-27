@@ -118,11 +118,13 @@ class ChatConsumer(WebsocketConsumer):
         #                 "result_id":teamsResults[0].id,
         #                 "participant_name":teamsResults[0].team.participant.name,
         #                 "score": str(len(matchActions.filter(team=teamsResults[0].team)))
+        #                 "rounds_score": "Заглушка. отображает количество выигранных раундов"
         #             },
         #             "second_team":{
         #                 "result_id":teamsResults[1].id,
         #                 "participant_name":teamsResults[1].team.participant.name,
         #                 "score": str(len(matchActions.filter(team=teamsResults[1].team)))
+        #                 "rounds_score": "Заглушка. отображает количество выигранных раундов"
         #             },
         #         }
         #     }
