@@ -40,7 +40,7 @@ class ChatConsumer(WebsocketConsumer):
     def getMatchTranslationData(self):
         teamsResults = [tr for tr in MatchTeamResult.objects.all().filter(match=self.match)]
         if len(teamsResults) != 2: return Response({"ERROR":"Ошибка сервера: количество команд не равно 2"})
-        matchActions = MatchAction.objects.all().filter(match=self.match).filter(eventType="GOAL")
+        matchGoals = MatchAction.objects.all().filter(match=self.match).filter(eventType="GOAL")
         
         return {
             "message_type" : "translation_data",
@@ -49,13 +49,13 @@ class ChatConsumer(WebsocketConsumer):
                 "first_team":{
                     "result_id":teamsResults[0].id,
                     "participant_name":teamsResults[0].team.participant.name,
-                    "score": str(len(matchActions.filter(team=teamsResults[0].team))),
+                    "score": str(len(matchGoals.filter(team=teamsResults[0].team))),
                     "rounds_score": "Заглушка. отображает количество выигранных раундов"
                 },
                 "second_team":{
                     "result_id":teamsResults[1].id,
                     "participant_name":teamsResults[1].team.participant.name,
-                    "score": str(len(matchActions.filter(team=teamsResults[1].team))),
+                    "score": str(len(matchGoals.filter(team=teamsResults[1].team))),
                     "rounds_score": "Заглушка. отображает количество выигранных раундов"
                 },
             }
@@ -67,7 +67,7 @@ class ChatConsumer(WebsocketConsumer):
         async_to_sync(self.channel_layer.group_add)( self.room_group_name, self.channel_name )
         self.accept()
 
-        for action in MatchAction.objects.all().filter(match=self.match):
+        for action in MatchAction.objects.all().filter(match=self.match):   # order by
             self.send_to_channel(json.dumps(self.getActionMessage(action), ensure_ascii=False))
         self.send_to_channel(json.dumps(self.getMatchTranslationData(), ensure_ascii=False))
 
@@ -82,14 +82,18 @@ class ChatConsumer(WebsocketConsumer):
         else:
             message = json.loads(text_data)['message']
             teamResID = MatchTeamResult.objects.all().get(id=message["team_result_id"]) if message["team_result_id"] else None
-            self.send_to_group(self.getActionMessage(
-                    MatchAction.objects.create(
-                        eventType = message["signal"],
-                        match = self.match,
-                        team = (teamResID.team if teamResID else None),
-                    )
-                ))
+            action = MatchAction.objects.create(
+                eventType = message["signal"],
+                match = self.match,
+                team = (teamResID.team if teamResID else None),
+            )
+            self.send_to_group(self.getActionMessage(action))
+            
+            if action.eventType == "GOAL": 
+            #   ||  action.eventType == "STOP_MATCH":
+                send_to_group(self.getMatchTranslationData())
 
+            
 
 
         
