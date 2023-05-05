@@ -92,6 +92,7 @@ class MatchManagmentView(APIView):
     permission_classes = [IsAuthenticated]
 
     def get(self, request):
+        
         try: match = AbstractMatch.objects.get(id=request.GET.get("match_id"))
         except: return Response({"ERROR":"Матч с указанным ID не существует"})
         if match.judge != self.request.auth.user: 
@@ -101,11 +102,8 @@ class MatchManagmentView(APIView):
             response = actionsDict["volleyball"]    # Другие виды спорта
         else: response = {"ERROR":"Нет события для этого вида спорта"}
 
-        teamsResults = [tr for tr in MatchTeamResult.objects.all().filter(match=match)]
-        if len(teamsResults) != 2: return Response({"ERROR":"Ошибка сервера: количество команд не равно 2"})
-           
+        response["teams_data"] = match.getTranslationData()
         response["info"] = socketINFO
-
         return Response(response)
 
 class OlympicsAPIView(generics.ListAPIView):

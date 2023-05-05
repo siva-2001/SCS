@@ -3,12 +3,13 @@ from asgiref.sync import async_to_sync
 from channels.generic.websocket import WebsocketConsumer
 from SCSapp.models.Competition import Competition
 from SCSapp.models.MatchActions import MatchAction
-from SCSapp.models.MatchTeamResult import MatchTeamResult
+from SCSapp.models.MatchTeamResult import VolleyballMatchTeamResult
 from SCSapp.models.Match import AbstractMatch
 from SCSapp.models.Team import Team
 from SCSapp.func import getTokenFromASGIScope
 from rest_framework.authtoken.models import Token
 from django.core.exceptions import ObjectDoesNotExist
+from rest_framework.response import Response
 
 
 class ChatConsumer(WebsocketConsumer):
@@ -25,55 +26,24 @@ class ChatConsumer(WebsocketConsumer):
             self.room_group_name, {"type": "chat_message", "message": message}
         )
 
-    def getActionMessage(self, action):
-        return {
-            "message_type" : "action_info",
-            "data" : {
-                "id" : action.id,
-                "signal" : action.eventType,
-                "datetime" : str(action.eventTime),
-                "team" : (action.team.participant.name if action.team else None),
-            }
-        }
-
-
-    def getMatchTranslationData(self):
-        teamsResults = [tr for tr in MatchTeamResult.objects.all().filter(match=self.match)]
-        if len(teamsResults) != 2: return Response({"ERROR":"Ошибка сервера: количество команд не равно 2"})
-        matchGoals = MatchAction.objects.all().filter(match=self.match).filter(eventType="GOAL")
-        
-        return {
-            "message_type" : "translation_data",
-            "time": "Пока что тут строковая заглушка",
-            "data" : {
-                "first_team":{
-                    "result_id":teamsResults[0].id,
-                    "participant_name":teamsResults[0].team.participant.name,
-                    "score": str(len(matchGoals.filter(team=teamsResults[0].team))),
-                    "rounds_score": "Заглушка. отображает количество выигранных раундов"
-                },
-                "second_team":{
-                    "result_id":teamsResults[1].id,
-                    "participant_name":teamsResults[1].team.participant.name,
-                    "score": str(len(matchGoals.filter(team=teamsResults[1].team))),
-                    "rounds_score": "Заглушка. отображает количество выигранных раундов"
-                },
-            }
-        }
-
     def connect(self):
+        # ошибка при отсутствии матча в БД
         self.match = AbstractMatch.objects.all().get(id=self.scope["url_route"]["kwargs"]["match_id"])
         self.room_group_name = "match_%s" % self.scope["url_route"]["kwargs"]["match_id"]
         async_to_sync(self.channel_layer.group_add)( self.room_group_name, self.channel_name )
         self.accept()
-
-        for action in MatchAction.objects.all().filter(match=self.match):   # order by
-            self.send_to_channel(json.dumps(self.getActionMessage(action), ensure_ascii=False))
-        self.send_to_channel(json.dumps(self.getMatchTranslationData(), ensure_ascii=False))
+        if self.match.translated_now:
+            for action in MatchAction.objects.all().filter(match=self.match).order_by("eventTime"):   # order by
+                self.send_to_channel(json.dumps(action.getActionMessage(), ensure_ascii=False))
+            self.send_to_channel(json.dumps(self.match.getTranslationData(), ensure_ascii=False))
+        else:
+            self.send_to_channel(json.dumps({"ERROR":"Трансляция матча не ведётся в данный момент"}, ensure_ascii=False))
+            self.disconnect("translation close")
+            
 
 
     def receive(self, text_data):
-        try: token = getTokenFromASGIScope()
+        try: token = getTokenFromASGIScope(self.scope)
         except: 
             self.send_to_group("Пользователь не авторизован")
             return
@@ -81,17 +51,33 @@ class ChatConsumer(WebsocketConsumer):
             self.send_to_group("Вы не имеете судейских прав")
         else:
             message = json.loads(text_data)['message']
-            teamResID = MatchTeamResult.objects.all().get(id=message["team_result_id"]) if message["team_result_id"] else None
-            action = MatchAction.objects.create(
-                eventType = message["signal"],
-                match = self.match,
-                team = (teamResID.team if teamResID else None),
-            )
-            self.send_to_group(self.getActionMessage(action))
+            teamRes = VolleyballMatchTeamResult.objects.all().get(id=message["team_result_id"]) if message["team_result_id"] else None
             
-            if action.eventType == "GOAL": 
-            #   ||  action.eventType == "STOP_MATCH":
-                send_to_group(self.getMatchTranslationData())
+            if message["signal"] == "CANCEL": self.match.cancelLastAction()
+            else: 
+                action = MatchAction.objects.create(
+                    eventType = message["signal"],
+                    match = self.match,
+                    team = (teamRes.team if teamRes else None),
+                )
+
+
+                self.send_to_group(action.getActionMessage())
+            # if action.eventType == "GOAL":
+                self.send_to_group(self.match.getTranslationData())
+            
+
+            # if action.eventType == "STOP_ROUND":
+            # self.match.updateRoundsScore()
+
+
+
+
+
+
+
+
+            
 
             
 

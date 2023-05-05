@@ -1,6 +1,6 @@
 from SCSapp.models.Competition import Competition
 from SCSapp.models.Match import AbstractMatch
-from SCSapp.models.MatchTeamResult import MatchTeamResult
+from SCSapp.models.MatchTeamResult import VolleyballMatchTeamResult
 from SCSapp.models.Team import Team
 from SCSapp.models.User import User
 from SCSapp.models.Participant import AbstractParticipant
@@ -107,49 +107,49 @@ def CreateTestDataView(request):
         match = match_2
     )
     
-    match_team_res_1 = MatchTeamResult.objects.create(
+    match_team_res_1 = VolleyballMatchTeamResult.objects.create(
         team = team_1,
         match = match_1,
         teamScore = 5,
     )
 
-    match_team_res_2 = MatchTeamResult.objects.create(
+    match_team_res_2 = VolleyballMatchTeamResult.objects.create(
         team = team_2,
         match = match_1,
         teamScore = 5,
     )
 
-    match_team_res_3 = MatchTeamResult.objects.create(
+    match_team_res_3 = VolleyballMatchTeamResult.objects.create(
         team = team_3,
         match = match_2,
         teamScore = 5,
     )
 
-    match_team_res_4 = MatchTeamResult.objects.create(
+    match_team_res_4 = VolleyballMatchTeamResult.objects.create(
         team = team_4,
         match = match_2,
         teamScore = 5,
     )
 
-    match_team_res_5 = MatchTeamResult.objects.create(
+    match_team_res_5 = VolleyballMatchTeamResult.objects.create(
         team = team_1,
         match = match_3,
         teamScore = 5,
     )
 
-    match_team_res_6 = MatchTeamResult.objects.create(
+    match_team_res_6 = VolleyballMatchTeamResult.objects.create(
         team = team_2,
         match = match_3,
         teamScore = 5,
     )
 
-    match_team_res_7 = MatchTeamResult.objects.create(
+    match_team_res_7 = VolleyballMatchTeamResult.objects.create(
         team = team_3,
         match = match_4,
         teamScore = 5,
     )
 
-    match_team_res_8 = MatchTeamResult.objects.create(
+    match_team_res_8 = VolleyballMatchTeamResult.objects.create(
         team = team_4,
         match = match_4,
         teamScore = 5,
@@ -158,6 +158,12 @@ def CreateTestDataView(request):
     group = Group.objects.create()
     group.name = "judges"
     group.save()
+
+    group2 = Group.objects.create()
+    group2.name = "organizer"
+    group2.save()    
+
     user.groups.add(group)
+    user.groups.add(group2)
 
     return redirect('homePage')

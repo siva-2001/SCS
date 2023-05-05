@@ -19,3 +19,13 @@ class MatchAction(models.Model):
         participantName = self.team.participant.name if self.team else "NoTeam"
         return f"{self.eventType}, {participantName} in {self.eventTime}"
 
+    def getActionMessage(self):
+        return {
+            "message_type" : "action_info",
+            "data" : {
+                "id" : self.id,
+                "signal" : self.eventType,
+                "datetime" : str(self.eventTime),
+                "team" : (self.team.participant.name if self.team else None),
+            }
+        }

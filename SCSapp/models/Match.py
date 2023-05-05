@@ -3,6 +3,7 @@ from django.db import models
 from SCSapp.models.MatchTeamResult import MatchTeamResult
 from SCSapp.models.MatchActions import MatchAction
 from SCSapp.models import User
+from SCSapp.models.MatchTeamResult import VolleyballMatchTeamResult
 
 class AbstractMatch(models.Model):
     isAnnounced = models.BooleanField(default=True)
@@ -11,6 +12,7 @@ class AbstractMatch(models.Model):
     place = models.CharField(max_length=128, null=True, blank=True)
     protocol = models.FileField(upload_to='media/protocols/match', default=None, null=True, blank=True)
     judge = models.ForeignKey(User, on_delete=models.SET_NULL, default=None, blank=True, null=True)
+    translated_now = models.BooleanField(default=False)
 
     class Meta:
         verbose_name = 'Матч'
@@ -34,6 +36,7 @@ class AbstractMatch(models.Model):
         self.save()
 
     def startMatch(self):
+        # self.translated_now = True
         pass
         #   Начало трансляции ?
         #   Жеребьёвка
@@ -43,35 +46,44 @@ class AbstractMatch(models.Model):
         self.isAnnounced = False
         self.save()
 
-    def cancelMatch(self):
-        for act in MatchAction.objects.filter(match=self): act.delete()
-        for res in MatchTeamResult.objects.filter(match=self):
-            res.teamScore = 0
-            res.save()
+    def updateRoundsScore():
+        results = VolleyballMatchTeamResult.objects.all().filter(match=self)
+        results[0].updateRoundsScore(results[0].getCurrentRoundScore() > results[1].getCurrentRoundScore())
+        results[1].updateRoundsScore(not results[0].getCurrentRoundScore() > results[1].getCurrentRoundScore())
+
+
+    def getTranslationData(self):
+        teamsResults = [tr for tr in VolleyballMatchTeamResult.objects.all().filter(match=self)]
+        if len(teamsResults) != 2: return Response({"ERROR":"Ошибка сервера: количество команд не равно 2"})
+        
+        return {
+            "message_type" : "translation_data",
+            "time": "Пока что тут строковая заглушка",
+            "data" : {
+                "first_team":{
+                    "result_id":teamsResults[0].id,
+                    "participant_name":teamsResults[0].team.participant.name,
+                    "score": teamsResults[0].getCurrentRoundScore(),
+                    "rounds_score": teamsResults[0].teamScore
+                },
+                "second_team":{
+                    "result_id":teamsResults[1].id,
+                    "participant_name":teamsResults[1].team.participant.name,
+                    "score": teamsResults[1].getCurrentRoundScore(),
+                    "rounds_score": teamsResults[1].teamScore
+                },
+            }
+        }
+
+    def cancelLastAction(self):
+        actions = MatchAction.objects.all().filter(match=self).order_by("-eventTime")
+        if len(actions) != 0: actions[0].delete()
+        
+        
+
+    # def cancelMatch(self):
+    #     for act in MatchAction.objects.filter(match=self): act.delete()
+    #     for res in MatchTeamResult.objects.filter(match=self):
+    #         res.teamScore = 0
+    #         res.save()
     
-    # def getData(self):
-    #     matchTeamResults = AbstractMatchTeamResult.objects.filter(match=self)
-    #     gameData = {
-    #         'firstParticipantName':matchTeamResults[0].team.participant.name,
-    #         'secondParticipantName':matchTeamResults[1].team.participant.name,
-    #         'isAnnounced':True,
-    #     }
-    #     if not self.isAnnounced:
-    #         gameData['firstTeamScore'] = matchTeamResults[0].teamScore
-    #         gameData['secondTeamScore'] = matchTeamResults[1].teamScore
-    #         gameData['isAnnounced'] = False
-    #     data = {
-    #         'matchDate':self.matchDateTime,
-    #         'place':self.place,
-    #         'gameData':gameData
-    #     }
-    #     if self.protocol: data['protocol'] = self.protocol.url
-
-    #     #   Изменить способ определения наличия судьи
-    #     if self.judge.first_name or self.judge.last_name:
-    #         data['judge'] = self.judge.first_name + " " + self.judge.last_name
-    #     return data
-
-# class VolleyballMatch(AbstractMatch):
-#     def startRound(self):
-#         pass
