@@ -62,10 +62,10 @@ class ChatConsumer(WebsocketConsumer):
                 )
 
 
-                self.send_to_group(action.getActionMessage())
-            # if action.eventType == "GOAL":
-                self.send_to_group(self.match.getTranslationData())
-            
+                self.send_to_group(json.dumps(action.getActionMessage(), ensure_ascii=False))
+                # if action.eventType == "GOAL":
+                self.send_to_group(json.dumps(self.match.getTranslationData(), ensure_ascii=False))
+                
 
             # if action.eventType == "STOP_ROUND":
             # self.match.updateRoundsScore()
