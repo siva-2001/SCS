@@ -49,7 +49,7 @@ class AbstractMatch(models.Model):
         self.save()
 
 
-    def checkEndRound(self, teamRes):
+    def checkEndRound(self):
         maxRoundScore = 15
         results = VolleyballMatchTeamResult.objects.all().filter(match=self)
         firstTeamScore = results[0].getCurrentRoundScore()
@@ -94,7 +94,7 @@ class AbstractMatch(models.Model):
 
     def cancelLastAction(self):
         actions = MatchAction.objects.all().filter(match=self).order_by("-eventTime")
-        if len(actions) != 0: actions[0].delete()
+        if len(actions) > 1: actions[1].delete()
  
  
 
