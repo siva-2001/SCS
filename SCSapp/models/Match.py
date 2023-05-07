@@ -13,6 +13,8 @@ class AbstractMatch(models.Model):
     protocol = models.FileField(upload_to='media/protocols/match', default=None, null=True, blank=True)
     judge = models.ForeignKey(User, on_delete=models.SET_NULL, default=None, blank=True, null=True)
     translated_now = models.BooleanField(default=False)
+    
+    # placeSide
 
     class Meta:
         verbose_name = 'Матч'
@@ -46,10 +48,23 @@ class AbstractMatch(models.Model):
         self.isAnnounced = False
         self.save()
 
-    def updateRoundsScore():
+
+    def checkEndRound(self, teamRes):
+        maxRoundScore = 15
         results = VolleyballMatchTeamResult.objects.all().filter(match=self)
-        results[0].updateRoundsScore(results[0].getCurrentRoundScore() > results[1].getCurrentRoundScore())
-        results[1].updateRoundsScore(not results[0].getCurrentRoundScore() > results[1].getCurrentRoundScore())
+        firstTeamScore = results[0].getCurrentRoundScore()
+        secondTeamScore = results[1].getCurrentRoundScore()
+
+        if ((firstTeamScore >= maxRoundScore and secondTeamScore < maxRoundScore-1) 
+            or (secondTeamScore >= maxRoundScore and firstTeamScore < maxRoundScore-1) 
+            or (secondTeamScore >= maxRoundScore and firstTeamScore >= maxRoundScore and 
+                abs(firstTeamScore-secondTeamScore) > 1 )): 
+            results[0].updateRoundsScore(firstTeamScore > secondTeamScore)
+            results[1].updateRoundsScore(firstTeamScore < secondTeamScore)
+            return True
+
+        # если раунд закончился - соответствующие действия
+
 
 
     def getTranslationData(self):
@@ -58,13 +73,15 @@ class AbstractMatch(models.Model):
         
         return {
             "message_type" : "translation_data",
-            "time": "Пока что тут строковая заглушка",
+            "time" : "Пока что тут строковая заглушка",
+            "part" : "Заглушка",
             "data" : {
                 "first_team":{
-                    "result_id":teamsResults[0].id,
-                    "participant_name":teamsResults[0].team.participant.name,
-                    "score": teamsResults[0].getCurrentRoundScore(),
-                    "rounds_score": teamsResults[0].teamScore
+                    "result_id" : teamsResults[0].id,
+                    "participant_name" : teamsResults[0].team.participant.name,
+                    "score" : teamsResults[0].getCurrentRoundScore(),
+                    "rounds_score" : teamsResults[0].teamScore,
+                    "PlaceSide" : "LEFT"
                 },
                 "second_team":{
                     "result_id":teamsResults[1].id,
@@ -78,8 +95,8 @@ class AbstractMatch(models.Model):
     def cancelLastAction(self):
         actions = MatchAction.objects.all().filter(match=self).order_by("-eventTime")
         if len(actions) != 0: actions[0].delete()
-        
-        
+ 
+ 
 
     # def cancelMatch(self):
     #     for act in MatchAction.objects.filter(match=self): act.delete()

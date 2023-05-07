@@ -47,39 +47,32 @@ class ChatConsumer(WebsocketConsumer):
         except: 
             self.send_to_group("Пользователь не авторизован")
             return
-        if not self.match.judge == token.user:
-            self.send_to_group("Вы не имеете судейских прав")
+        if not self.match.judge == token.user: self.send_to_group("Вы не имеете судейских прав")
         else:
             message = json.loads(text_data)['message']
-            teamRes = VolleyballMatchTeamResult.objects.all().get(id=message["team_result_id"]) if message["team_result_id"] else None
-            
+
             if message["signal"] == "CANCEL": self.match.cancelLastAction()
             else: 
+                teamRes = VolleyballMatchTeamResult.objects.all().get(id=message["team_result_id"]) if message["team_result_id"] else None
+                
                 action = MatchAction.objects.create(
                     eventType = message["signal"],
                     match = self.match,
                     team = (teamRes.team if teamRes else None),
                 )
 
-
                 self.send_to_group(json.dumps(action.getActionMessage(), ensure_ascii=False))
-                # if action.eventType == "GOAL":
-                self.send_to_group(json.dumps(self.match.getTranslationData(), ensure_ascii=False))
-                
-
-            # if action.eventType == "STOP_ROUND":
-            # self.match.updateRoundsScore()
-
-
-
-
+                if action.eventType == "GOAL":
+                    teamRes.goal()
+                    if self.match.checkEndRound(): 
+                        action = MatchAction.objects.create(
+                            eventType = "END_ROUND",
+                            match = self.match,
+                            team = (teamRes.team if teamRes else None),
+                        )
 
 
-
-
-            
-
-            
+                    self.send_to_group(json.dumps(self.match.getTranslationData(), ensure_ascii=False))
 
 
         
@@ -87,37 +80,3 @@ class ChatConsumer(WebsocketConsumer):
         async_to_sync(self.channel_layer.group_discard)(
             self.room_group_name, self.channel_name
         )
-
-
-        # {
-        #     "message" : {
-        #         "message_type" : "action_info",
-        #         "data" : {
-        #             "id" : action.id,
-        #             "signal" : action.eventType,
-        #             "datetime" : str(action.eventTime),
-        #             "team" : (action.team.participant.name if action.team else None),
-        #         }
-        #     }
-        # }
-
-        # {
-        #     "message" : {
-        #         "message_type" : "translation_data",
-        #         "time": "Пока что тут строковая заглушка",
-        #         "data" : {
-        #             "first_team":{
-        #                 "result_id":teamsResults[0].id,
-        #                 "participant_name":teamsResults[0].team.participant.name,
-        #                 "score": str(len(matchActions.filter(team=teamsResults[0].team)))
-        #                 "rounds_score": "Заглушка. отображает количество выигранных раундов"
-        #             },
-        #             "second_team":{
-        #                 "result_id":teamsResults[1].id,
-        #                 "participant_name":teamsResults[1].team.participant.name,
-        #                 "score": str(len(matchActions.filter(team=teamsResults[1].team)))
-        #                 "rounds_score": "Заглушка. отображает количество выигранных раундов"
-        #             },
-        #         }
-        #     }
-        # }

@@ -15,6 +15,7 @@ $(document).ready(() => {
                 $('#match_score').text(data["data"]["first_team"]["rounds_score"] + " : " + data["data"]["second_team"]["rounds_score"]);
                 $("#first_team_name").text(data["data"]["first_team"]["participant_name"]);
                 $("#second_team_name").text(data["data"]["second_team"]["participant_name"]);
+                $("#part").text(data["data"]["first_team"]["rounds_score"] + data["data"]["second_team"]["rounds_score"])
             }
         };
 
