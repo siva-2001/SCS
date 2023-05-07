@@ -50,29 +50,26 @@ class ChatConsumer(WebsocketConsumer):
         if not self.match.judge == token.user: self.send_to_group("Вы не имеете судейских прав")
         else:
             message = json.loads(text_data)['message']
+            teamRes = VolleyballMatchTeamResult.objects.all().get(id=message["team_result_id"]) if message["team_result_id"] else None
+
+            action = MatchAction.objects.create(
+                eventType = message["signal"],
+                match = self.match,
+                team = (teamRes.team if teamRes else None),
+            )
+
+            self.send_to_group(json.dumps(action.getActionMessage(), ensure_ascii=False))
 
             if message["signal"] == "CANCEL": self.match.cancelLastAction()
-            else: 
-                teamRes = VolleyballMatchTeamResult.objects.all().get(id=message["team_result_id"]) if message["team_result_id"] else None
-                
-                action = MatchAction.objects.create(
-                    eventType = message["signal"],
-                    match = self.match,
-                    team = (teamRes.team if teamRes else None),
-                )
-
-                self.send_to_group(json.dumps(action.getActionMessage(), ensure_ascii=False))
-                if action.eventType == "GOAL":
-                    teamRes.goal()
-                    if self.match.checkEndRound(): 
-                        action = MatchAction.objects.create(
-                            eventType = "END_ROUND",
-                            match = self.match,
-                            team = (teamRes.team if teamRes else None),
-                        )
-
-
-                    self.send_to_group(json.dumps(self.match.getTranslationData(), ensure_ascii=False))
+            if action.eventType == "GOAL":
+                teamRes.goal()
+                if self.match.checkEndRound():
+                    action = MatchAction.objects.create(
+                        eventType = "END_ROUND",
+                        match = self.match,
+                        team = (teamRes.team if teamRes else None),
+                    )
+                self.send_to_group(json.dumps(self.match.getTranslationData(), ensure_ascii=False))
 
 
         
