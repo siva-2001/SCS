@@ -57,7 +57,7 @@ class AbstractMatch(models.Model):
 
         if ((firstTeamScore >= maxRoundScore and secondTeamScore < maxRoundScore-1) 
             or (secondTeamScore >= maxRoundScore and firstTeamScore < maxRoundScore-1) 
-            or (secondTeamScore >= maxRoundScore and firstTeamScore >= maxRoundScore and 
+            or (secondTeamScore >= maxRoundScore - 1 and firstTeamScore >= maxRoundScore - 1 and
                 abs(firstTeamScore-secondTeamScore) > 1 )): 
             results[0].updateRoundsScore(firstTeamScore > secondTeamScore)
             results[1].updateRoundsScore(firstTeamScore < secondTeamScore)
