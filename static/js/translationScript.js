@@ -1,18 +1,6 @@
 $(document).ready(() => {
     if (window.location.pathname.match(/liveStream/)){
 
-        var startDate = new Date();
-        var time = setInterval(function(){
-            var date = new Date()
-
-            var seconds = parseInt(((date - startDate) / 1000) % 60);
-            var minutes = parseInt((date - startDate) / 60000);
-            if (seconds < 10) seconds = "0" + seconds;
-            if (minutes < 10) minutes = "0" + minutes;
-            $("#time").text("Время " + minutes + ":" + seconds);
-
-        }, 1000)
-
         const chatSocket = new WebSocket(
             'ws://'+window.location.host+'/ws/chat/'+JSON.parse(document.getElementById('match-id').textContent)+'/'
         );
@@ -21,8 +9,22 @@ $(document).ready(() => {
             const data = JSON.parse(JSON.parse(e.data).message);
             console.log(data)
 
-//            КОСТЫЛЬ ДЛЯ ДЕМОНСТРАЦИИ
+            if(data["message_type"] == "action_info"){
+                if(data["data"]["signal"] == "START_ROUND"){
 
+                    var startDate = new Date();
+                    var time = setInterval(function(){
+                        var date = new Date()
+
+                        var seconds = parseInt(((date - startDate) / 1000) % 60);
+                        var minutes = parseInt((date - startDate) / 60000);
+                        if (seconds < 10) seconds = "0" + seconds;
+                        if (minutes < 10) minutes = "0" + minutes;
+                        $("#time").text("Время " + minutes + ":" + seconds);
+                    }, 1000);
+                }
+
+            }
 
 
             if(data["message_type"] == "translation_data"){
