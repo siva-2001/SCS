@@ -20,6 +20,16 @@ class VolleyballMatchTeamResult(MatchTeamResult):
     thirdRoundScore = models.IntegerField(default=None, null=True, blank=True)
     currentRoundScore = models.IntegerField(default=None, null=True, blank=True)
 
+    class Meta:
+        verbose_name = 'Результат в матче по волейболу'
+        verbose_name_plural = 'Результаты в матче по волейболу'
+
+    def startMatch(self):
+        self.firstRoundScore = 0
+        self.currentRoundScore = 0
+        self.teamScore = 0
+        self.save()
+
     def updateRoundsScore(self, isWinner=False):        
         if self.thirdRoundScore is not None: 
             print("error : счёт всех раундов уже сохранён")

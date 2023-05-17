@@ -2,7 +2,7 @@ $(document).ready(() => {
     if (window.location.pathname.match(/liveStream/)){
 
         const chatSocket = new WebSocket(
-            'ws://'+window.location.host+'/ws/chat/'+JSON.parse(document.getElementById('match-id').textContent)+'/'
+            'ws://'+window.location.host+'/ws/volleyballTranslation/'+JSON.parse(document.getElementById('match-id').textContent)+'/'
         );
 
         chatSocket.onmessage = function(e) {
@@ -38,7 +38,7 @@ $(document).ready(() => {
                 $('#match_score').text(data["data"]["first_team"]["rounds_score"] + " : " + data["data"]["second_team"]["rounds_score"]);
                 $("#first_team_name").text(data["data"]["first_team"]["participant_name"]);
                 $("#second_team_name").text(data["data"]["second_team"]["participant_name"]);
-                var part = data["data"]["first_team"]["rounds_score"] + data["data"]["second_team"]["rounds_score"]
+                var part = data["data"]["first_team"]["rounds_score"] + data["data"]["second_team"]["rounds_score"] + 1;
                 $("#part").text("Партия №" + part)
             }
         };

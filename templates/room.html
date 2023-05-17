@@ -17,10 +17,13 @@
     <div>
         <textarea id="chat-log" cols="100" rows="20"></textarea><br>
         <input id="chat-message-input" type="text" size="100"><br>
-        <input id="chat-message-submit" type="button" value="Send">
+        <input id="chat-message-submit" type="button" value="Send"><br>
+        <input id="goal-send-fsu" type="button" value="goal FSU">
+        <input id="goal-send-gf" type="button" value="goal GF"><br>
+        <input id="start-round-send" type="button" value="start round"><br>
+        <input id="cancel-send" type="button" value="cancel">
         {{ match_id|json_script:"match-id" }}
     </div>
-    
     
     <script>
         const matchID = JSON.parse(document.getElementById('match-id').textContent);
@@ -28,7 +31,7 @@
         const chatSocket = new WebSocket(
             'ws://'
             + window.location.host
-            + '/ws/chat/'
+            + '/ws/volleyballTranslation/'
             + matchID
             + '/'
         );
@@ -42,6 +45,52 @@
         chatSocket.onclose = function(e) {
             console.error('Chat socket closed unexpectedly');
         };
+
+
+
+
+
+
+
+        document.querySelector('#goal-send-fsu').onclick = function(e) {
+            chatSocket.send(JSON.stringify({
+                'message': {
+                    "signal":"GOAL",
+                    "team_result_id" : 4,
+                }
+            }));
+        };
+
+        document.querySelector('#goal-send-gf').onclick = function(e) {
+            chatSocket.send(JSON.stringify({
+                'message': {
+                    "signal":"GOAL",
+                    "team_result_id" : 3,
+                }
+            }));
+        };
+
+        document.querySelector('#cancel-send').onclick = function(e) {
+            chatSocket.send(JSON.stringify({
+                'message': {
+                    "signal":"CANCEL",
+                    "team_result_id" : null,
+                }
+            }));
+        };
+
+        document.querySelector('#start-round-send').onclick = function(e) {
+            chatSocket.send(JSON.stringify({
+                'message': {
+                    "signal":"START_ROUND",
+                    "team_result_id" : null,
+                }
+            }));
+        };
+
+
+
+
 
         document.querySelector('#chat-message-submit').onclick = function(e) {
             const messageInputDom = document.querySelector('#chat-message-input');

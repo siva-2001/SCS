@@ -12,9 +12,10 @@ class AbstractMatch(models.Model):
     place = models.CharField(max_length=128, null=True, blank=True)
     protocol = models.FileField(upload_to='media/protocols/match', default=None, null=True, blank=True)
     judge = models.ForeignKey(User, on_delete=models.SET_NULL, default=None, blank=True, null=True)
+
     translated_now = models.BooleanField(default=False)
-    
-    # placeSide
+    current_round = models.IntegerField(default=0, null=True, blank=True)
+
 
     class Meta:
         verbose_name = 'Матч'
@@ -31,22 +32,37 @@ class AbstractMatch(models.Model):
         #   AbstractMatchTeamResult.create(firstTeam, object)
         #   AbstractMatchTeamResult.create(secondTeam, object)
 
-    def editMatch(self, date, place, judge):
-        self.matchDateTime = date
-        self.place = place
-        self.judge = judge
-        self.save()
 
     def startMatch(self):
-        # self.translated_now = True
-        pass
-        #   Начало трансляции ?
-        #   Жеребьёвка
+        self.translated_now = True
+        self.isAnnounced = False
+        self.save()
 
     def endMatch(self):
         #   Генерация протокола
-        self.isAnnounced = False
+
+        self.translated_now = False
         self.save()
+
+    def cancelLastAction(self):
+        actions = MatchAction.objects.all().filter(match=self).order_by("-eventTime")
+        if len(actions) > 1: actions[1].delete()
+
+class VolleyballMatch(AbstractMatch):
+
+    def create(cls, firstTeam, secondTeam, competition, judge=None):
+        object = super().create()
+        VolleyballMatchTeamResult.create(secondTeam, object)
+        VolleyballMatchTeamResult.create(firstTeam, object)
+        return object
+
+    def startMatch(self):
+        if self.isAnnounced:
+            super().startMatch()
+            results = VolleyballMatchTeamResult.objects.all().filter(match=self)
+            for res in results: res.startMatch()
+            return 'ws://127.0.0.1:8000/ws/volleyballTranslation/'+ str(self.id) +'/'
+
 
 
     def checkEndRound(self):
@@ -65,10 +81,8 @@ class AbstractMatch(models.Model):
 
         # если раунд закончился - соответствующие действия
 
-
-
     def getTranslationData(self):
-        teamsResults = [tr for tr in VolleyballMatchTeamResult.objects.all().filter(match=self)]
+        teamsResults = VolleyballMatchTeamResult.objects.all().filter(match=self)
         if len(teamsResults) != 2: return Response({"ERROR":"Ошибка сервера: количество команд не равно 2"})
         
         return {
@@ -81,7 +95,7 @@ class AbstractMatch(models.Model):
                     "participant_name" : teamsResults[0].team.participant.name,
                     "score" : teamsResults[0].getCurrentRoundScore(),
                     "rounds_score" : teamsResults[0].teamScore,
-                    "PlaceSide" : "LEFT"
+                    # "PlaceSide" : "LEFT"
                 },
                 "second_team":{
                     "result_id":teamsResults[1].id,
@@ -91,16 +105,3 @@ class AbstractMatch(models.Model):
                 },
             }
         }
-
-    def cancelLastAction(self):
-        actions = MatchAction.objects.all().filter(match=self).order_by("-eventTime")
-        if len(actions) > 1: actions[1].delete()
- 
- 
-
-    # def cancelMatch(self):
-    #     for act in MatchAction.objects.filter(match=self): act.delete()
-    #     for res in MatchTeamResult.objects.filter(match=self):
-    #         res.teamScore = 0
-    #         res.save()
-    

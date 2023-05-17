@@ -5,11 +5,12 @@ from rest_framework.views import APIView
 from rest_framework.authentication import TokenAuthentication
 from rest_framework.permissions import IsAuthenticated
 from django.contrib.auth.models import AnonymousUser
+import json
 
 from SCSapp.models.Olympics import Olympics
 from SCSapp.serializers import OlympicsSerializer, UserSerializer
 from SCSapp.models.Competition import Competition
-from SCSapp.models.Match import AbstractMatch
+from SCSapp.models.Match import AbstractMatch, VolleyballMatch
 from SCSapp.serializers import MatchSerializer, CompetitionSerializer
 from SCSapp.models.User import User
 from SCSapp.models.MatchTeamResult import MatchTeamResult
@@ -91,20 +92,23 @@ class MatchManagmentView(APIView):
     authentication_classes = [TokenAuthentication]
     permission_classes = [IsAuthenticated]
 
-    def get(self, request):
-        
-        try: match = AbstractMatch.objects.get(id=request.GET.get("match_id"))
+    def post(self, request):
+        try:
+            if AbstractMatch.objects.get(id=json.loads(request.body)["match_id"]).competition.sportType == Competition.SportTypeChoices.VOLLEYBALL:
+                match = VolleyballMatch.objects.get(id=json.loads(request.body)["match_id"])
+                response = actionsDict["volleyball"]
+            else: return Response({"ERROR": "Нет события для этого вида спорта"})
         except: return Response({"ERROR":"Матч с указанным ID не существует"})
-        if match.judge != self.request.auth.user: 
-            return Response({"ERROR":"Судейство в этом матче недоступно под этой учётной записью"})
-    
-        if match.competition.sportType == Competition.SportTypeChoices.VOLLEYBALL: 
-            response = actionsDict["volleyball"]    # Другие виды спорта
-        else: response = {"ERROR":"Нет события для этого вида спорта"}
 
+        if match.judge != self.request.auth.user:
+            return Response({"ERROR":"Судейство в этом матче недоступно под этой учётной записью"})
         response["teams_data"] = match.getTranslationData()
         response["info"] = socketINFO
+        response["WSLink"] = match.startMatch()
+
         return Response(response)
+
+
 
 class OlympicsAPIView(generics.ListAPIView):
     queryset = Olympics.objects.all()

@@ -60,6 +60,7 @@ urlpatterns = [
     path('api/v1/judgeMatches/', JudgeMatchesAPIView.as_view(), name='judgeMatches'),
     path('api/v1/matchManagment/', MatchManagmentView.as_view(), name='matchManagment'),
 
+
     # ---------------------------------------------------------------------------------------------
     #   WebSocket
     

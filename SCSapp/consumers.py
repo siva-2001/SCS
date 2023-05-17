@@ -4,7 +4,7 @@ from channels.generic.websocket import WebsocketConsumer
 from SCSapp.models.Competition import Competition
 from SCSapp.models.MatchActions import MatchAction
 from SCSapp.models.MatchTeamResult import VolleyballMatchTeamResult
-from SCSapp.models.Match import AbstractMatch
+from SCSapp.models.Match import AbstractMatch, VolleyballMatch
 from SCSapp.models.Team import Team
 from SCSapp.func import getTokenFromASGIScope
 from rest_framework.authtoken.models import Token
@@ -26,9 +26,12 @@ class ChatConsumer(WebsocketConsumer):
             self.room_group_name, {"type": "chat_message", "message": message}
         )
 
+    def disconnect(self, close_code):
+        async_to_sync(self.channel_layer.group_discard)(
+            self.room_group_name, self.channel_name
+        )
+
     def connect(self):
-        # ошибка при отсутствии матча в БД
-        self.match = AbstractMatch.objects.all().get(id=self.scope["url_route"]["kwargs"]["match_id"])
         self.room_group_name = "match_%s" % self.scope["url_route"]["kwargs"]["match_id"]
         async_to_sync(self.channel_layer.group_add)( self.room_group_name, self.channel_name )
         self.accept()
@@ -39,41 +42,43 @@ class ChatConsumer(WebsocketConsumer):
         else:
             self.send_to_channel(json.dumps({"ERROR":"Трансляция матча не ведётся в данный момент"}, ensure_ascii=False))
             self.disconnect("translation close")
-            
 
+
+
+class VolleyballConsumer(ChatConsumer):
+
+    def connect(self):
+        # ошибка при отсутствии матча в БД
+        self.match = VolleyballMatch.objects.all().get(id=self.scope["url_route"]["kwargs"]["match_id"])
+        super().connect()
 
     def receive(self, text_data):
-        try: token = getTokenFromASGIScope(self.scope)
-        except: 
+        try:
+            token = getTokenFromASGIScope(self.scope)
+        except:
             self.send_to_group("Пользователь не авторизован")
             return
-        if not self.match.judge == token.user: self.send_to_group("Вы не имеете судейских прав")
+        if not self.match.judge == token.user:
+            self.send_to_group("Вы не имеете судейских прав")
         else:
             message = json.loads(text_data)['message']
             teamRes = VolleyballMatchTeamResult.objects.all().get(id=message["team_result_id"]) if message["team_result_id"] else None
-
             action = MatchAction.objects.create(
-                eventType = message["signal"],
-                match = self.match,
-                team = (teamRes.team if teamRes else None),
+                eventType=message["signal"],
+                match=self.match,
+                team=(teamRes.team if teamRes else None),
             )
-
             self.send_to_group(json.dumps(action.getActionMessage(), ensure_ascii=False))
 
-            if message["signal"] == "CANCEL": self.match.cancelLastAction()
+            message = json.loads(text_data)['message']
+            if message["signal"] == "CANCEL":
+                self.match.cancelLastAction()
             if action.eventType == "GOAL":
                 teamRes.goal()
                 if self.match.checkEndRound():
-                    action = MatchAction.objects.create(
-                        eventType = "END_ROUND",
-                        match = self.match,
-                        team = (teamRes.team if teamRes else None),
+                    MatchAction.objects.create(
+                        eventType="END_ROUND",
+                        match=self.match,
+                        team=(teamRes.team if teamRes else None),
                     )
                 self.send_to_group(json.dumps(self.match.getTranslationData(), ensure_ascii=False))
-
-
-        
-    def disconnect(self, close_code):
-        async_to_sync(self.channel_layer.group_discard)(
-            self.room_group_name, self.channel_name
-        )

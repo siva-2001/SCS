@@ -1,9 +1,9 @@
 from SCSapp.models.Competition import Competition
-from SCSapp.models.Match import AbstractMatch
+from SCSapp.models.Match import AbstractMatch, VolleyballMatch
 from SCSapp.models.MatchTeamResult import VolleyballMatchTeamResult
 from SCSapp.models.Team import Team
 from SCSapp.models.User import User
-from SCSapp.models.Participant import AbstractParticipant
+from SCSapp.models.Participant import Faculty
 from SCSapp.models.MatchActions import MatchAction
 
 from django.shortcuts import redirect
@@ -56,30 +56,30 @@ def CreateTestDataView(request):
     competition_1.save()
     competition_3.save()
 
-    match_1 = AbstractMatch.objects.create(
+    match_1 = VolleyballMatch.objects.create(
         competition = competition_2,
         judge = User.objects.get(username="admin")
     )  
 
-    match_2 = AbstractMatch.objects.create(
+    match_2 = VolleyballMatch.objects.create(
         competition = competition_3,
         judge = User.objects.get(username="user")
     )
 
-    match_3 = AbstractMatch.objects.create(
+    match_3 = VolleyballMatch.objects.create(
         competition = competition_3,
         judge = User.objects.get(username="admin")
     )
 
-    match_4 = AbstractMatch.objects.create(
+    match_4 = VolleyballMatch.objects.create(
         competition = competition_2,
         judge = User.objects.get(username="user")
     )
 
-    participant_1 = AbstractParticipant.objects.create(name="РТФ")
-    participant_2 = AbstractParticipant.objects.create(name="ФБ")
-    participant_3 = AbstractParticipant.objects.create(name="ГФ")
-    participant_4 = AbstractParticipant.objects.create(name="ФСУ")
+    participant_1 = Faculty.objects.create(name="РТФ")
+    participant_2 = Faculty.objects.create(name="ФБ")
+    participant_3 = Faculty.objects.create(name="ГФ")
+    participant_4 = Faculty.objects.create(name="ФСУ")
 
     team_1 = Team.objects.create(participant=participant_1)
     team_2 = Team.objects.create(participant=participant_2)

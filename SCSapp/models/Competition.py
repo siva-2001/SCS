@@ -140,7 +140,7 @@ class CacheScore(models.Model):
     participantRaiting = models.FloatField()
     participantPlace = models.IntegerField()
     competition = models.ForeignKey('SCSapp.Competition', on_delete=models.CASCADE)
-    participant = models.ForeignKey('SCSapp.AbstractParticipant', on_delete=models.CASCADE)
+    participant = models.ForeignKey('SCSapp.Faculty', on_delete=models.CASCADE)
 
 
     @classmethod
