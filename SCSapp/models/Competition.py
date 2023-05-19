@@ -7,11 +7,11 @@ from .Team import Team
 
 class CurrentCompetitionManager(models.Manager):
     def get_queryset(self):
-        return super().get_queryset().filter(status=Competition.StatusChoices.CURRENT, isHighLevelSportEvent=True)
+        return super().get_queryset().filter(status=Competition.StatusChoices.CURRENT)#, isHighLevelSportEvent=True)
 
 class AnnouncedCompetitionManager(models.Manager):
     def get_queryset(self):
-        return super().get_queryset().filter(status=Competition.StatusChoices.ANNOUNSED, isHighLevelSportEvent=True)
+        return super().get_queryset().filter(status=Competition.StatusChoices.ANNOUNSED)#, isHighLevelSportEvent=True)
 
 
 class Competition(models.Model):
@@ -19,9 +19,6 @@ class Competition(models.Model):
     current_objects = CurrentCompetitionManager()
     announced_objects = AnnouncedCompetitionManager()
 
-    class TypeChoices(models.TextChoices):
-        INTERNAL = 'INTERNAL', 'Внутреннее'
-        INTERCOLLEGIATE = 'INTERCOLLEGIATE', 'Межвузовское'
 
     class StatusChoices(models.TextChoices):
         ANNOUNSED = "ANNONCED", 'Анонсированное'
@@ -35,24 +32,28 @@ class Competition(models.Model):
         verbose_name = 'Статус',
     )
 
-    type = models.CharField(
-        verbose_name='Тип',
-        max_length=128,
-        choices = TypeChoices.choices,
-        default = TypeChoices.INTERCOLLEGIATE,
-    )
+    # class TypeChoices(models.TextChoices):
+    #     INTERNAL = 'INTERNAL', 'Внутреннее'
+    #     INTERCOLLEGIATE = 'INTERCOLLEGIATE', 'Межвузовское'
+    #
+    # type = models.CharField(
+    #     verbose_name='Тип',
+    #     max_length=128,
+    #     choices = TypeChoices.choices,
+    #     default = TypeChoices.INTERCOLLEGIATE,
+    # )
 
-    class SportTypeChoices(models.TextChoices):
-        FOOTBALL = 'BASKETBALL', 'Баскетбол'
-        VOLLEYBALL = 'VOLLEYBALL', 'Волейбол'
+    # class SportTypeChoices(models.TextChoices):
+    #     FOOTBALL = 'BASKETBALL', 'Баскетбол'
+    #     VOLLEYBALL = 'VOLLEYBALL', 'Волейбол'
 
 
-    sportType = models.CharField(
-        max_length=128,
-        verbose_name='Тип спорта',
-        choices=SportTypeChoices.choices,
-        default=SportTypeChoices.VOLLEYBALL
-    )
+    # sportType = models.CharField(
+    #     max_length=128,
+    #     verbose_name='Тип спорта',
+    #     choices=SportTypeChoices.choices,
+    #     default=SportTypeChoices.VOLLEYBALL
+    # )
 
     name = models.CharField(max_length=256, verbose_name="Заголовок", null=True)
     description = models.TextField(blank=True, verbose_name="Описание", null=True)
@@ -62,33 +63,34 @@ class Competition(models.Model):
     protocol = models.FileField(upload_to='protocols', null=True, blank=True, verbose_name="Протокол")
     regulations = models.FileField(upload_to='regulations', null=True, blank=True, verbose_name="Регламент соревнований")
     # olympics = models.ForeignKey('SCSapp.olympics', on_delete=models.CASCADE, verbose_name='Спартакиада', null=True, default=None, blank=True)
-    isHighLevelSportEvent = models.BooleanField(default=True)
+    # isHighLevelSportEvent = models.BooleanField(default=True)
 
     class Meta:
         verbose_name = 'Соревнование'
         verbose_name_plural = 'Соревнования'
 
     def __str__(self):
-        # if self.olympics: return f"{self.SportTypeChoices(self.sportType).label} в < {self.olympics} >"
         return self.name
-
 
     def get_absolute_url(self):
         return reverse('competition', args=[str(self.id)])
 
     @classmethod
-    def create(cls, name, description, sportType, isHighLevel=True, type=None, startDate=None, organizer=None, regulations = None, olympics = None):
+    # def create(cls, name, description, sportType, isHighLevel=True, type=None, startDate=None, organizer=None, regulations=None, olympics=None):
+    def create(cls, name, description, startDate=None, organizer=None, regulations = None):
         object = cls()
         object.name = name
         object.description = description
-        object.sportType = sportType
         object.dateTimeStartCompetition = startDate
-        object.isHighLevelSportEvent = isHighLevel
         object.organizer = organizer
-        object.type = type
-        object.olympics = olympics
         object.regulations = regulations
         object.status = cls.StatusChoices.ANNOUNSED
+
+        # object.type = type
+        # object.isHighLevelSportEvent = isHighLevel
+        # object.sportType = sportType
+        # object.olympics = olympics
+
         object.save()
         return object
 
@@ -114,15 +116,6 @@ class Competition(models.Model):
         relatedMatches = AbstractMatch.objects.filter(competition=self).order_by('status').order_by('matchDateTime')
         return [match.getData() for match in relatedMatches]
 
-    #   Возвращает подтверждённые организатором команды
-    def getRelatedTeams(self):
-        return Team.objects.filter(competition=self).filter(confirmed=True)
-
-      # Возвращает ещё не подтверждённые организатором команды
-    def getApplicationsForParticipation(self):
-        return Team.objects.filter(competition=self).filter(confirmed=False)
-
-
     #   Данные на основе которых формируется турнирная сетка
     def getTournamentGrid(self):
         data = list()
@@ -131,8 +124,45 @@ class Competition(models.Model):
         return data
 
 
-    def getRelatedPlayersByParticipant(self):
-        pass
+class VolleyballCompetition(Competition):
+    class Meta:
+        verbose_name = 'Соревнование по волейболу'
+        verbose_name_plural = 'Соревнования по волейболу'
+
+    numOfRounds = models.IntegerField(null=True, blank=True, verbose_name='Максимальное количество раундов')
+    roundsPointLimit = models.IntegerField(null = True,blank = True, verbose_name='Раунд идёт до')
+    lastRoundPointLimit = models.IntegerField(null=True, blank=True, verbose_name='Последний раунд идёт до')
+
+    onePointsLead = models.IntegerField(verbose_name="Балл за отрыв в 3 очка", null=True, blank=True)
+    twoPointsLead = models.IntegerField(verbose_name="Балл за отрыв в 2 очка", null=True, blank=True)
+    threePointsLead = models.IntegerField(verbose_name="Балл за отрыв в 1 очко", null=True, blank=True)
+
+    onePointsLose = models.IntegerField(verbose_name="Балл за проигрыш в 3 очка", null=True, blank=True)
+    twoPointsLose = models.IntegerField(verbose_name="Балл за проигрыш в 2 очка", null=True, blank=True)
+    threePointsLose = models.IntegerField(verbose_name="Балл за проигрыш в 1 очко", null=True, blank=True)
+
+    @classmethod
+    def create(cls, name, description, startDate=None, organizer=None, regulations = None,
+               numOfRounds=5, roundsPointLimit=25, lastRoundPointLimit=15,
+               onePointsLead = 1, twoPointsLead = 2, threePointsLead = None,
+               onePointsLose = 0, twoPointsLose = 0, threePointsLose = None):
+        object = super().create(name, description, startDate, organizer, regulations)
+
+        object.numOfRounds = numOfRounds
+        object.roundsPointLimit = roundsPointLimit
+        object.lastRoundPointLimit = lastRoundPointLimit
+
+        object.onePointsLead = onePointsLead
+        object.twoPointsLead = twoPointsLead
+        object.threePointsLead = threePointsLead
+
+        object.onePointsLose = onePointsLose
+        object.twoPointsLose = twoPointsLose
+        object.threePointsLose = threePointsLose
+
+        object.save()
+        return object
+
 
 
 class CacheScore(models.Model):

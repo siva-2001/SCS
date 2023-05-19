@@ -1,6 +1,7 @@
 $(document).ready(() => {
     checkAccessPermissions();
 
+
     if (window.location.pathname == '/logout/'){
         delete_cookie("Authorization")
         delete_cookie("session_id")
@@ -58,6 +59,34 @@ $(document).ready(() => {
 
         $('#create-competition-btn').click((e) => {
             e.preventDefault();
+            if ($("#main-info-form").css("display") == "block" && $("#score-info-form").css("display") == "none"){
+                if ($('#competition-title').val() === ""
+                || $('#competition-description').val() === ""
+                || $('#competition-date').val() === "")
+                    alert("Заполните пустые поля");
+                else {
+                    if ($('input[name="partNumber"]:checked').val() == 3) $('#one-point-row').hide();
+                    $("#main-info-form").hide();
+                    $("#score-info-form").show();
+                    $("#create-competition-btn").text("Готово");
+                }
+            } else if ($("#main-info-form").css("display") == "none" && $("#score-info-form").css("display") == "block"){
+                if (!(isNaN(parseInt($('#round-point-limit').val()))
+                ||  isNaN(parseInt($('#last-round-point-limit').val()))
+                ||  isNaN(parseInt($('#one-point-lead').val()))
+                ||  isNaN(parseInt($('#one-point-lose').val()))
+                ||  isNaN(parseInt($('#two-point-lead').val()))
+                ||  isNaN(parseInt($('#two-point-lose').val()))
+                )){
+                    alert("here");
+//                isNaN(parseInt($('#three-point-lead').val()))
+//                ||  isNaN(parseInt($('#three-point-lose').val()))
+                } else alert("not here");
+            }
+
+
+
+
 
             formData.append('name', $('#competition-title').val());
             formData.append('description', $('#competition-description').val());
@@ -66,28 +95,28 @@ $(document).ready(() => {
             formData.append('type', $('input[name=type]').val());
             formData.append('regulations', $('#regulations')[0].files[0]);
 
-            if ($('#competition-title').val() === "" 
-                || $('#competition-description').val() === "" 
-                || $('#competition-date').val() === "") alert("Заполните пустые поля");
-            else {
-                $.ajax({
-                    method: "POST",
-                    url: "http://127.0.0.1:8000/api/v1/competitions/",
-                    dataType : 'json',
-                    contentType: false,
-                    processData: false,
-                    cache: false,
-                    data: formData,
-                    headers:{
-                        "X-CSRFToken": $('[name="csrfmiddlewaretoken"]').attr('value'),
-                        "Authorization": cookieStrToObject(document.cookie).Authorization 
-                    },
-                })
-                .done(function() {
-                    alert('Соревнование успешно создано');
-                    $(location).attr('href',"http://127.0.0.1:8000/");
-                });
-            }
+//            if ($('#competition-title').val() === ""
+//                || $('#competition-description').val() === ""
+//                || $('#competition-date').val() === "") alert("Заполните пустые поля");
+//            else {
+//                $.ajax({
+//                    method: "POST",
+//                    url: "http://127.0.0.1:8000/api/v1/competitions/",
+//                    dataType : 'json',
+//                    contentType: false,
+//                    processData: false,
+//                    cache: false,
+//                    data: formData,
+//                    headers:{
+//                        "X-CSRFToken": $('[name="csrfmiddlewaretoken"]').attr('value'),
+//                        "Authorization": cookieStrToObject(document.cookie).Authorization
+//                    },
+//                })
+//                .done(function() {
+//                    alert('Соревнование успешно создано');
+//                    $(location).attr('href',"http://127.0.0.1:8000/");
+//                });
+//            }
         });
     }
 

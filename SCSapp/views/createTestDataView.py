@@ -1,4 +1,4 @@
-from SCSapp.models.Competition import Competition
+from SCSapp.models.Competition import Competition, VolleyballCompetition
 from SCSapp.models.Match import AbstractMatch, VolleyballMatch
 from SCSapp.models.MatchTeamResult import VolleyballMatchTeamResult
 from SCSapp.models.Team import Team
@@ -18,36 +18,48 @@ def CreateTestDataView(request):
     user.save()
 
 
-    competition_1 = Competition.objects.create(
+    competition_1 = VolleyballCompetition.objects.create(
         name = "Межфакультетские соревнования. Кубок по волейболу ТУСУР", 
         description = "Лучшие соревнования за последние 10, а то и 15 лет!",
-        sportType = Competition.SportTypeChoices.VOLLEYBALL,
-        type = Competition.TypeChoices.INTERCOLLEGIATE, 
-        organizer = User.objects.get(username="admin")
+        organizer = User.objects.get(username="admin"),
+        numOfRounds=3,
+        roundsPointLimit=15,
+        lastRoundPointLimit=15,
+        onePointsLead=1, twoPointsLead=2,
+        onePointsLose=0, twoPointsLose=0,
     )
 
-    competition_2 = Competition.objects.create(
+    competition_2 = VolleyballCompetition.objects.create(
         name = "Межфакультетские соревнования. Кубок по футболу ТУСУР", 
         description = "Вторые лучшие соревнования за последние 10, а то и 15 лет!",
-        sportType = Competition.SportTypeChoices.FOOTBALL,
-        type = Competition.TypeChoices.INTERNAL, 
-        organizer = User.objects.get(username="user")
+        organizer = User.objects.get(username="user"),
+        numOfRounds = 3,
+        roundsPointLimit = 15,
+        lastRoundPointLimit = 15,
+        onePointsLead = 1, twoPointsLead = 2,
+        onePointsLose = 0, twoPointsLose = 0,
     )
 
-    competition_3 = Competition.objects.create(
+    competition_3 = VolleyballCompetition.objects.create(
         name = "Межвузовские соревнования. Кубок по футболу ТУСУР-ТПУ-ТГУ", 
         description = "Лучшие соревнования за последние 20, а то и 50 лет!",
-        sportType = Competition.SportTypeChoices.VOLLEYBALL,
-        type = Competition.TypeChoices.INTERCOLLEGIATE, 
-        organizer = User.objects.get(username="user")
+        organizer = User.objects.get(username="user"),
+        numOfRounds=3,
+        roundsPointLimit=15,
+        lastRoundPointLimit=15,
+        onePointsLead=1, twoPointsLead=2,
+        onePointsLose=0, twoPointsLose=0,
     )
 
-    competition_4 = Competition.objects.create(
+    competition_4 = VolleyballCompetition.objects.create(
         name = "Пупок по полу ТУСУР", 
         description = "Худшие соревнование, без комментариев...",
-        sportType = Competition.SportTypeChoices.VOLLEYBALL,
-        type = Competition.TypeChoices.INTERCOLLEGIATE, 
-        organizer = User.objects.get(username="admin")
+        organizer = User.objects.get(username="admin"),
+        numOfRounds=3,
+        roundsPointLimit=15,
+        lastRoundPointLimit=15,
+        onePointsLead=1, twoPointsLead=2,
+        onePointsLose=0, twoPointsLose=0,
     )
 
     competition_1.status = Competition.StatusChoices.PAST
