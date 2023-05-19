@@ -29,7 +29,7 @@ $(document).ready(() => {
     }
 
     //      Отправляет данные для авторизации пользователя
-    if (window.location.pathname == '/loginPage/'){
+    if (window.location.pathname == '/auth/loginPage/'){
         let username = $('input[name=username]');
         let password = $('input[name=password]');
         let scrf_token = $('[name="csrfmiddlewaretoken"]').attr('value');

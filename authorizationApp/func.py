@@ -1,9 +1,7 @@
 from datetime import datetime
 import pytz
 import smtplib
-from email.message import EmailMessage
 from rest_framework.authtoken.models import Token
-from SCSapp.models.MatchTeamResult import MatchTeamResult
 
 
 def getTokenFromASGIScope(scope):

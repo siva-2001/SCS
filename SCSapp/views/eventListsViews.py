@@ -1,6 +1,6 @@
 from django.shortcuts import render
 from SCSapp.models.Competition import Competition
-from SCSapp.models.Olympics import Olympics
+# from SCSapp.models.Olympics import Olympics
 from django.core.paginator import Paginator
 from SportCompetitionService import settings
 
@@ -10,7 +10,7 @@ def homePageView(request):
     listOfAnnouncedEvents = list()
     for comp in Competition.announced_objects.all(): listOfAnnouncedEvents.append(comp.getData())
     for comp in Competition.current_objects.all(): listOfCurrentEvents.append(comp.getData())
-    for olympics in Olympics.current_objects.all(): listOfCurrentEvents.append(olympics.getData())
+    # for olympics in Olympics.current_objects.all(): listOfCurrentEvents.append(olympics.getData())
     return render(request, 'homePage.html', {
         'announcedEvents':listOfAnnouncedEvents,
         'currentEvents': listOfCurrentEvents,

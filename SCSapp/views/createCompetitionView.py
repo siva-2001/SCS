@@ -1,4 +1,3 @@
-from SCSapp.forms import CreateCompetitionsForm
 from django.views.generic import TemplateView
 from django.contrib.auth.decorators import login_required, permission_required   
 from django.contrib.auth.mixins import LoginRequiredMixin

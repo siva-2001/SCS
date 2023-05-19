@@ -2,9 +2,9 @@ from SCSapp.models.Competition import Competition
 from SCSapp.models.Match import AbstractMatch, VolleyballMatch
 from SCSapp.models.MatchTeamResult import VolleyballMatchTeamResult
 from SCSapp.models.Team import Team
-from SCSapp.models.User import User
+from authorizationApp.models import User
 from SCSapp.models.Participant import Faculty
-from SCSapp.models.MatchActions import MatchAction
+from translationApp.models import MatchAction
 
 from django.shortcuts import redirect
 from django.db import models

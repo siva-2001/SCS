@@ -1,18 +1,14 @@
 from rest_framework import generics
 from rest_framework.response import Response
 from rest_framework.views import APIView
-# from rest_framework.decorators import api_view
 from rest_framework.authentication import TokenAuthentication
 from rest_framework.permissions import IsAuthenticated
 from django.contrib.auth.models import AnonymousUser
 import json
-
-from SCSapp.models.Olympics import Olympics
-from SCSapp.serializers import OlympicsSerializer, UserSerializer
 from SCSapp.models.Competition import Competition
 from SCSapp.models.Match import AbstractMatch, VolleyballMatch
 from SCSapp.serializers import MatchSerializer, CompetitionSerializer
-from SCSapp.models.User import User
+from authorizationApp.models import User
 from SCSapp.models.MatchTeamResult import MatchTeamResult
 from SCSapp.matchActionsDict import actionsDict
 
@@ -22,33 +18,6 @@ socketINFO = [    # FOR_DEBUG
         "Обмен данными происходит по технологии websocket. В сообщении скорей всего мобилка будет передавать JSON-запись с указанием сигнала и, для событий команд - название команды (участника)",
         "None в button_color окрашивает кнопку в стандартный серый цвет. '_FFFFFF' - нижнее подчёркивание говорит что текст кнопки должен быть белым. Кнопка отмены окрашивается отдельно, смотри фигму",
     ]
-
-
-
-class PermissionsAPIView(APIView):
-    def get(self, request):
-        data = {}
-        user = request.user
-        data["isAnonymousUser"] = True if (type(user) == AnonymousUser) else False
-        if not data["isAnonymousUser"]:
-            if user.last_name:
-                data["FIO"] = user.last_name + ' ' + ((user.first_name[0]+'.') if user.first_name else "") 
-            else: data["FIO"] = 'NoName'
-            data["isOrganizer"] = user.groups.filter(name="organizer").exists()
-        return Response(data)
-
-
-class SignUpAPIView(generics.CreateAPIView):
-    queryset = User.objects.all()
-    serializer_class = UserSerializer
-
-class CurrentOlympicsAPIView(generics.ListAPIView):
-    queryset = Olympics.current_objects.all()
-    serializer_class = OlympicsSerializer
-
-class CurrentCompetitionAPIView(generics.ListAPIView):
-    queryset =  Competition.current_objects.all()
-    serializer_class = CompetitionSerializer
 
 class JudgeCompetitionsAPIView(APIView):
     authentication_classes = [TokenAuthentication]
@@ -109,11 +78,6 @@ class MatchManagmentView(APIView):
         return Response(response)
 
 
-
-class OlympicsAPIView(generics.ListAPIView):
-    queryset = Olympics.objects.all()
-    serializer_class = OlympicsSerializer
-
 class CompetitionAPIView(generics.ListCreateAPIView):
     queryset = Competition.objects.all()
     serializer_class = CompetitionSerializer
@@ -127,3 +91,16 @@ class AnnouncedEventsAPIView(generics.ListAPIView):
 
     queryset = Competition.announced_objects.all()
     serializer_class = CompetitionSerializer
+
+class CurrentCompetitionAPIView(generics.ListAPIView):
+    queryset =  Competition.current_objects.all()
+    serializer_class = CompetitionSerializer
+
+
+# class OlympicsAPIView(generics.ListAPIView):
+#     queryset = Olympics.objects.all()
+#     serializer_class = OlympicsSerializer
+
+# class CurrentOlympicsAPIView(generics.ListAPIView):
+#     queryset = Olympics.current_objects.all()
+#     serializer_class = OlympicsSerializer

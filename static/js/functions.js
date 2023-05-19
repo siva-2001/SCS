@@ -1,9 +1,9 @@
 function addAnonymousUserButtons(){
     $(".footer-actions").append(
-        "<a href=\"http://127.0.0.1:8000/loginPage/\" id=\"login-head-button\" class=\"menu-btn menu-log-in-btn p-3 me-3 d-block text-center text-decoration-none\">"
+        "<a href=\"http://127.0.0.1:8000/auth/loginPage/\" id=\"login-head-button\" class=\"menu-btn menu-log-in-btn p-3 me-3 d-block text-center text-decoration-none\">"
         + "Войти"
     + "</a>"
-    + "<a href=\"http://127.0.0.1:8000/signupPage/\" id=\"signup-head-button\" class=\"menu-btn menu-log-in-btn p-3 d-block text-center text-decoration-none\">"
+    + "<a href=\"http://127.0.0.1:8000/auth/signupPage/\" id=\"signup-head-button\" class=\"menu-btn menu-log-in-btn p-3 d-block text-center text-decoration-none\">"
         + "Регистрация"
     + "</a>"
     )
@@ -12,7 +12,7 @@ function addAnonymousUserButtons(){
 function checkAccessPermissions(){
     $.ajax({
         method: "GET",
-        url: "http://127.0.0.1:8000/permission/",
+        url: "http://127.0.0.1:8000/auth/permission/",
         dataType : 'json',
         headers:{
             "Authorization": cookieStrToObject(document.cookie).Authorization 
@@ -37,8 +37,6 @@ function checkAccessPermissions(){
         }
     })        
 }
-
-
 
 function addCreateEventButton(){
     $(".footer-actions").append(
@@ -85,7 +83,7 @@ function addProfileElement(){
                     +"</svg>"
                     +"Профиль"
                 +"</a>"
-                +"<a href=\"http://127.0.0.1:8000/logout/\" class=\"user-action exit d-flex align-items-center text-decoration-none\">"
+                +"<a href=\"http://127.0.0.1:8000/auth/logout/\" class=\"user-action exit d-flex align-items-center text-decoration-none\">"
                     +"<svg class=\"me-2\" width=\"14\" height=\"14\" viewBox=\"0 0 14 14\" fill=\"none\" xmlns=\"http://www.w3.org/2000/svg\">"
                         +"<path d=\"M1.16667 14C0.855556 14 0.583333 13.8833 0.35 13.65C0.116667 13.4167 0 13.1444 0 12.8333V1.16667C0 0.855556 0.116667 0.583333 0.35 0.35C0.583333 0.116667 0.855556 0 1.16667 0H6.825V1.16667H1.16667V12.8333H6.825V14H1.16667ZM10.6167 10.4028L9.78056 9.56667L11.7639 7.58333H4.95833V6.41667H11.725L9.74167 4.43333L10.5778 3.59722L14 7.01944L10.6167 10.4028Z\" fill=\"#000814\"/>"
                     +"</svg>"

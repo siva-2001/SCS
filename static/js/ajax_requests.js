@@ -4,7 +4,7 @@
 function login_user_request(username, password, scrf_token){
     $.ajax({
         method: "POST",
-        url: "http://127.0.0.1:8000/login/",
+        url: "http://127.0.0.1:8000/auth/login/",
         dataType : 'json',
         headers:{"X-CSRFToken": scrf_token},
         data: {
@@ -23,7 +23,7 @@ function login_user_request(username, password, scrf_token){
 function get_auth_token_request(username, password){
     $.ajax({
         method: "POST",
-        url: "http://127.0.0.1:8000/api-token-auth/",
+        url: "http://127.0.0.1:8000/auth/api-token-auth/",
         dataType : 'json',
         data: {
             "username": username,
@@ -53,7 +53,7 @@ function sign_up_user_request(username, password, scrf_token){
         headers:{"X-CSRFToken": scrf_token},
         success: function(){ 
             alert("Пользователь зарегистрирован"); 
-            $(location).attr('href',"http://127.0.0.1:8000/loginPage/");
+            $(location).attr('href',"http://127.0.0.1:8000/auth/loginPage/");
         },
     });
 }

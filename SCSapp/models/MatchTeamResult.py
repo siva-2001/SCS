@@ -1,5 +1,5 @@
 from django.db import models
-from SCSapp.models.MatchActions import MatchAction
+from translationApp.models import MatchAction
 
 class MatchTeamResult(models.Model):
     team = models.ForeignKey('SCSapp.Team', on_delete=models.CASCADE)

@@ -45,9 +45,11 @@ INSTALLED_APPS = [
     'rest_framework',
     'rest_framework.authtoken',
     'SCSapp',
+    'authorizationApp',
+    'translationApp',
 ]
 
-AUTH_USER_MODEL = "SCSapp.User"
+AUTH_USER_MODEL = "authorizationApp.User"
 
 
 REST_FRAMEWORK = {
@@ -151,5 +153,3 @@ if not locDev:
     STATICFILES_STORAGE = 'whitenoise.storage.CompressedManifestStaticFilesStorage'
     DISABLE_COLLECTSTATIC=1
     SECURE_PROXY_SSL_HEADER = ('HTTP_X_FORWARDED_PROTO', 'https')
-
-PAST_EVENT_PAGE_LEN = 10

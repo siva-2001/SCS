@@ -1,7 +1,7 @@
 from django.urls import reverse
 from django.db import models
 
-from SCSapp.models import User
+from authorizationApp.models import User
 from .Match import AbstractMatch
 from .Team import Team
 
@@ -61,7 +61,7 @@ class Competition(models.Model):
     organizer = models.ForeignKey(User, on_delete=models.CASCADE, verbose_name="Организатор")
     protocol = models.FileField(upload_to='protocols', null=True, blank=True, verbose_name="Протокол")
     regulations = models.FileField(upload_to='regulations', null=True, blank=True, verbose_name="Регламент соревнований")
-    olympics = models.ForeignKey('SCSapp.olympics', on_delete=models.CASCADE, verbose_name='Спартакиада', null=True, default=None, blank=True)
+    # olympics = models.ForeignKey('SCSapp.olympics', on_delete=models.CASCADE, verbose_name='Спартакиада', null=True, default=None, blank=True)
     isHighLevelSportEvent = models.BooleanField(default=True)
 
     class Meta:
@@ -69,7 +69,7 @@ class Competition(models.Model):
         verbose_name_plural = 'Соревнования'
 
     def __str__(self):
-        if self.olympics: return f"{self.SportTypeChoices(self.sportType).label} в < {self.olympics} >"
+        # if self.olympics: return f"{self.SportTypeChoices(self.sportType).label} в < {self.olympics} >"
         return self.name
 
 

@@ -1,8 +1,8 @@
 from django.db import models
 
 from SCSapp.models.MatchTeamResult import MatchTeamResult
-from SCSapp.models.MatchActions import MatchAction
-from SCSapp.models import User
+from translationApp.models import MatchAction
+from authorizationApp.models import User
 from SCSapp.models.MatchTeamResult import VolleyballMatchTeamResult
 
 class AbstractMatch(models.Model):

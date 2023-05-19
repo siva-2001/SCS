@@ -2,11 +2,11 @@ import json
 from asgiref.sync import async_to_sync
 from channels.generic.websocket import WebsocketConsumer
 from SCSapp.models.Competition import Competition
-from SCSapp.models.MatchActions import MatchAction
+from translationApp.models import MatchAction
 from SCSapp.models.MatchTeamResult import VolleyballMatchTeamResult
 from SCSapp.models.Match import AbstractMatch, VolleyballMatch
 from SCSapp.models.Team import Team
-from SCSapp.func import getTokenFromASGIScope
+from authorizationApp.func import getTokenFromASGIScope
 from rest_framework.authtoken.models import Token
 from django.core.exceptions import ObjectDoesNotExist
 from rest_framework.response import Response
