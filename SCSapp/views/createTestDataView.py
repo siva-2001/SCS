@@ -23,10 +23,10 @@ def CreateTestDataView(request):
         description = "Лучшие соревнования за последние 10, а то и 15 лет!",
         organizer = User.objects.get(username="admin"),
         numOfRounds=3,
-        roundsPointLimit=15,
+        roundPointLimit=15,
         lastRoundPointLimit=15,
-        onePointsLead=1, twoPointsLead=2,
-        onePointsLose=0, twoPointsLose=0,
+        onePointLead=1, twoPointsLead=2,
+        onePointLose=0, twoPointsLose=0,
     )
 
     competition_2 = VolleyballCompetition.objects.create(
@@ -34,10 +34,10 @@ def CreateTestDataView(request):
         description = "Вторые лучшие соревнования за последние 10, а то и 15 лет!",
         organizer = User.objects.get(username="user"),
         numOfRounds = 3,
-        roundsPointLimit = 15,
+        roundPointLimit = 15,
         lastRoundPointLimit = 15,
-        onePointsLead = 1, twoPointsLead = 2,
-        onePointsLose = 0, twoPointsLose = 0,
+        onePointLead = 1, twoPointsLead = 2,
+        onePointLose = 0, twoPointsLose = 0,
     )
 
     competition_3 = VolleyballCompetition.objects.create(
@@ -45,10 +45,10 @@ def CreateTestDataView(request):
         description = "Лучшие соревнования за последние 20, а то и 50 лет!",
         organizer = User.objects.get(username="user"),
         numOfRounds=3,
-        roundsPointLimit=15,
+        roundPointLimit=15,
         lastRoundPointLimit=15,
-        onePointsLead=1, twoPointsLead=2,
-        onePointsLose=0, twoPointsLose=0,
+        onePointLead=1, twoPointsLead=2,
+        onePointLose=0, twoPointsLose=0,
     )
 
     competition_4 = VolleyballCompetition.objects.create(
@@ -56,10 +56,10 @@ def CreateTestDataView(request):
         description = "Худшие соревнование, без комментариев...",
         organizer = User.objects.get(username="admin"),
         numOfRounds=3,
-        roundsPointLimit=15,
+        roundPointLimit=15,
         lastRoundPointLimit=15,
-        onePointsLead=1, twoPointsLead=2,
-        onePointsLose=0, twoPointsLose=0,
+        onePointLead=1, twoPointsLead=2,
+        onePointLose=0, twoPointsLose=0,
     )
 
     competition_1.status = Competition.StatusChoices.PAST

@@ -7,7 +7,7 @@ from SCSapp.views.competitionView import competitionView
 from SCSapp.views.eventListsViews import pastEventsView
 from django.urls import path
 from SCSapp.views.api_views import CurrentCompetitionAPIView, JudgeCompetitionsAPIView
-from SCSapp.views.api_views import JudgeMatchesAPIView, MatchManagmentView, CompetitionAPIView
+from SCSapp.views.api_views import JudgeMatchesAPIView, MatchManagmentView, CompetitionAPIView, VolleyballCompetitionAPIView
 from authorizationApp.views import JudgeObtainAuthToken
 
 
@@ -19,7 +19,7 @@ scs_urlpatterns = [
     path('past/', pastEventsView, name='history'),
 
     # __________________________________________    API views    ____________________________________________
-    path('api/v1/competitions/', CompetitionAPIView.as_view(), name='competitionAPI'),
+    path('api/v1/competitions/', VolleyballCompetitionAPIView.as_view(), name='competitionAPI'),
     path('api/v1/currentCompetitions/', CurrentCompetitionAPIView.as_view(), name='currentCompetitions'),
 
     # ______________________________________    mobile API views    ____________________________________________

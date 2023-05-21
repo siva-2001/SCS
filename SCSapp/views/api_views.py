@@ -5,9 +5,9 @@ from rest_framework.authentication import TokenAuthentication
 from rest_framework.permissions import IsAuthenticated
 from django.contrib.auth.models import AnonymousUser
 import json
-from SCSapp.models.Competition import Competition
+from SCSapp.models.Competition import Competition, VolleyballCompetition
 from SCSapp.models.Match import AbstractMatch, VolleyballMatch
-from SCSapp.serializers import MatchSerializer, CompetitionSerializer
+from SCSapp.serializers import MatchSerializer, CompetitionSerializer, VolleyballCompetitionSerializer
 from authorizationApp.models import User
 from SCSapp.models.MatchTeamResult import MatchTeamResult
 from SCSapp.matchActionsDict import actionsDict
@@ -84,6 +84,16 @@ class CompetitionAPIView(generics.ListCreateAPIView):
 
     def perform_create(self, serializer):
         serializer.save(self.request.auth.user)
+
+class VolleyballCompetitionAPIView(generics.ListCreateAPIView):
+    queryset = VolleyballCompetition.objects.all()
+    serializer_class = VolleyballCompetitionSerializer
+
+    def perform_create(self, serializer):
+        print(self.request.auth.user)
+        serializer.save(self.request.auth.user)
+
+
 
 class AnnouncedEventsAPIView(generics.ListAPIView):
     authentication_classes = [TokenAuthentication]

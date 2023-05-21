@@ -1,6 +1,6 @@
 from rest_framework import serializers
 from SCSapp.models.Match import AbstractMatch
-from SCSapp.models.Competition import Competition
+from SCSapp.models.Competition import Competition, VolleyballCompetition
 
 # from SCSapp.models.Olympics import Olympics
 # class OlympicsSerializer(serializers.ModelSerializer):
@@ -19,6 +19,22 @@ class CompetitionSerializer(serializers.ModelSerializer):
     def save(self, user):
         organizer = user
         super().save()
+
+
+class VolleyballCompetitionSerializer(serializers.ModelSerializer):
+    organizer = serializers.HiddenField(default=serializers.CurrentUserDefault())
+    class Meta:
+        model = VolleyballCompetition
+        fields = ['id', 'name', 'description', 'organizer', 'dateTimeStartCompetition', 'regulations',
+                  'numOfRounds', 'roundPointLimit', 'lastRoundPointLimit',
+                  'onePointLead', 'twoPointsLead', 'threePointsLead',
+                  'onePointLose', 'twoPointsLose', 'threePointsLose']
+
+    def save(self, user):
+        organizer = user
+        super().save()
+
+
 
 class MatchSerializer(serializers.ModelSerializer):
     class Meta:

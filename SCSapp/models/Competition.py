@@ -130,16 +130,16 @@ class VolleyballCompetition(Competition):
         verbose_name_plural = 'Соревнования по волейболу'
 
     numOfRounds = models.IntegerField(null=True, blank=True, verbose_name='Максимальное количество раундов')
-    roundsPointLimit = models.IntegerField(null = True,blank = True, verbose_name='Раунд идёт до')
+    roundPointLimit = models.IntegerField(null = True,blank = True, verbose_name='Раунд идёт до')
     lastRoundPointLimit = models.IntegerField(null=True, blank=True, verbose_name='Последний раунд идёт до')
 
-    onePointsLead = models.IntegerField(verbose_name="Балл за отрыв в 3 очка", null=True, blank=True)
+    onePointLead = models.IntegerField(verbose_name="Балл за отрыв в 1 очко", null=True, blank=True)
     twoPointsLead = models.IntegerField(verbose_name="Балл за отрыв в 2 очка", null=True, blank=True)
-    threePointsLead = models.IntegerField(verbose_name="Балл за отрыв в 1 очко", null=True, blank=True)
+    threePointsLead = models.IntegerField(verbose_name="Балл за отрыв в 3 очка", null=True, blank=True)
 
-    onePointsLose = models.IntegerField(verbose_name="Балл за проигрыш в 3 очка", null=True, blank=True)
+    onePointLose = models.IntegerField(verbose_name="Балл за проигрыш в 1 очко", null=True, blank=True)
     twoPointsLose = models.IntegerField(verbose_name="Балл за проигрыш в 2 очка", null=True, blank=True)
-    threePointsLose = models.IntegerField(verbose_name="Балл за проигрыш в 1 очко", null=True, blank=True)
+    threePointsLose = models.IntegerField(verbose_name="Балл за проигрыш в 3 очка", null=True, blank=True)
 
     @classmethod
     def create(cls, name, description, startDate=None, organizer=None, regulations = None,

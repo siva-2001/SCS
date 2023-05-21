@@ -10,4 +10,3 @@ class CreateCompetitionView(LoginRequiredMixin, TemplateView):
     template_name = 'createCompetitions.html'
 
 
-

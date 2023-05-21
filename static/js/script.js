@@ -59,17 +59,19 @@ $(document).ready(() => {
 
         $('#create-competition-btn').click((e) => {
             e.preventDefault();
+
+            if ($('#competition-title').val() === ""
+            || $('#competition-description').val() === ""
+            || $('#competition-date').val() === ""){
+                alert("Заполните пустые поля");
+                return;
+            }
+
             if ($("#main-info-form").css("display") == "block" && $("#score-info-form").css("display") == "none"){
-                if ($('#competition-title').val() === ""
-                || $('#competition-description').val() === ""
-                || $('#competition-date').val() === "")
-                    alert("Заполните пустые поля");
-                else {
-                    if ($('input[name="partNumber"]:checked').val() == 3) $('#one-point-row').hide();
-                    $("#main-info-form").hide();
-                    $("#score-info-form").show();
-                    $("#create-competition-btn").text("Готово");
-                }
+                if ($('input[name="partNumber"]:checked').val() == 3) $('#three-point-row').hide();
+                $("#main-info-form").hide();
+                $("#score-info-form").show();
+                $("#create-competition-btn").text("Готово");
             } else if ($("#main-info-form").css("display") == "none" && $("#score-info-form").css("display") == "block"){
                 if (!(isNaN(parseInt($('#round-point-limit').val()))
                 ||  isNaN(parseInt($('#last-round-point-limit').val()))
@@ -78,45 +80,53 @@ $(document).ready(() => {
                 ||  isNaN(parseInt($('#two-point-lead').val()))
                 ||  isNaN(parseInt($('#two-point-lose').val()))
                 )){
-                    alert("here");
-//                isNaN(parseInt($('#three-point-lead').val()))
-//                ||  isNaN(parseInt($('#three-point-lose').val()))
-                } else alert("not here");
+                    formData.append('name', $('#competition-title').val());
+                    formData.append('description', $('#competition-description').val());
+                    formData.append('dateTimeStartCompetition', $('#competition-date').val().toString());
+                    formData.append('roundPointLimit', $('#round-point-limit').val());
+                    formData.append('lastRoundPointLimit', $('#last-round-point-limit').val());
+                    formData.append('onePointLead', $('#one-point-lead').val());
+                    formData.append('onePointLose', $('#one-point-lose').val());
+                    formData.append('twoPointsLead', $('#two-point-lead').val());
+                    formData.append('twoPointsLose', $('#two-point-lose').val());
+                    formData.append('numOfRounds', $('input[name="partNumber"]').val());
+                    if ($('#regulations')[0].files[0]) formData.append('regulations', $('#regulations')[0].files[0]);
+
+                    if ($('input[name="partNumber"]:checked').val() == 5){
+                        if(!(isNaN(parseInt($('#three-point-lead').val()))
+                        ||   isNaN(parseInt($('#three-point-lose').val())))){
+                            formData.append('threePointsLead', $('#three-point-lead').val());
+                            formData.append('threePointsLose', $('#three-point-lose').val());
+                        } else {
+                            alert("Ещё есть пустые или некорректно заполненые поля");
+                            return;
+                        }
+                    }
+                } else {
+                    alert("Ещё есть пустые или некорректно заполненые поля");
+                    return;
+                }
+
+                $.ajax({
+                    method: "POST",
+                    url: "http://127.0.0.1:8000/api/v1/competitions/",
+                    dataType : 'json',
+                    contentType: false,
+                    processData: false,
+                    cache: false,
+                    data: formData,
+                    headers:{
+                        "X-CSRFToken": $('[name="csrfmiddlewaretoken"]').attr('value'),
+                        "Authorization": cookieStrToObject(document.cookie).Authorization
+                    },
+                }).done(function() {
+                    alert('Соревнование успешно создано');
+                    $(location).attr('href',"http://127.0.0.1:8000/");
+                });
+
             }
 
 
-
-
-
-            formData.append('name', $('#competition-title').val());
-            formData.append('description', $('#competition-description').val());
-            formData.append('dateTimeStartCompetition', $('#competition-date').val().toString());
-            formData.append('sportType', $('#competition-sport').val());
-            formData.append('type', $('input[name=type]').val());
-            formData.append('regulations', $('#regulations')[0].files[0]);
-
-//            if ($('#competition-title').val() === ""
-//                || $('#competition-description').val() === ""
-//                || $('#competition-date').val() === "") alert("Заполните пустые поля");
-//            else {
-//                $.ajax({
-//                    method: "POST",
-//                    url: "http://127.0.0.1:8000/api/v1/competitions/",
-//                    dataType : 'json',
-//                    contentType: false,
-//                    processData: false,
-//                    cache: false,
-//                    data: formData,
-//                    headers:{
-//                        "X-CSRFToken": $('[name="csrfmiddlewaretoken"]').attr('value'),
-//                        "Authorization": cookieStrToObject(document.cookie).Authorization
-//                    },
-//                })
-//                .done(function() {
-//                    alert('Соревнование успешно создано');
-//                    $(location).attr('href',"http://127.0.0.1:8000/");
-//                });
-//            }
         });
     }
 
