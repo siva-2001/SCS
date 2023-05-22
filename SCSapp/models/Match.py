@@ -7,14 +7,14 @@ from SCSapp.models.MatchTeamResult import VolleyballMatchTeamResult
 
 class AbstractMatch(models.Model):
     isAnnounced = models.BooleanField(default=True)
-    competition = models.ForeignKey("SCSapp.Competition", on_delete=models.CASCADE, null=True)
+    # competition = models.ForeignKey("SCSapp.Competition", on_delete=models.CASCADE, null=True)
     matchDateTime = models.DateTimeField(null=True, blank=True)
     place = models.CharField(max_length=128, null=True, blank=True)
     protocol = models.FileField(upload_to='media/protocols/match', default=None, null=True, blank=True)
     judge = models.ForeignKey(User, on_delete=models.SET_NULL, default=None, blank=True, null=True)
 
-    translated_now = models.BooleanField(default=False)
-    current_round = models.IntegerField(default=0, null=True, blank=True)
+    match_translated_now = models.BooleanField(default=False)
+
 
 
     class Meta:
@@ -34,14 +34,14 @@ class AbstractMatch(models.Model):
 
 
     def startMatch(self):
-        self.translated_now = True
+        self.match_translated_now = True
         self.isAnnounced = False
         self.save()
 
     def endMatch(self):
         #   Генерация протокола
 
-        self.translated_now = False
+        self.match_translated_now = False
         self.save()
 
     def cancelLastAction(self):
@@ -49,12 +49,28 @@ class AbstractMatch(models.Model):
         if len(actions) > 1: actions[1].delete()
 
 class VolleyballMatch(AbstractMatch):
+    competition = models.ForeignKey("SCSapp.VolleyballCompetition", on_delete=models.CASCADE, null=True)
+    round_translated_now = models.BooleanField(default=False)
+    current_round = models.IntegerField(default=0, null=True, blank=True)
+
+    class Meta:
+        verbose_name = 'Волейбольный матч'
+        verbose_name_plural = 'Волейбольные матчи'
 
     def create(cls, firstTeam, secondTeam, competition, judge=None):
         object = super().create()
         VolleyballMatchTeamResult.create(secondTeam, object)
         VolleyballMatchTeamResult.create(firstTeam, object)
         return object
+
+    def startRound(self):
+        if (not self.round_translated_now) and (self.competition.numOfRounds >  self.current_round):
+            self.round_translated_now = True
+            self.current_round += 1
+            self.save()
+            results = VolleyballMatchTeamResult.objects.all().filter(match=self)
+            for res in results: res.startNextRound()
+
 
     def startMatch(self):
         if self.isAnnounced:
@@ -66,7 +82,9 @@ class VolleyballMatch(AbstractMatch):
 
 
     def checkEndRound(self):
-        maxRoundScore = 15
+        if self.current_round == self.competition.numOfRounds: maxRoundScore = self.competition.lastRoundPointLimit
+        else: maxRoundScore = self.competition.roundPointLimit
+
         results = VolleyballMatchTeamResult.objects.all().filter(match=self)
         firstTeamScore = results[0].getCurrentRoundScore()
         secondTeamScore = results[1].getCurrentRoundScore()
@@ -74,11 +92,15 @@ class VolleyballMatch(AbstractMatch):
         if ((firstTeamScore >= maxRoundScore and secondTeamScore < maxRoundScore-1) 
             or (secondTeamScore >= maxRoundScore and firstTeamScore < maxRoundScore-1) 
             or (secondTeamScore >= maxRoundScore - 1 and firstTeamScore >= maxRoundScore - 1 and
-                abs(firstTeamScore-secondTeamScore) > 1 )): 
-            results[0].updateRoundsScore(firstTeamScore > secondTeamScore)
-            results[1].updateRoundsScore(firstTeamScore < secondTeamScore)
-            return True
+                abs(firstTeamScore-secondTeamScore) > 1 )):
+            print("mde")
+            results[0].updateRoundsScore(firstTeamScore > secondTeamScore, self.current_round)
+            results[1].updateRoundsScore(firstTeamScore < secondTeamScore, self.current_round)
 
+            #   завершить счёт времени таймера
+
+            return True
+        else: return False
         # если раунд закончился - соответствующие действия
 
     def getTranslationData(self):

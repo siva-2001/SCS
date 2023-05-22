@@ -143,13 +143,13 @@ class VolleyballCompetition(Competition):
 
     @classmethod
     def create(cls, name, description, startDate=None, organizer=None, regulations = None,
-               numOfRounds=5, roundsPointLimit=25, lastRoundPointLimit=15,
+               numOfRounds=5, roundPointLimit=25, lastRoundPointLimit=15,
                onePointsLead = 1, twoPointsLead = 2, threePointsLead = None,
                onePointsLose = 0, twoPointsLose = 0, threePointsLose = None):
         object = super().create(name, description, startDate, organizer, regulations)
 
         object.numOfRounds = numOfRounds
-        object.roundsPointLimit = roundsPointLimit
+        object.roundPointLimit = roundPointLimit
         object.lastRoundPointLimit = lastRoundPointLimit
 
         object.onePointsLead = onePointsLead

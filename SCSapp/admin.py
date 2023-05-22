@@ -7,7 +7,6 @@ from SCSapp.models.Participant import Faculty
 # from SCSapp.models.Olympics import Olympics
 
 admin.site.register(VolleyballCompetition)
-admin.site.register(AbstractMatch)
 admin.site.register(VolleyballMatch)
 admin.site.register(Team)
 admin.site.register(VolleyballMatchTeamResult)

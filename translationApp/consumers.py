@@ -35,7 +35,7 @@ class ChatConsumer(WebsocketConsumer):
         self.room_group_name = "match_%s" % self.scope["url_route"]["kwargs"]["match_id"]
         async_to_sync(self.channel_layer.group_add)( self.room_group_name, self.channel_name )
         self.accept()
-        if self.match.translated_now:
+        if self.match.match_translated_now:
             for action in MatchAction.objects.all().filter(match=self.match).order_by("eventTime"):   # order by
                 self.send_to_channel(json.dumps(action.getActionMessage(), ensure_ascii=False))
             self.send_to_channel(json.dumps(self.match.getTranslationData(), ensure_ascii=False))
@@ -63,17 +63,35 @@ class VolleyballConsumer(ChatConsumer):
         else:
             message = json.loads(text_data)['message']
             teamRes = VolleyballMatchTeamResult.objects.all().get(id=message["team_result_id"]) if message["team_result_id"] else None
-            action = MatchAction.objects.create(
-                eventType=message["signal"],
-                match=self.match,
-                team=(teamRes.team if teamRes else None),
-            )
-            self.send_to_group(json.dumps(action.getActionMessage(), ensure_ascii=False))
+
 
             message = json.loads(text_data)['message']
+            if message["signal"] == "START_ROUND":
+                if not self.match.round_translated_now:
+                    action = MatchAction.objects.create(
+                        eventType=message["signal"],
+                        match=self.match,
+                        team=(teamRes.team if teamRes else None),
+                    )
+                    self.send_to_group(json.dumps(action.getActionMessage(), ensure_ascii=False))
+                    self.match.startRound()
             if message["signal"] == "CANCEL":
+                action = MatchAction.objects.create(
+                    eventType=message["signal"],
+                    match=self.match,
+                    team=(teamRes.team if teamRes else None),
+                )
+                self.send_to_group(json.dumps(action.getActionMessage(), ensure_ascii=False))
                 self.match.cancelLastAction()
-            if action.eventType == "GOAL":
+            if message["signal"] == "GOAL" and self.match.round_translated_now:
+
+                action = MatchAction.objects.create(
+                    eventType=message["signal"],
+                    match=self.match,
+                    team=(teamRes.team if teamRes else None),
+                )
+                self.send_to_group(json.dumps(action.getActionMessage(), ensure_ascii=False))
+
                 teamRes.goal()
                 if self.match.checkEndRound():
                     MatchAction.objects.create(
@@ -81,4 +99,9 @@ class VolleyballConsumer(ChatConsumer):
                         match=self.match,
                         team=(teamRes.team if teamRes else None),
                     )
-                self.send_to_group(json.dumps(self.match.getTranslationData(), ensure_ascii=False))
+                    self.match.round_translated_now = False
+                    self.match.save()
+            self.send_to_group(json.dumps(self.match.getTranslationData(), ensure_ascii=False))
+
+
+
