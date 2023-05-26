@@ -17,6 +17,10 @@ $(document).ready(() => {
         chatSocket.onmessage = function(e) {
             const data = JSON.parse(JSON.parse(e.data).message);
 
+            if(data['message_type'] == "action_info"){
+                console.log(data)
+            }
+
             if(data["message_type"] == "translation_data"){
                 console.log(data)
                 clearInterval(time);
@@ -38,6 +42,11 @@ $(document).ready(() => {
                     $('#match_score').text(data["data"]["second_team"]["rounds_score"] + " : " + data["data"]["first_team"]["rounds_score"]);
                 }
                 $("#part").text("Партия №" + data["part"])
+            }
+
+            if (data["ERROR"]){
+                $('#translation_error').text(data["ERROR"]);
+                $('#translation-table').hide();
             }
         };
 

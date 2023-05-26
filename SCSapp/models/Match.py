@@ -73,6 +73,7 @@ class VolleyballMatch(AbstractMatch):
 
     def startRound(self):
         if (not self.round_translated_now) and (self.competition.numOfRounds >  self.current_round):
+            print("here")
             self.round_translated_now = True
             self.current_round += 1
             self.save()
@@ -104,27 +105,32 @@ class VolleyballMatch(AbstractMatch):
         if ((firstTeamScore >= maxRoundScore and secondTeamScore < maxRoundScore-1) 
             or (secondTeamScore >= maxRoundScore and firstTeamScore < maxRoundScore-1) 
             or (secondTeamScore >= maxRoundScore - 1 and firstTeamScore >= maxRoundScore - 1 and
-                abs(firstTeamScore-secondTeamScore) > 1 )):
-            print("__method__checkEndRound")
-            results[0].updateRoundsScore(firstTeamScore > secondTeamScore, self.current_round)
-            results[1].updateRoundsScore(firstTeamScore < secondTeamScore, self.current_round)
-            self.round_translated_now = False
-            self.save()
-
-            #   завершить счёт времени таймера
-            #   проверить завершённость матча
-            return True
+                abs(firstTeamScore-secondTeamScore) > 1 )): return True
         else: return False
-        # если раунд закончился - соответствующие действия
+
+    def endRound(self):
+        print("__method__checkEndRound")
+        results = VolleyballMatchTeamResult.objects.all().filter(match=self)
+        firstTeamScore = results[0].getCurrentRoundScore()
+        secondTeamScore = results[1].getCurrentRoundScore()
+        results[0].updateRoundsScore(firstTeamScore > secondTeamScore, self.current_round)
+        results[1].updateRoundsScore(firstTeamScore < secondTeamScore, self.current_round)
+        self.round_translated_now = False
+        self.save()
+
+        #   завершить счёт времени таймера
+
+
+
 
     def checkEndGame(self):
-        if self.current_round == self.competition.numOfRounds:
-            self.match_translated_now = False
-
-            #   что ещё здесь делается?
-
-            return True
+        if self.current_round == self.competition.numOfRounds and not self.round_translated_now: return True
         else: return False
+
+    def endGame(self):
+        self.match_translated_now = False
+        self.save()
+
 
     def getRoundTimer(self):
         def timeToSec(time):
@@ -137,17 +143,16 @@ class VolleyballMatch(AbstractMatch):
         try: end_action = match_actions.filter(eventType="END_ROUND").get(round=self.current_round)
         except MatchAction.DoesNotExist: end_action = None
 
+        if end_action or not start_action: return 0
 
-        if start_action:
-            if end_action: roundTimer = timeToSec(end_action.eventTime)
-            elif self.round_translated_now: roundTimer = timeToSec(datetime.datetime.now().time())
-            else: roundTimer = timeToSec(datetime.time())
-            for action in actions:
-                if action.eventType == "CONTINUE_ROUND": roundTimer -= timeToSec(action.eventTime)
-                else: roundTimer += timeToSec(action.eventTime)
-            roundTimer -= timeToSec(start_action.eventTime)
-            return roundTimer
-        return None
+        if self.round_translated_now: roundTimer = timeToSec(datetime.datetime.now().time())
+        else: roundTimer = 0
+        for action in actions:
+            if action.eventType == "CONTINUE_ROUND": roundTimer -= timeToSec(action.eventTime)
+            else: roundTimer += timeToSec(action.eventTime)
+        roundTimer -= timeToSec(start_action.eventTime)
+        return roundTimer
+
 
     def pauseRound(self):
         self.round_translated_now = False
@@ -163,9 +168,6 @@ class VolleyballMatch(AbstractMatch):
     def getTranslationData(self):
         teamsResults = VolleyballMatchTeamResult.objects.all().filter(match=self)
         if len(teamsResults) != 2: return Response({"ERROR":"Ошибка сервера: количество команд не равно 2"})
-
-
-
         return {
             "message_type" : "translation_data",
             "time" : self.getRoundTimer(),

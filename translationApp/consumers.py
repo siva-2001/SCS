@@ -49,6 +49,7 @@ class ChatConsumer(WebsocketConsumer):
             match=self.match,
             team=(team_res.team if team_res else None),
             round = self.match.current_round,
+            roundEventTime = self.match.getRoundTimer()
         )
         return action
 
@@ -89,22 +90,23 @@ class VolleyballConsumer(ChatConsumer):
                 if self.match.checkEndRound():
                     action = self.createAction("END_ROUND", teamRes)
                     self.send_to_group(json.dumps(action.getActionMessage(), ensure_ascii=False))
-
+                    print("here")
+                    self.match.endRound()
                 if self.match.checkEndGame():
                     action = self.createAction("END_GAME", teamRes)
                     self.send_to_group(json.dumps(action.getActionMessage(), ensure_ascii=False))
 
 
             if message["signal"] == "PAUSE_ROUND" and self.match.round_translated_now:
+
+                action = self.createAction(message["signal"], teamRes)
+                self.send_to_group(json.dumps(action.getActionMessage(), ensure_ascii=False))
                 self.match.pauseRound()
-                action = self.createAction(message["signal"], teamRes)
-                self.send_to_group(json.dumps(action.getActionMessage(), ensure_ascii=False))
-
             if message["signal"] == "CONTINUE_ROUND" and not self.match.round_translated_now and self.match.current_round != 0:
-                self.match.continueRound()
+
                 action = self.createAction(message["signal"], teamRes)
                 self.send_to_group(json.dumps(action.getActionMessage(), ensure_ascii=False))
-
+                self.match.continueRound()
             if message['signal'] == "SWAP_FIELD_SIDE": self.match.swapFieldSide()
 
-            self.send_to_group(json.dumps(self.match.getTranslationData(), ensure_ascii=False))
+        self.send_to_group(json.dumps(self.match.getTranslationData(), ensure_ascii=False))

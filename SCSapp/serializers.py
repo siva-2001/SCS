@@ -39,12 +39,12 @@ class VolleyballCompetitionSerializer(serializers.ModelSerializer):
 class MatchSerializer(serializers.ModelSerializer):
     class Meta:
         model = AbstractMatch
-        fields = ["id", "isAnnounced", "matchDateTime", "place", "protocol", "judge"]
+        fields = ["id", "isAnnounced", "matchDateTime", "place", "protocol", "judge", "match_translated_now"]
 
 
 class VolleybalMatchSerializer(serializers.ModelSerializer):
     class Meta:
         model = VolleyballMatch
         fields = ["id", "isAnnounced", "competition", "matchDateTime", "place", "protocol",
-                  "judge", "round_translated_now", "current_round"]
+                  "judge", "round_translated_now", "current_round", "match_translated_now"]
 

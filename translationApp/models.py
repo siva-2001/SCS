@@ -12,13 +12,15 @@ class MatchAction(models.Model):
 
     team = models.ForeignKey("SCSapp.Team", on_delete=models.SET_NULL, null=True, blank=True, verbose_name='Команда')
     eventTime = models.TimeField(auto_now_add=True, verbose_name="Время события")
+    roundEventTime = models.IntegerField(blank=True, null=True)
     match = models.ForeignKey('SCSapp.AbstractMatch', on_delete=models.CASCADE, verbose_name="Матч")
     round = models.IntegerField(default=0, blank=True)
 
     @classmethod
-    def create(self, team, eventType, match, round):
+    def create(self, team, eventType, match, round, eventTime):
         object = cls()
         object.team = team
+        object.roundEventTime = roundEventTime
         object.eventType = eventType
         object.match = match
         # object.additional_note = additional_note
@@ -29,7 +31,7 @@ class MatchAction(models.Model):
 
     def __str__(self):
         participantName = self.team.participant.name if self.team else "NoTeam"
-        return f"{self.eventType} in {self.eventTime}"
+        return f"{self.eventType} in {self.roundEventTime}"
 
     def getActionMessage(self):
         return {
@@ -37,7 +39,7 @@ class MatchAction(models.Model):
             "data" : {
                 "id" : self.id,
                 "signal" : self.eventType,
-                "datetime" : str(self.eventTime),
+                "roundTime" : self.roundEventTime,
                 "team" : (self.team.participant.name if self.team else None),
             }
         }
