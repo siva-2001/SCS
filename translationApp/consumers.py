@@ -43,6 +43,14 @@ class ChatConsumer(WebsocketConsumer):
             self.send_to_channel(json.dumps({"ERROR":"Трансляция матча не ведётся в данный момент"}, ensure_ascii=False))
             self.disconnect("translation close")
 
+    def createAction(self, signal, team_res):
+        action = MatchAction.objects.create(
+            eventType=signal,
+            match=self.match,
+            team=(team_res.team if team_res else None),
+            round = self.match.current_round,
+        )
+        return action
 
 
 class VolleyballConsumer(ChatConsumer):
@@ -56,52 +64,41 @@ class VolleyballConsumer(ChatConsumer):
         try:
             token = getTokenFromASGIScope(self.scope)
         except:
-            self.send_to_group("Пользователь не авторизован")
+            self.send_to_channel("Пользователь не авторизован")
             return
         if not self.match.judge == token.user:
-            self.send_to_group("Вы не имеете судейских прав")
+            self.send_to_channel("Вы не имеете судейских прав")
         else:
             message = json.loads(text_data)['message']
             teamRes = VolleyballMatchTeamResult.objects.all().get(id=message["team_result_id"]) if message["team_result_id"] else None
 
-
             message = json.loads(text_data)['message']
-            if message["signal"] == "START_ROUND":
-                if not self.match.round_translated_now:
-                    action = MatchAction.objects.create(
-                        eventType=message["signal"],
-                        match=self.match,
-                        team=(teamRes.team if teamRes else None),
-                    )
-                    self.send_to_group(json.dumps(action.getActionMessage(), ensure_ascii=False))
-                    self.match.startRound()
+
+            if message["signal"] == "START_ROUND" and not self.match.round_translated_now:
+                self.match.startRound()
+                action = self.createAction(message["signal"], teamRes)
+                self.send_to_group(json.dumps(action.getActionMessage(), ensure_ascii=False))
             if message["signal"] == "CANCEL":
-                action = MatchAction.objects.create(
-                    eventType=message["signal"],
-                    match=self.match,
-                    team=(teamRes.team if teamRes else None),
-                )
+                action = self.createAction(message["signal"], teamRes)
                 self.send_to_group(json.dumps(action.getActionMessage(), ensure_ascii=False))
-                self.match.cancelLastAction()
+                self.match.cancelLastGoal()
             if message["signal"] == "GOAL" and self.match.round_translated_now:
+                action = self.createAction(message["signal"], teamRes)
+                self.send_to_group(json.dumps(action.getActionMessage(), ensure_ascii=False))
+                teamRes.goal()
+                if self.match.checkEndRound(): self.createAction("END_ROUND", teamRes)
+                if self.match.checkEndGame(): self.createAction("END_GAME", teamRes)
 
-                action = MatchAction.objects.create(
-                    eventType=message["signal"],
-                    match=self.match,
-                    team=(teamRes.team if teamRes else None),
-                )
+            if message["signal"] == "PAUSE_ROUND" and self.match.round_translated_now:
+                self.match.pauseRound()
+                action = self.createAction(message["signal"], teamRes)
                 self.send_to_group(json.dumps(action.getActionMessage(), ensure_ascii=False))
 
-                teamRes.goal()
-                if self.match.checkEndRound():
-                    MatchAction.objects.create(
-                        eventType="END_ROUND",
-                        match=self.match,
-                        team=(teamRes.team if teamRes else None),
-                    )
-                    self.match.round_translated_now = False
-                    self.match.save()
+            if message["signal"] == "CONTINUE_ROUND" and not self.match.round_translated_now and self.match.current_round != 0:
+                self.match.continueRound()
+                action = self.createAction(message["signal"], teamRes)
+                self.send_to_group(json.dumps(action.getActionMessage(), ensure_ascii=False))
+
+            if message['signal'] == "SWAP_FIELD_SIDE": self.match.swapFieldSide()
+
             self.send_to_group(json.dumps(self.match.getTranslationData(), ensure_ascii=False))
-
-
-

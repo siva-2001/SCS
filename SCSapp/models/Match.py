@@ -4,6 +4,9 @@ from SCSapp.models.MatchTeamResult import MatchTeamResult
 from translationApp.models import MatchAction
 from authorizationApp.models import User
 from SCSapp.models.MatchTeamResult import VolleyballMatchTeamResult
+from django.db.models import Q
+import datetime
+import time
 
 class AbstractMatch(models.Model):
     isAnnounced = models.BooleanField(default=True)
@@ -38,20 +41,23 @@ class AbstractMatch(models.Model):
         self.isAnnounced = False
         self.save()
 
-    def endMatch(self):
-        #   Генерация протокола
-
-        self.match_translated_now = False
-        self.save()
-
-    def cancelLastAction(self):
+    def cancelLastGoal(self):
         actions = MatchAction.objects.all().filter(match=self).order_by("-eventTime")
-        if len(actions) > 1: actions[1].delete()
+        if ((len(actions) > 1) and (actions[0].eventType == "CANCEL") and (actions[1].eventType == "GOAL")):
+            VolleyballMatchTeamResult.objects.all().filter(match=self).get(team=actions[1].team).cancelLastGoal()
+            actions[1].delete()
+            actions[0].delete()
+            return True
+        actions[0].delete()
+        return False
+
 
 class VolleyballMatch(AbstractMatch):
     competition = models.ForeignKey("SCSapp.VolleyballCompetition", on_delete=models.CASCADE, null=True)
     round_translated_now = models.BooleanField(default=False)
     current_round = models.IntegerField(default=0, null=True, blank=True)
+
+
 
     class Meta:
         verbose_name = 'Волейбольный матч'
@@ -71,6 +77,9 @@ class VolleyballMatch(AbstractMatch):
             results = VolleyballMatchTeamResult.objects.all().filter(match=self)
             for res in results: res.startNextRound()
 
+    def swapFieldSide(self):
+        results = VolleyballMatchTeamResult.objects.all().filter(match=self)
+        for res in results: res.swapFieldSide()
 
     def startMatch(self):
         if self.isAnnounced:
@@ -93,15 +102,60 @@ class VolleyballMatch(AbstractMatch):
             or (secondTeamScore >= maxRoundScore and firstTeamScore < maxRoundScore-1) 
             or (secondTeamScore >= maxRoundScore - 1 and firstTeamScore >= maxRoundScore - 1 and
                 abs(firstTeamScore-secondTeamScore) > 1 )):
-            print("mde")
+            print("__method__checkEndRound")
             results[0].updateRoundsScore(firstTeamScore > secondTeamScore, self.current_round)
             results[1].updateRoundsScore(firstTeamScore < secondTeamScore, self.current_round)
+            self.round_translated_now = False
+            self.save()
 
             #   завершить счёт времени таймера
-
+            #   проверить завершённость матча
             return True
         else: return False
         # если раунд закончился - соответствующие действия
+
+    def checkEndGame(self):
+        if self.current_round == self.competition.numOfRounds:
+            self.match_translated_now = False
+
+            #   что ещё здесь делается?
+
+            return True
+        else: return False
+
+    def getRoundTimer(self):
+        def timeToSec(time):
+            return time.hour * 3600 + time.minute * 60 + time.second
+
+        match_actions = MatchAction.objects.all().filter(match=self)
+        try: start_action = match_actions.filter(eventType="START_ROUND").get(round=self.current_round)
+        except MatchAction.DoesNotExist: start_action = None
+        actions = match_actions.filter(Q(eventType="CONTINUE_ROUND") | Q(eventType="PAUSE_ROUND")).filter(round=self.current_round)
+        try: end_action = match_actions.filter(eventType="END_ROUND").get(round=self.current_round)
+        except MatchAction.DoesNotExist: end_action = None
+
+
+        if start_action:
+            if end_action: roundTimer = timeToSec(end_action.eventTime)
+            elif self.round_translated_now: roundTimer = timeToSec(datetime.datetime.now().time())
+            else: roundTimer = timeToSec(datetime.time())
+            for action in actions:
+                if action.eventType == "CONTINUE_ROUND": roundTimer -= timeToSec(action.eventTime)
+                else: roundTimer += timeToSec(action.eventTime)
+            roundTimer -= timeToSec(start_action.eventTime)
+            return roundTimer
+        return None
+
+    def pauseRound(self):
+        self.round_translated_now = False
+        self.save()
+
+    def continueRound(self):
+        self.round_translated_now = True
+        self.save()
+
+
+
 
     def getTranslationData(self):
         teamsResults = VolleyballMatchTeamResult.objects.all().filter(match=self)
@@ -109,21 +163,23 @@ class VolleyballMatch(AbstractMatch):
         
         return {
             "message_type" : "translation_data",
-            "time" : "Пока что тут строковая заглушка",
-            "part" : "Заглушка",
+            "time" : self.getRoundTimer(),
+            "round_time_is_run" : self.round_translated_now,
+            "part" : self.current_round,
             "data" : {
                 "first_team":{
                     "result_id" : teamsResults[0].id,
                     "participant_name" : teamsResults[0].team.participant.name,
                     "score" : teamsResults[0].getCurrentRoundScore(),
                     "rounds_score" : teamsResults[0].teamScore,
-                    # "PlaceSide" : "LEFT"
+                    "fieldSide" : teamsResults[0].fieldSide
                 },
                 "second_team":{
                     "result_id":teamsResults[1].id,
                     "participant_name":teamsResults[1].team.participant.name,
                     "score": teamsResults[1].getCurrentRoundScore(),
-                    "rounds_score": teamsResults[1].teamScore
+                    "rounds_score": teamsResults[1].teamScore,
+                    "fieldSide": teamsResults[1].fieldSide
                 },
             }
         }

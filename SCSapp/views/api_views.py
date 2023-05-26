@@ -10,7 +10,7 @@ from SCSapp.models.Match import AbstractMatch, VolleyballMatch
 from SCSapp.serializers import MatchSerializer, CompetitionSerializer, VolleyballCompetitionSerializer
 from authorizationApp.models import User
 from SCSapp.models.MatchTeamResult import MatchTeamResult
-from SCSapp.matchActionsDict import actionsDict
+from translationApp.matchActionsDict import actionsDict
 
 
 

@@ -10,33 +10,33 @@
     <script src="{% static 'js/translationScript.js' %}"></script>
 </head>
 <body class="translation-page">
-    <div class="translation-table">
+
+    <div class="d-flex pt-5 flex-column">
+        <b id="translation_error" class="translation-text text-center"></b>
+    </div>
+
+
+    <div class="translation-table" id="translation-table">
         <div class="d-flex pt-5 flex-column">
-            <b id="part" class="translation-text text-center">
-                Партия № 2
-            </b>
-            <b id="time" class="translation-text text-center">
-                Время  00:00
-            </b>
+            <b id="part" class="translation-text text-center"></b>
+            <b id="time" class="translation-text text-center"></b>
         </div>
         <div class="d-flex gap-5 justify-content-around">
-            <b class="flex-column translation-round-score" ><div id="first_team_score"></div></b>
-            <b id="second_team_score" class="flex-column translation-round-score"></b>
+            <b id="left_team_score" class="flex-column translation-round-score"></b>
+            <b id="right_team_score" class="flex-column translation-round-score"></b>
         </div>
         <div class="d-flex gap-5 justify-content-evenly">
             <b class="translation-text flex-column">
                 <div>Команда</div>
-                <div id="first_team_name">*Team*</div>
+                <div id="left_team_name"></div>
             </b>
             <b class="translation-text text-center">
-                <div id="match_score" class="translation-match-score">
-                    2 : 3
-                </div>
+                <div id="match_score" class="translation-match-score"></div>
                 <div>Общий счёт</div>
             </b>
             <b class="translation-text flex-column">
                 <div>Команда</div>
-                <div id="second_team_name">*Team*</div>
+                <div id="right_team_name"></div>
             </b>
         </div>
     </div>

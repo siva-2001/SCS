@@ -20,8 +20,13 @@
         <input id="chat-message-submit" type="button" value="Send"><br>
         <input id="goal-send-fsu" type="button" value="goal FSU">
         <input id="goal-send-gf" type="button" value="goal GF"><br>
+        <input id="pause-send-fsu" type="button" value="pause FSU">
+        <input id="pause-send-gf" type="button" value="pause GF"><br>
+        <input id="continue-round-send" type="button" value="continue round"><br>
         <input id="start-round-send" type="button" value="start round"><br>
+        <input id="swap-send" type="button" value="swap"><br>
         <input id="cancel-send" type="button" value="cancel">
+
         {{ match_id|json_script:"match-id" }}
     </div>
     
@@ -50,6 +55,23 @@
 
 
 
+        document.querySelector('#pause-send-fsu').onclick = function(e) {
+            chatSocket.send(JSON.stringify({
+                'message': {
+                    "signal":"PAUSE_ROUND",
+                    "team_result_id" : 4,
+                }
+            }));
+        };
+
+        document.querySelector('#pause-send-gf').onclick = function(e) {
+            chatSocket.send(JSON.stringify({
+                'message': {
+                    "signal":"PAUSE_ROUND",
+                    "team_result_id" : 3,
+                }
+            }));
+        };
 
 
         document.querySelector('#goal-send-fsu').onclick = function(e) {
@@ -88,9 +110,23 @@
             }));
         };
 
+        document.querySelector('#continue-round-send').onclick = function(e) {
+            chatSocket.send(JSON.stringify({
+                'message': {
+                    "signal":"CONTINUE_ROUND",
+                    "team_result_id" : null,
+                }
+            }));
+        };
 
-
-
+        document.querySelector('#swap-send').onclick = function(e) {
+            chatSocket.send(JSON.stringify({
+                'message': {
+                    "signal":"SWAP_FIELD_SIDE",
+                    "team_result_id" : null,
+                }
+            }));
+        };
 
         document.querySelector('#chat-message-submit').onclick = function(e) {
             const messageInputDom = document.querySelector('#chat-message-input');
