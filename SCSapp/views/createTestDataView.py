@@ -123,48 +123,56 @@ def CreateTestDataView(request):
         team = team_1,
         match = match_1,
         teamScore = 5,
+        fieldSide=VolleyballMatchTeamResult.fieldSideChoices.LEFT,
     )
 
     match_team_res_2 = VolleyballMatchTeamResult.objects.create(
         team = team_2,
         match = match_1,
         teamScore = 5,
+        fieldSide=VolleyballMatchTeamResult.fieldSideChoices.RIGHT,
     )
 
     match_team_res_3 = VolleyballMatchTeamResult.objects.create(
         team = team_3,
         match = match_2,
         teamScore = 5,
+        fieldSide = VolleyballMatchTeamResult.fieldSideChoices.LEFT
     )
 
     match_team_res_4 = VolleyballMatchTeamResult.objects.create(
         team = team_4,
         match = match_2,
         teamScore = 5,
+        fieldSide=VolleyballMatchTeamResult.fieldSideChoices.RIGHT
     )
 
     match_team_res_5 = VolleyballMatchTeamResult.objects.create(
         team = team_1,
         match = match_3,
         teamScore = 5,
+        fieldSide=VolleyballMatchTeamResult.fieldSideChoices.LEFT
     )
 
     match_team_res_6 = VolleyballMatchTeamResult.objects.create(
         team = team_2,
         match = match_3,
         teamScore = 5,
+        fieldSide=VolleyballMatchTeamResult.fieldSideChoices.RIGHT
     )
 
     match_team_res_7 = VolleyballMatchTeamResult.objects.create(
         team = team_3,
         match = match_4,
         teamScore = 5,
+        fieldSide=VolleyballMatchTeamResult.fieldSideChoices.LEFT
     )
 
     match_team_res_8 = VolleyballMatchTeamResult.objects.create(
         team = team_4,
         match = match_4,
         teamScore = 5,
+        fieldSide=VolleyballMatchTeamResult.fieldSideChoices.RIGHT
     )
 
     group = Group.objects.create()

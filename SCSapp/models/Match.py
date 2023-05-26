@@ -163,12 +163,14 @@ class VolleyballMatch(AbstractMatch):
     def getTranslationData(self):
         teamsResults = VolleyballMatchTeamResult.objects.all().filter(match=self)
         if len(teamsResults) != 2: return Response({"ERROR":"Ошибка сервера: количество команд не равно 2"})
-        
+
+
+
         return {
             "message_type" : "translation_data",
             "time" : self.getRoundTimer(),
             "round_time_is_run" : self.round_translated_now,
-            "part" : self.current_round,
+            "part" : self.current_round if (self.current_round != 0) else 1,
             "data" : {
                 "first_team":{
                     "result_id" : teamsResults[0].id,

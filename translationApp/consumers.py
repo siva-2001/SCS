@@ -86,8 +86,14 @@ class VolleyballConsumer(ChatConsumer):
                 action = self.createAction(message["signal"], teamRes)
                 self.send_to_group(json.dumps(action.getActionMessage(), ensure_ascii=False))
                 teamRes.goal()
-                if self.match.checkEndRound(): self.createAction("END_ROUND", teamRes)
-                if self.match.checkEndGame(): self.createAction("END_GAME", teamRes)
+                if self.match.checkEndRound():
+                    action = self.createAction("END_ROUND", teamRes)
+                    self.send_to_group(json.dumps(action.getActionMessage(), ensure_ascii=False))
+
+                if self.match.checkEndGame():
+                    action = self.createAction("END_GAME", teamRes)
+                    self.send_to_group(json.dumps(action.getActionMessage(), ensure_ascii=False))
+
 
             if message["signal"] == "PAUSE_ROUND" and self.match.round_translated_now:
                 self.match.pauseRound()

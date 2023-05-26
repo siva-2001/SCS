@@ -46,8 +46,8 @@ class JudgeMatchesAPIView(APIView):
         
         matches = [match for match in VolleyballMatch.objects.all()
             if (request.user == match.judge and 
-            int(request.GET.get("competition_id")) == match.competition.id and 
-            match.isAnnounced)]
+            int(request.GET.get("competition_id")) == match.competition.id and
+            (match.isAnnounced or match.match_translated_now))]
         serializer = VolleybalMatchSerializer(matches, many=True)
         
         for matchDataDict in serializer.data:

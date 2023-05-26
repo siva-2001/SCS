@@ -37,9 +37,7 @@ $(document).ready(() => {
                     $("#right_team_name").text(data["data"]["first_team"]["participant_name"]);
                     $('#match_score').text(data["data"]["second_team"]["rounds_score"] + " : " + data["data"]["first_team"]["rounds_score"]);
                 }
-
-                if (data["part"] == 0) $("#part").text("Партия № 1" + data["part"])
-                else $("#part").text("Партия №" + data["part"])
+                $("#part").text("Партия №" + data["part"])
             }
         };
 
