@@ -1,5 +1,5 @@
 from rest_framework import serializers
-from SCSapp.models.Match import AbstractMatch
+from SCSapp.models.Match import AbstractMatch, VolleyballMatch
 from SCSapp.models.Competition import Competition, VolleyballCompetition
 
 # from SCSapp.models.Olympics import Olympics
@@ -39,5 +39,12 @@ class VolleyballCompetitionSerializer(serializers.ModelSerializer):
 class MatchSerializer(serializers.ModelSerializer):
     class Meta:
         model = AbstractMatch
-        fields = ["id", "isAnnounced", "competition", "matchDateTime", "place", "protocol", "judge"]
+        fields = ["id", "isAnnounced", "matchDateTime", "place", "protocol", "judge"]
+
+
+class VolleybalMatchSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = VolleyballMatch
+        fields = ["id", "isAnnounced", "competition", "matchDateTime", "place", "protocol",
+                  "judge", "round_translated_now", "current_round"]
 

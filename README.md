@@ -1,6 +1,8 @@
 <!-- Создание базы данных и админа, запуск сервера -->
 pip install -r requirements.txt
-python manage.py makemigrations
+python manage.py makemigrations SCSapp
+python manage.py makemigrations translationApp
+python manage.py makemigrations authorizationApp
 python manage.py migrate
 python manage.py createsuperuser
 docker run -p 6379:6379 -d redis

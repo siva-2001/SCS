@@ -7,7 +7,7 @@ from django.contrib.auth.models import AnonymousUser
 import json
 from SCSapp.models.Competition import Competition, VolleyballCompetition
 from SCSapp.models.Match import AbstractMatch, VolleyballMatch
-from SCSapp.serializers import MatchSerializer, CompetitionSerializer, VolleyballCompetitionSerializer
+from SCSapp.serializers import MatchSerializer, CompetitionSerializer, VolleyballCompetitionSerializer, VolleybalMatchSerializer
 from authorizationApp.models import User
 from SCSapp.models.MatchTeamResult import MatchTeamResult
 from translationApp.matchActionsDict import actionsDict
@@ -25,7 +25,7 @@ class JudgeCompetitionsAPIView(APIView):
 
     def get(self, request):
         if not request.GET.get("olympics_id"):
-            competitions = [match.competition for match in AbstractMatch.objects.all() 
+            competitions = [match.competition for match in VolleyballMatch.objects.all()
                 if request.user == match.judge and
                 match.competition.status == Competition.StatusChoices.CURRENT]       
         else:
@@ -34,7 +34,7 @@ class JudgeCompetitionsAPIView(APIView):
                 int(request.GET.get("olympics_id")) == match.competition.olympics.id and
                 match.competition.status == Competition.StatusChoices.CURRENT] 
 
-        serializer = CompetitionSerializer(competitions, many=True)
+        serializer = VolleyballCompetitionSerializer(competitions, many=True)
         return Response(serializer.data)
 
 class JudgeMatchesAPIView(APIView):
@@ -44,11 +44,11 @@ class JudgeMatchesAPIView(APIView):
     def get(self, request):
         if not request.GET.get("competition_id"): return Response({"error":"Не указан competition_id параметр HTTP-запроса"})
         
-        matches = [match for match in AbstractMatch.objects.all() 
+        matches = [match for match in VolleyballMatch.objects.all()
             if (request.user == match.judge and 
             int(request.GET.get("competition_id")) == match.competition.id and 
             match.isAnnounced)]
-        serializer = MatchSerializer(matches, many=True)
+        serializer = VolleybalMatchSerializer(matches, many=True)
         
         for matchDataDict in serializer.data:
             abstrTeamRes = MatchTeamResult.objects.filter(match = matchDataDict["id"])
