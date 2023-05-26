@@ -99,22 +99,22 @@ def CreateTestDataView(request):
     team_4 = Team.objects.create(participant=participant_4)
 
     action_1 = MatchAction.objects.create(
-        eventType = "Гол",
+        eventType = "START_ROUND",
         team = team_1,
         match = match_2
     )
     action_2 = MatchAction.objects.create(
-        eventType = "Перелёт",
+        eventType = "GOAL",
         team = team_1,
         match = match_2
     )
     action_3 = MatchAction.objects.create(
-        eventType = "Заступ",
+        eventType = "CANCEL",
         team = team_1,
         match = match_2
     )
     action_4 = MatchAction.objects.create(
-        eventType = "Гол",
+        eventType = "GOAL",
         team = team_1,
         match = match_2
     )

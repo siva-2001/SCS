@@ -91,7 +91,7 @@ class VolleyballMatch(AbstractMatch):
         else: return False
 
     def getWSAdress(self):
-        return 'ws://127.0.0.1:8000/ws/volleyballTranslation/' + str(self.id) + '/'
+        return '/ws/volleyballTranslation/' + str(self.id) + '/'
 
     def checkEndRound(self):
         if self.current_round == self.competition.numOfRounds: maxRoundScore = self.competition.lastRoundPointLimit
