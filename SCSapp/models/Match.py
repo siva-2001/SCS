@@ -37,9 +37,12 @@ class AbstractMatch(models.Model):
 
 
     def startMatch(self):
-        self.match_translated_now = True
-        self.isAnnounced = False
-        self.save()
+        if self.isAnnounced:
+            self.match_translated_now = True
+            self.isAnnounced = False
+            self.save()
+            return True
+        else: return False
 
     def cancelLastGoal(self):
         actions = MatchAction.objects.all().filter(match=self).order_by("-eventTime")
@@ -56,7 +59,6 @@ class VolleyballMatch(AbstractMatch):
     competition = models.ForeignKey("SCSapp.VolleyballCompetition", on_delete=models.CASCADE, null=True)
     round_translated_now = models.BooleanField(default=False)
     current_round = models.IntegerField(default=0, null=True, blank=True)
-
 
 
     class Meta:
@@ -82,13 +84,14 @@ class VolleyballMatch(AbstractMatch):
         for res in results: res.swapFieldSide()
 
     def startMatch(self):
-        if self.isAnnounced:
-            super().startMatch()
+        if super().startMatch():
             results = VolleyballMatchTeamResult.objects.all().filter(match=self)
             for res in results: res.startMatch()
-            return 'ws://127.0.0.1:8000/ws/volleyballTranslation/'+ str(self.id) +'/'
+            return True
+        else: return False
 
-
+    def getWSAdress(self):
+        return 'ws://127.0.0.1:8000/ws/volleyballTranslation/' + str(self.id) + '/'
 
     def checkEndRound(self):
         if self.current_round == self.competition.numOfRounds: maxRoundScore = self.competition.lastRoundPointLimit

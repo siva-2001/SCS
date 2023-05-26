@@ -75,7 +75,8 @@ class MatchManagmentView(APIView):
             return Response({"ERROR":"Судейство в этом матче недоступно под этой учётной записью"})
         response["teams_data"] = match.getTranslationData()
         response["info"] = socketINFO
-        response["WSLink"] = match.startMatch()
+        if not match.match_translated_now: match.startMatch()
+        response["WSLink"] = match.getWSAdress()
 
         return Response(response)
 
