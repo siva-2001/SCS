@@ -63,10 +63,12 @@ class MatchManagmentView(APIView):
 
     def post(self, request):
         try:
-            if AbstractMatch.objects.get(id=json.loads(request.body)["match_id"]).competition.sportType == Competition.SportTypeChoices.VOLLEYBALL:
-                match = VolleyballMatch.objects.get(id=json.loads(request.body)["match_id"])
-                response = actionsDict["volleyball"]
-            else: return Response({"ERROR": "Нет события для этого вида спорта"})
+            match = VolleyballMatch.objects.get(id=json.loads(request.body)["match_id"])
+            response = actionsDict["volleyball"]
+            # if AbstractMatch.objects.get(id=json.loads(request.body)["match_id"]).competition.sportType == Competition.SportTypeChoices.VOLLEYBALL:
+            #     match = VolleyballMatch.objects.get(id=json.loads(request.body)["match_id"])
+            #     response = actionsDict["volleyball"]
+            # else: return Response({"ERROR": "Нет события для этого вида спорта"})
         except: return Response({"ERROR":"Матч с указанным ID не существует"})
 
         if match.judge != self.request.auth.user:
