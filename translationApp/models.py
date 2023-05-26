@@ -40,6 +40,7 @@ class MatchAction(models.Model):
                 "id" : self.id,
                 "signal" : self.eventType,
                 "roundTime" : self.roundEventTime,
+                "round" : self.round,
                 "team" : (self.team.participant.name if self.team else None),
             }
         }
