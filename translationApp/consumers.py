@@ -53,11 +53,11 @@ class ChatConsumer(WebsocketConsumer):
         )
         return action
 
-    # def getInfoWindowMessage(self, message):
-    #     return {
-    #         "message_type" : "Info_message",
-    #         "data" : message
-    #     }
+    def getInfoWindowMessage(self, message):
+        return {
+            "message_type" : "Info_message",
+            "data" : message
+        }
 
 
 
@@ -98,7 +98,6 @@ class VolleyballConsumer(ChatConsumer):
                 if self.match.checkEndRound():
                     action = self.createAction("END_ROUND", teamRes)
                     self.send_to_group(json.dumps(action.getActionMessage(), ensure_ascii=False))
-                    print("here")
                     self.match.endRound()
                 if self.match.checkEndGame():
                     action = self.createAction("END_GAME", teamRes)
@@ -106,10 +105,13 @@ class VolleyballConsumer(ChatConsumer):
 
 
             if message["signal"] == "PAUSE_ROUND" and self.match.round_translated_now:
-                action = self.createAction(message["signal"], teamRes)
-                self.send_to_group(json.dumps(action.getActionMessage(), ensure_ascii=False))
-                self.match.pauseRound()
-
+                if teamRes.getPauseCount() < 2:
+                    action = self.createAction(message["signal"], teamRes)
+                    self.send_to_group(json.dumps(action.getActionMessage(), ensure_ascii=False))
+                    self.match.pauseRound()
+                else:
+                    message = "Команда использовала все доступные ей перерывы"
+                    self.send_to_channel(json.dumps(self.getInfoWindowMessage(message), ensure_ascii=False))
 
             if message["signal"] == "CONTINUE_ROUND" and not self.match.round_translated_now and self.match.current_round != 0:
 
@@ -117,5 +119,9 @@ class VolleyballConsumer(ChatConsumer):
                 self.send_to_group(json.dumps(action.getActionMessage(), ensure_ascii=False))
                 self.match.continueRound()
             if message['signal'] == "SWAP_FIELD_SIDE": self.match.swapFieldSide()
+
+            if message['signal'] == "STOP_MATCH": pass
+
+
 
         self.send_to_group(json.dumps(self.match.getTranslationDataMessage(), ensure_ascii=False))
