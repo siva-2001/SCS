@@ -65,6 +65,7 @@ class MatchManagmentView(APIView):
         try:
             match = VolleyballMatch.objects.get(id=json.loads(request.body)["match_id"])
             response = actionsDict["volleyball"]
+
             # if AbstractMatch.objects.get(id=json.loads(request.body)["match_id"]).competition.sportType == Competition.SportTypeChoices.VOLLEYBALL:
             #     match = VolleyballMatch.objects.get(id=json.loads(request.body)["match_id"])
             #     response = actionsDict["volleyball"]
@@ -73,7 +74,7 @@ class MatchManagmentView(APIView):
 
         if match.judge != self.request.auth.user:
             return Response({"ERROR":"Судейство в этом матче недоступно под этой учётной записью"})
-        response["teams_data"] = match.getTranslationData()
+        response["teams_data"] = match.getTranslationDataMessage()
         response["info"] = socketINFO
         if not match.match_translated_now: match.startMatch()
         response["WSLink"] = match.getWSAdress()

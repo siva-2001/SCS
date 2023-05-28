@@ -10,7 +10,7 @@ def homePageView(request):
     listOfAnnouncedEvents = list()
     for comp in Competition.announced_objects.all(): listOfAnnouncedEvents.append(comp.getData())
     for comp in Competition.current_objects.all(): listOfCurrentEvents.append(comp.getData())
-    # for olympics in Olympics.current_objects.all(): listOfCurrentEvents.append(olympics.getData())
+
     return render(request, 'homePage.html', {
         'announcedEvents':listOfAnnouncedEvents,
         'currentEvents': listOfCurrentEvents,
@@ -18,12 +18,11 @@ def homePageView(request):
 
 
 def pastEventsView(request):
-    data = {}
-    pastCompetitions = Competition.objects.filter(status=Competition.StatusChoices.PAST)
-    pastOlympics = Olympics.objects.filter(status=Olympics.StatusChoices.PAST)
-    events = [e.getData() for e in pastOlympics] + [e.getData for e in pastCompetitions]
+    PAST_EVENT_PAGE_LEN = 10
+    data = dict()
+    events = [e.getData for e in Competition.objects.filter(status=Competition.StatusChoices.PAST)]
 
-    if len(events) > settings.PAST_EVENT_PAGE_LEN:
+    if len(events) > PAST_EVENT_PAGE_LEN:
         paginator = Paginator(events, settings.PAST_EVENT_PAGE_LEN)
         page_number = request.GET.get('page', 1)
         data['page_obj'] = paginator.get_page(page_number)

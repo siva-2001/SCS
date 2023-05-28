@@ -165,7 +165,7 @@ class VolleyballMatch(AbstractMatch):
 
 
 
-    def getTranslationData(self):
+    def getTranslationDataMessage(self):
         teamsResults = VolleyballMatchTeamResult.objects.all().filter(match=self)
         if len(teamsResults) != 2: return Response({"ERROR":"Ошибка сервера: количество команд не равно 2"})
         return {
@@ -179,14 +179,16 @@ class VolleyballMatch(AbstractMatch):
                     "participant_name" : teamsResults[0].team.participant.name,
                     "score" : teamsResults[0].getCurrentRoundScore(),
                     "rounds_score" : teamsResults[0].teamScore,
-                    "fieldSide" : teamsResults[0].fieldSide
+                    "fieldSide" : teamsResults[0].fieldSide,
+                    "pauseCount" : teamsResults[0].getPauseCount()
                 },
                 "second_team":{
                     "result_id":teamsResults[1].id,
                     "participant_name":teamsResults[1].team.participant.name,
                     "score": teamsResults[1].getCurrentRoundScore(),
                     "rounds_score": teamsResults[1].teamScore,
-                    "fieldSide": teamsResults[1].fieldSide
+                    "fieldSide": teamsResults[1].fieldSide,
+                    "pauseCount": teamsResults[0].getPauseCount()
                 },
             }
         }

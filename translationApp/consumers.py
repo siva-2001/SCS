@@ -38,7 +38,7 @@ class ChatConsumer(WebsocketConsumer):
         if self.match.match_translated_now:
             for action in MatchAction.objects.all().filter(match=self.match).order_by("eventTime"):   # order by
                 self.send_to_channel(json.dumps(action.getActionMessage(), ensure_ascii=False))
-            self.send_to_channel(json.dumps(self.match.getTranslationData(), ensure_ascii=False))
+            self.send_to_channel(json.dumps(self.match.getTranslationDataMessage(), ensure_ascii=False))
         else:
             self.send_to_channel(json.dumps({"ERROR":"Трансляция матча не ведётся в данный момент"}, ensure_ascii=False))
             self.disconnect("translation close")
@@ -52,6 +52,14 @@ class ChatConsumer(WebsocketConsumer):
             roundEventTime = self.match.getRoundTimer()
         )
         return action
+
+    # def getInfoWindowMessage(self, message):
+    #     return {
+    #         "message_type" : "Info_message",
+    #         "data" : message
+    #     }
+
+
 
 
 class VolleyballConsumer(ChatConsumer):
@@ -98,10 +106,11 @@ class VolleyballConsumer(ChatConsumer):
 
 
             if message["signal"] == "PAUSE_ROUND" and self.match.round_translated_now:
-
                 action = self.createAction(message["signal"], teamRes)
                 self.send_to_group(json.dumps(action.getActionMessage(), ensure_ascii=False))
                 self.match.pauseRound()
+
+
             if message["signal"] == "CONTINUE_ROUND" and not self.match.round_translated_now and self.match.current_round != 0:
 
                 action = self.createAction(message["signal"], teamRes)
@@ -109,4 +118,4 @@ class VolleyballConsumer(ChatConsumer):
                 self.match.continueRound()
             if message['signal'] == "SWAP_FIELD_SIDE": self.match.swapFieldSide()
 
-        self.send_to_group(json.dumps(self.match.getTranslationData(), ensure_ascii=False))
+        self.send_to_group(json.dumps(self.match.getTranslationDataMessage(), ensure_ascii=False))
