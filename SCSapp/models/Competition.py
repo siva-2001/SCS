@@ -3,7 +3,7 @@ from django.db import models
 
 from authorizationApp.models import User
 from .Match import AbstractMatch
-from .Team import Team
+from .VolleyballTeam import VolleyballTeam
 
 class CurrentCompetitionManager(models.Manager):
     def get_queryset(self):

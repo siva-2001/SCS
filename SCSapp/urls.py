@@ -6,8 +6,9 @@ from SCSapp.views.competitionView import competitionView
 # from SCSapp.views.createOlympicsView import CreateOlympicsView
 from SCSapp.views.eventListsViews import pastEventsView
 from django.urls import path
-from SCSapp.views.api_views import CurrentCompetitionAPIView, JudgeCompetitionsAPIView
-from SCSapp.views.api_views import JudgeMatchesAPIView, MatchManagmentView, CompetitionAPIView, VolleyballCompetitionAPIView
+from SCSapp.views.api_views import CurrentCompetitionAPIView, JudgeCompetitionsAPIView, CertainVolleyballCompetitionAPIView, CertainVolleyballMatch
+from SCSapp.views.api_views import JudgeMatchesAPIView, MatchManagmentView, VolleyballCompetitionAPIView, VolleyballMatchesOfCompetitionAPIView
+from SCSapp.views.api_views import VolleyballTeamAPIView, PlayerAPIView
 from authorizationApp.views import JudgeObtainAuthToken
 
 
@@ -19,14 +20,24 @@ scs_urlpatterns = [
     path('past/', pastEventsView, name='history'),
 
     # __________________________________________    API views    ____________________________________________
-    path('api/v1/competitions/', VolleyballCompetitionAPIView.as_view(), name='competitionAPI'),
+    path('api/v1/competitions/', VolleyballCompetitionAPIView.as_view(), name='competitionsAPI'),
     path('api/v1/currentCompetitions/', CurrentCompetitionAPIView.as_view(), name='currentCompetitions'),
+    path('api/v1/competition/<pk>/', CertainVolleyballCompetitionAPIView.as_view(), name = 'competitionAPI'),
+    path('api/v1/matchesOfCompetition/<pk>/', VolleyballMatchesOfCompetitionAPIView.as_view(), name = 'matchesOfCompetitionAPI'),
+    path('api/v1/match/<pk>/', CertainVolleyballMatch.as_view(), name = 'matchAPI'),
+    path('api/v1/teamsOfCompetition/<pk>/', VolleyballTeamAPIView.as_view(), name="teamsOfCompetitionAPI"),
+    path('api/v1/playersOfTeam/<pk>/', PlayerAPIView.as_view(), name="playersOfTeamAPI"),
+
+
 
     # ______________________________________    mobile API views    ____________________________________________
     # path('mobile-api-token-auth/', JudgeObtainAuthToken.as_view(), name="judgeAuthToken"),
     path('api/v1/judgeCompetitions/', JudgeCompetitionsAPIView.as_view(), name='judgeCompetitions'),
     path('api/v1/judgeMatches/', JudgeMatchesAPIView.as_view(), name='judgeMatches'),
     path('api/v1/matchManagment/', MatchManagmentView.as_view(), name='matchManagment'),
+
+
+
 
     # path('api/v1/currentOlympics/', CurrentOlympicsAPIView.as_view(), name='currentOlympics'),
     # path('api/v1/olympicsList/', OlympicsAPIView.as_view(), name='APIOlympics'),

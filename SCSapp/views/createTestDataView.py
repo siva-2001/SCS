@@ -1,9 +1,9 @@
 from SCSapp.models.Competition import Competition, VolleyballCompetition
 from SCSapp.models.Match import AbstractMatch, VolleyballMatch
 from SCSapp.models.MatchTeamResult import VolleyballMatchTeamResult
-from SCSapp.models.Team import Team
+from SCSapp.models.VolleyballTeam import VolleyballTeam
 from authorizationApp.models import User
-from SCSapp.models.Participant import Faculty
+from SCSapp.models.Faculty import Faculty
 from translationApp.models import MatchAction
 
 from django.shortcuts import redirect
@@ -93,10 +93,10 @@ def CreateTestDataView(request):
     participant_3 = Faculty.objects.create(name="ГФ")
     participant_4 = Faculty.objects.create(name="ФСУ")
 
-    team_1 = Team.objects.create(participant=participant_1)
-    team_2 = Team.objects.create(participant=participant_2)
-    team_3 = Team.objects.create(participant=participant_3)
-    team_4 = Team.objects.create(participant=participant_4)
+    team_1 = VolleyballTeam.objects.create(participant=participant_1)
+    team_2 = VolleyballTeam.objects.create(participant=participant_2)
+    team_3 = VolleyballTeam.objects.create(participant=participant_3)
+    team_4 = VolleyballTeam.objects.create(participant=participant_4)
 
     action_1 = MatchAction.objects.create(
         eventType = "START_ROUND",

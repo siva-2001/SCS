@@ -168,11 +168,16 @@ class VolleyballMatch(AbstractMatch):
     def getTranslationDataMessage(self):
         teamsResults = VolleyballMatchTeamResult.objects.all().filter(match=self)
         if len(teamsResults) != 2: return Response({"ERROR":"Ошибка сервера: количество команд не равно 2"})
+
+        goalActions = MatchAction.objects.all().filter(match=self).filter(eventType="GOAL")
+        lastGoalActionTeam = goalActions.order_by("-eventTime")[0].team.participant.name
+
         return {
             "message_type" : "translation_data",
             "time" : self.getRoundTimer(),
             "round_time_is_run" : self.round_translated_now,
             "part" : self.current_round if (self.current_round != 0) else 1,
+            "servesTheBall" : lastGoalActionTeam,
             "data" : {
                 "first_team":{
                     "result_id" : teamsResults[0].id,
@@ -188,7 +193,7 @@ class VolleyballMatch(AbstractMatch):
                     "score": teamsResults[1].getCurrentRoundScore(),
                     "rounds_score": teamsResults[1].teamScore,
                     "fieldSide": teamsResults[1].fieldSide,
-                    "pauseCount": teamsResults[0].getPauseCount()
+                    "pauseCount": teamsResults[1].getPauseCount()
                 },
             }
         }

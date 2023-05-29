@@ -1,6 +1,6 @@
 from django.db import models
 
-class Player(models.Model):
+class VolleyballPlayer(models.Model):
     class Meta:
         ordering = ['surename', 'name']
         verbose_name = 'Игрок'
@@ -12,7 +12,9 @@ class Player(models.Model):
     age = models.IntegerField(verbose_name='Возраст')
     height = models.IntegerField(verbose_name='Рост')
     weight = models.IntegerField(verbose_name='Вес')
-    trainer = models.BooleanField(verbose_name='Тренер')
+    trainer = models.BooleanField(verbose_name='Тренер', null=True, default=False)
+
+    team = models.ForeignKey("SCSapp.VolleyballTeam", on_delete=models.CASCADE, default=None, null=True)
 
     def __str__(self):
         return f'{self.name}  {self.surename}'

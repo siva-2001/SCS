@@ -24,7 +24,7 @@ from django.conf.urls.static import static
 from django.urls import include, path, re_path
 from django.conf import settings
 from SCSapp.views.api_views import CurrentCompetitionAPIView, JudgeCompetitionsAPIView
-from SCSapp.views.api_views import JudgeMatchesAPIView, MatchManagmentView, CompetitionAPIView
+from SCSapp.views.api_views import JudgeMatchesAPIView, MatchManagmentView
 
 from rest_framework.authtoken import views as drf_views
 

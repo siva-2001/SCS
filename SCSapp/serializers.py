@@ -1,6 +1,8 @@
 from rest_framework import serializers
 from SCSapp.models.Match import AbstractMatch, VolleyballMatch
 from SCSapp.models.Competition import Competition, VolleyballCompetition
+from SCSapp.models.VolleyballTeam import VolleyballTeam
+from SCSapp.models.Player import VolleyballPlayer
 
 # from SCSapp.models.Olympics import Olympics
 # class OlympicsSerializer(serializers.ModelSerializer):
@@ -25,14 +27,14 @@ class VolleyballCompetitionSerializer(serializers.ModelSerializer):
     organizer = serializers.HiddenField(default=serializers.CurrentUserDefault())
     class Meta:
         model = VolleyballCompetition
-        fields = ['id', 'name', 'description', 'organizer', 'dateTimeStartCompetition', 'regulations',
+        fields = ['id', 'name', 'description', 'organizer', 'dateTimeStartCompetition', 'regulations', 'protocol',
                   'numOfRounds', 'roundPointLimit', 'lastRoundPointLimit',
                   'onePointLead', 'twoPointsLead', 'threePointsLead',
                   'onePointLose', 'twoPointsLose', 'threePointsLose']
 
-    def save(self, user):
-        organizer = user
-        super().save()
+    # def save(self, user=None):
+    #     organizer = user
+    #     super().save()
 
 
 
@@ -42,9 +44,18 @@ class MatchSerializer(serializers.ModelSerializer):
         fields = ["id", "isAnnounced", "matchDateTime", "place", "protocol", "judge", "match_translated_now"]
 
 
-class VolleybalMatchSerializer(serializers.ModelSerializer):
+class VolleyballMatchSerializer(serializers.ModelSerializer):
     class Meta:
         model = VolleyballMatch
         fields = ["id", "isAnnounced", "competition", "matchDateTime", "place", "protocol",
                   "judge", "round_translated_now", "current_round", "match_translated_now"]
 
+class VolleyballTeamSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = VolleyballTeam
+        fields = ["participant", "match"]
+
+class VolleyballPlayerSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = VolleyballPlayer
+        fields = ["name", "surename", "patronymic", "team", 'age', 'height', 'weight']

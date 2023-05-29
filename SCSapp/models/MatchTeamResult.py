@@ -44,7 +44,7 @@ class VolleyballMatchTeamResult(MatchTeamResult):
         self.save()
 
     def getPauseCount(self):
-        return len(MatchAction.objects.filter(match=match).filter(team=team).filter(eventType="PAUSE_ROUND"))
+        return len(MatchAction.objects.filter(match=self.match).filter(team=self.team).filter(eventType="PAUSE_ROUND"))
 
     def cancelLastGoal(self):
         if self.currentRoundScore != 0: self.currentRoundScore -= 1
