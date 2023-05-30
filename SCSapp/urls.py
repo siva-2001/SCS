@@ -5,7 +5,7 @@ from SCSapp.views.eventListsViews import homePageView
 from SCSapp.views.competitionView import competitionView
 # from SCSapp.views.createOlympicsView import CreateOlympicsView
 from SCSapp.views.eventListsViews import pastEventsView
-from django.urls import path
+from django.urls import path, re_path
 from SCSapp.views.api_views import CurrentCompetitionAPIView, JudgeCompetitionsAPIView, CertainVolleyballCompetitionAPIView, CertainVolleyballMatch
 from SCSapp.views.api_views import JudgeMatchesAPIView, MatchManagmentView, VolleyballCompetitionAPIView, VolleyballMatchesOfCompetitionAPIView
 from SCSapp.views.api_views import VolleyballTeamAPIView, PlayerAPIView
@@ -16,7 +16,8 @@ scs_urlpatterns = [
     path('createTestDataset/', CreateTestDataView, name='createTestDataView'),
     path('createCompetition/', CreateCompetitionView.as_view(), name='createCompetition'),
     path('', homePageView, name='homePage'),
-    path('competition/<comp_id>/', competitionView, name='competition'),
+    re_path(r'^competition/(?P<pk>.*)$', competitionView.as_view(), name='competition'),
+    # path('competition/<comp_id>/', competitionView, name='competition'),
     path('past/', pastEventsView, name='history'),
 
     # __________________________________________    API views    _______________________________________________________

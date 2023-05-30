@@ -1,7 +1,7 @@
 from django.shortcuts import render, get_object_or_404
 from SCSapp.models.Competition import Competition
 from django.views.generic import View
-
+from django.views.generic import TemplateView
 class comptitionView(View):
     pass
 
@@ -10,6 +10,8 @@ def competitionView(request, comp_id):
     return render(request, 'competition.html', competition.getData())
 
 
+class competitionView(TemplateView):
+    template_name = 'competition.html'
 
 
 # def competitionView(request, comp_id):
