@@ -19,16 +19,18 @@ scs_urlpatterns = [
     path('competition/<comp_id>/', competitionView, name='competition'),
     path('past/', pastEventsView, name='history'),
 
-    # __________________________________________    API views    ____________________________________________
+    # __________________________________________    API views    _______________________________________________________
     path('api/v1/competitions/', VolleyballCompetitionAPIView.as_view(), name='competitionsAPI'),
     path('api/v1/currentCompetitions/', CurrentCompetitionAPIView.as_view(), name='currentCompetitions'),
+
+
+    # __________________________________________________________________________________________________________________
+
     path('api/v1/competition/<pk>/', CertainVolleyballCompetitionAPIView.as_view(), name = 'competitionAPI'),
     path('api/v1/matchesOfCompetition/<pk>/', VolleyballMatchesOfCompetitionAPIView.as_view(), name = 'matchesOfCompetitionAPI'),
     path('api/v1/match/<pk>/', CertainVolleyballMatch.as_view(), name = 'matchAPI'),
-    path('api/v1/teamsOfCompetition/<pk>/', VolleyballTeamAPIView.as_view(), name="teamsOfCompetitionAPI"),
-    path('api/v1/playersOfTeam/<pk>/', PlayerAPIView.as_view(), name="playersOfTeamAPI"),
-
-
+    path('api/v1/teamsOfCompetition/', VolleyballTeamAPIView.as_view(), name="teamsOfCompetitionAPI"),
+    path('api/v1/playersOfTeam/', PlayerAPIView.as_view(), name="playersOfTeamAPI"),
 
     # ______________________________________    mobile API views    ____________________________________________
     # path('mobile-api-token-auth/', JudgeObtainAuthToken.as_view(), name="judgeAuthToken"),

@@ -3,6 +3,7 @@ from SCSapp.models.Match import AbstractMatch, VolleyballMatch
 from SCSapp.models.Competition import Competition, VolleyballCompetition
 from SCSapp.models.VolleyballTeam import VolleyballTeam
 from SCSapp.models.Player import VolleyballPlayer
+from SCSapp.models.Faculty import Faculty
 
 # from SCSapp.models.Olympics import Olympics
 # class OlympicsSerializer(serializers.ModelSerializer):
@@ -59,3 +60,8 @@ class VolleyballPlayerSerializer(serializers.ModelSerializer):
     class Meta:
         model = VolleyballPlayer
         fields = ["name", "surename", "patronymic", "team", 'age', 'height', 'weight']
+
+class FacultySerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Faculty
+        fields = ['name', 'emblem', "description"]

@@ -8,7 +8,7 @@ class Team(models.Model):
             verbose_name_plural = 'Команды'
 
 class VolleyballTeam(Team):
-    match = models.ForeignKey("SCSapp.VolleyballMatch", on_delete=models.CASCADE, default=None, null=True)
+    competition = models.ForeignKey("SCSapp.VolleyballCompetition", on_delete=models.CASCADE, default=None, null=True)
 
     class Meta:
             verbose_name = 'Волейбольная команда'

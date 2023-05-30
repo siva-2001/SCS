@@ -10,9 +10,10 @@ from SCSapp.models.Match import AbstractMatch, VolleyballMatch
 from SCSapp.models.VolleyballTeam import VolleyballTeam
 from SCSapp.models.Player import VolleyballPlayer
 from SCSapp.serializers import MatchSerializer, CompetitionSerializer, VolleyballCompetitionSerializer, VolleyballMatchSerializer
-from SCSapp.serializers import VolleyballTeamSerializer, VolleyballPlayerSerializer
+from SCSapp.serializers import VolleyballTeamSerializer, VolleyballPlayerSerializer, FacultySerializer
 from authorizationApp.models import User
 from SCSapp.models.MatchTeamResult import MatchTeamResult
+from SCSapp.models.Faculty import Faculty
 from translationApp.matchActionsDict import actionsDict
 
 
@@ -51,7 +52,7 @@ class JudgeMatchesAPIView(APIView):
             if (request.user == match.judge and 
             int(request.GET.get("competition_id")) == match.competition.id and
             (match.isAnnounced or match.match_translated_now))]
-        serializer = VolleybalMatchSerializer(matches, many=True)
+        serializer = VolleyballMatchSerializer(matches, many=True)
         
         for matchDataDict in serializer.data:
             abstrTeamRes = MatchTeamResult.objects.filter(match = matchDataDict["id"])
@@ -131,23 +132,24 @@ class CertainVolleyballCompetitionAPIView(generics.RetrieveUpdateAPIView):
         return self.update(request, *args, **kwargs)
 
 class VolleyballMatchesOfCompetitionAPIView(generics.ListAPIView):
-    queryset = VolleyballCompetition.objects.all()
-    serializer_class = VolleyballCompetitionSerializer
+    queryset = VolleyballMatch.objects.all()
+    serializer_class = VolleyballMatchSerializer
+
+    def get_queryset(self):
+        if self.request.GET.get("competition_id"):
+            return self.queryset.filter(competition = self.request.GET.get("competition_id"))
+        else: return self.queryset.all()
 
     def get(self, request, *args, **kwargs):
-        if not kwargs["pk"]: return Response({"ERROR": "Не указан pk параметр HTTP-запроса"})
-
-        matches = [match for match in VolleyballMatch.objects.all()
-                   if int(kwargs["pk"]) == match.competition.id]
-        serializer = VolleyballMatchSerializer(matches, many=True)
+        serializer = VolleyballMatchSerializer(self.get_queryset(), many=True)
 
         for matchDataDict in serializer.data:
-            abstrTeamRes = MatchTeamResult.objects.filter(match=matchDataDict["id"])
-            matchDataDict["firstTeam"] = abstrTeamRes[0].team.participant.name
-            matchDataDict["firstTeamEmblem"] = abstrTeamRes[0].team.participant.emblem.url if abstrTeamRes[0].team.participant.emblem else None
+            teamRes = MatchTeamResult.objects.filter(match=matchDataDict["id"])
+            matchDataDict["firstTeam"] = teamRes[0].team.participant.name
+            matchDataDict["firstTeamEmblem"] = teamRes[0].team.participant.emblem.url if teamRes[0].team.participant.emblem else None
 
-            matchDataDict["secondTeam"] = abstrTeamRes[1].team.participant.name
-            matchDataDict["secondTeamEmblem"] = abstrTeamRes[1].team.participant.emblem.url if abstrTeamRes[1].team.participant.emblem else None
+            matchDataDict["secondTeam"] = teamRes[1].team.participant.name
+            matchDataDict["secondTeamEmblem"] = teamRes[1].team.participant.emblem.url if teamRes[1].team.participant.emblem else None
 
         return Response(serializer.data)
 
@@ -166,20 +168,22 @@ class VolleyballTeamAPIView(generics.ListCreateAPIView):
     queryset = VolleyballTeam.objects.all()
     serializer_class = VolleyballTeamSerializer
 
-    def get(self, request, *args, **kwargs):
-        if not kwargs["pk"]: return Response({"ERROR": "Не указан pk параметр HTTP-запроса"})
-        teams = [team for team in VolleyballTeam.objects.all() if int(kwargs["pk"]) == team.match.competition.id]
-        serializer = VolleyballTeamSerializer(teams, many=True)
-        return Response(serializer.data)
+    def get_queryset(self):
+        if self.request.GET.get("competition_id"):
+            return self.queryset.filter(competition = self.request.GET.get("competition_id"))
+        else: return self.queryset.all()
+
 
 class PlayerAPIView(generics.ListCreateAPIView):
     queryset = VolleyballPlayer.objects.all()
     serializer_class = VolleyballPlayerSerializer
 
-    def get(self, request, *args, **kwargs):
-        if not kwargs["pk"]: return Response({"ERROR": "Не указан pk параметр HTTP-запроса"})
-        players = [pl for pl in VolleyballPlayer.objects.all() if int(kwargs["pk"]) == pl.team.id]
-        serializer = VolleyballPlayerSerializer(players, many=True)
-        return Response(serializer.data)
+    def get_queryset(self):
+        if self.request.GET.get("team_id"): return self.queryset.filter(team=self.request.GET.get("team_id"))
+        else: return self.queryset.all()
 
-# ПИЗДЕЦ, ЭТО ВСЁ МОЖНО ПЕРЕПИСАТЬ ЧЕРЕЗ GET_QUERYSET И SERIALIZER_CLASS
+# ПРОПИСАТЬ ТЕСТЫ
+
+class FacultyDetailAPIView(generics.RetrieveAPIView):
+    queryset = Faculty.objects.all()
+    serializer_class = FacultySerializer
