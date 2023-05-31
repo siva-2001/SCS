@@ -10444,7 +10444,6 @@ textarea {
   padding-top: 13rem !important;
 }
 
-
 .createCompBtn {
   padding-left: 1.8rem;
   padding-right: 1.8rem;
@@ -10479,7 +10478,7 @@ textarea {
   font-weight: bolder;
   font-size: 3rem;
 }
-.competitionInfoConteiner .discription {
+.competitionInfoConteiner .description {
   font-size: 1.5rem;
 }
 .competitionInfoConteiner .organizer {

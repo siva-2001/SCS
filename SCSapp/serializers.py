@@ -26,9 +26,11 @@ class CompetitionSerializer(serializers.ModelSerializer):
 
 class VolleyballCompetitionSerializer(serializers.ModelSerializer):
     organizer = serializers.HiddenField(default=serializers.CurrentUserDefault())
+    dateTimeStartCompetition = serializers.DateTimeField(format="%H:%M %d.%m.%Y")
     class Meta:
         model = VolleyballCompetition
-        fields = ['id', 'name', 'description', 'organizer', 'dateTimeStartCompetition', 'regulations', 'protocol',
+        fields = ['id', 'name', 'description', 'organizer', 'status',
+                  'dateTimeStartCompetition', 'regulations', 'protocol',
                   'numOfRounds', 'roundPointLimit', 'lastRoundPointLimit',
                   'onePointLead', 'twoPointsLead', 'threePointsLead',
                   'onePointLose', 'twoPointsLose', 'threePointsLose']

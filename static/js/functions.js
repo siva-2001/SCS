@@ -9,6 +9,19 @@ function addAnonymousUserButtons(){
     )
 }
 
+//        window.location.pathname.split("/").forEach(function(item, i, arr) {
+//            if (arr[i-1] == "competition") competition_id = item;
+//        });
+
+function getPK(){
+    var pk = 0;
+    console.log(window.location.pathname);
+    window.location.pathname.split("/").forEach(function(item, i, arr) {
+        if (!isNaN(parseInt(item))) pk = item;
+    });
+    return pk;
+}
+
 var params = window.location.search.replace('?','').split('&').reduce(
         function(p,e){
             var a = e.split('=');

@@ -4,48 +4,23 @@
 
 <div class="row justify-content-between competitionInfoConteiner">
     <div class="col-12 col-md-8">
-        <p class="title">
+        <p class="title"></p>
 
-<!--            <a  data-bs-toggle="collapse" href="#collapseCompetitionEdit" role="button" aria-expanded="false" aria-controls="collapseExample">-->
-<!--                <img src="{% static 'pancil_black.png' %}" width="25" height="25">-->
-<!--            </a>    -->
-        </p>
-        <p class="discription"></p>
-        {% if competition.status == 'Past'%}        <!--      смена условия на наличиче\отсутствие протокола      -->
-            <a href="{{ competition.protocol.url }}" download>
-                <div class="protocol">
-                    <p class="h3">Скачать протокол соревнований</p>
-                </div>
-            </a>
-        {% endif %}
-
-        {% if not userAuth and competition.status == competition.ANNOUNSED %}
-        <p class="h3 mt-5" style="color:#880000;">Для подачи заявки необходимо авторизоваться</p>
-        {% endif %}
-
-
+        <p class="description"></p>
     </div>
-
-
 
     <div class="col-12 col-md-3">
         <div class="row organizer">
-            <p>Организатор: {{ competition.organizerName }}</p>
+            <p id="organizer"></p>
         </div>
         <div class="row dateTimeInfo">
-            {% if competition.status == 'Announsed' %}
-                <p class="h4"><strong>Заявки принимаются до:</strong></p>
-                <p class="h4">{{ competition.getLastTimeForApplicationStr }}</p>
-            {% elif competition.status == 'Current' %}
-                <p class="h4"><strong>Следующий матч пройдёт:</strong></p>
-                <p class="h4">{{ nextMatchDateTime }}</p>
-            {% else %}
-                <p class="h4"><strong>Соревнования завершились:</strong></p>
-                <p class="h4">{{ competition.getEndDateTimeStr }}</p>
-            {% endif %}
+            <div class="regulations"></div>
+            <div class="protocol"></div>
         </div>
     </div>
-    {% if userIsJudge %}
+
+
+
     <form method="POST">
         {% csrf_token %}
     <div class="collapse" id="collapseCompetitionEdit">
@@ -100,7 +75,7 @@
         </div>
     </div>
     </form>
-    {% endif %}
+
 </div>
 
 

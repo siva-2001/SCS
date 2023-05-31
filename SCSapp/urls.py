@@ -16,8 +16,7 @@ scs_urlpatterns = [
     path('createTestDataset/', CreateTestDataView, name='createTestDataView'),
     path('createCompetition/', CreateCompetitionView.as_view(), name='createCompetition'),
     path('', homePageView, name='homePage'),
-    re_path(r'^competition/(?P<pk>.*)$', competitionView.as_view(), name='competition'),
-    # path('competition/<comp_id>/', competitionView, name='competition'),
+    path('competition/<pk>/', competitionView.as_view(), name='competition'),
     path('past/', pastEventsView, name='history'),
 
     # __________________________________________    API views    _______________________________________________________
