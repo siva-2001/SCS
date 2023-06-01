@@ -41,9 +41,12 @@ function checkAccessPermissions(){
         },
         success: function(data){
             console.log(data);
-            if (data.isAnonymousUser || data.details == "Invalid token.") { addAnonymousUserButtons(); }
+            if (data.isAnonymousUser || data.details == "Invalid token.") addAnonymousUserButtons();
             else {
-                if(data.isOrganizer) addCreateEventButton();
+                if(data.isOrganizer) {
+                    addCreateEventButton();
+                    if(window.location.pathname.match(/competition/)) $("#competitionEditButton").show();
+                }
                 addProfileElement();
             }
         },
@@ -155,6 +158,4 @@ function set_cookie ( name, value, exp_y, exp_m, exp_d, path, domain, secure ){
     if (secure) сookie_string += "; secure";
     cookie_string += ';';
     document.cookie = cookie_string;
-    console.log(cookie_string);
-    setTimeout(() => { console.log("мир"); }, 10000);
 }

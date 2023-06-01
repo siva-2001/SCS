@@ -25,7 +25,14 @@ class CompetitionSerializer(serializers.ModelSerializer):
 
 
 class VolleyballCompetitionSerializer(serializers.ModelSerializer):
-    organizer = serializers.HiddenField(default=serializers.CurrentUserDefault())
+    # organizer = serializers.ForeignKeyField(default=serializers.CurrentUserDefault())
+
+    organizer = serializers.SlugRelatedField(
+        default=serializers.CurrentUserDefault(),
+        read_only=True,
+        slug_field='id'
+    )
+
     dateTimeStartCompetition = serializers.DateTimeField(format="%H:%M %d.%m.%Y")
     class Meta:
         model = VolleyballCompetition
@@ -40,14 +47,17 @@ class VolleyballCompetitionSerializer(serializers.ModelSerializer):
     #     super().save()
 
 
-
-class MatchSerializer(serializers.ModelSerializer):
-    class Meta:
-        model = AbstractMatch
-        fields = ["id", "isAnnounced", "matchDateTime", "place", "protocol", "judge", "match_translated_now"]
-
+#
+# class MatchSerializer(serializers.ModelSerializer):
+#
+#
+#     class Meta:
+#         model = AbstractMatch
+#         fields = ["id", "isAnnounced", "matchDateTime", "place", "protocol", "judge", "match_translated_now"]
+#
 
 class VolleyballMatchSerializer(serializers.ModelSerializer):
+    matchDateTime = serializers.DateTimeField(format="%H:%M %d.%m.%Y")
     class Meta:
         model = VolleyballMatch
         fields = ["id", "isAnnounced", "competition", "matchDateTime", "place", "protocol",

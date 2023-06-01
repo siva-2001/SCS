@@ -9,7 +9,7 @@ from SCSapp.models.Competition import Competition, VolleyballCompetition
 from SCSapp.models.Match import AbstractMatch, VolleyballMatch
 from SCSapp.models.VolleyballTeam import VolleyballTeam
 from SCSapp.models.Player import VolleyballPlayer
-from SCSapp.serializers import MatchSerializer, CompetitionSerializer, VolleyballCompetitionSerializer, VolleyballMatchSerializer
+from SCSapp.serializers import CompetitionSerializer, VolleyballCompetitionSerializer, VolleyballMatchSerializer
 from SCSapp.serializers import VolleyballTeamSerializer, VolleyballPlayerSerializer, FacultySerializer
 from authorizationApp.models import User
 from SCSapp.models.MatchTeamResult import MatchTeamResult
@@ -132,7 +132,7 @@ class CertainVolleyballCompetitionAPIView(generics.RetrieveUpdateAPIView):
         return self.update(request, *args, **kwargs)
 
 class VolleyballMatchesOfCompetitionAPIView(generics.ListAPIView):
-    queryset = VolleyballMatch.objects.all()
+    queryset = VolleyballMatch.objects.all().order_by("matchDateTime")
     serializer_class = VolleyballMatchSerializer
 
     def get_queryset(self):
