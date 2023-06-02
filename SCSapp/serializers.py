@@ -33,7 +33,7 @@ class VolleyballCompetitionSerializer(serializers.ModelSerializer):
         slug_field='id'
     )
 
-    dateTimeStartCompetition = serializers.DateTimeField(format="%H:%M %d.%m.%Y")
+    dateTimeStartCompetition = serializers.DateTimeField(format="%H:%M %d.%m.%Y", required=False)
     class Meta:
         model = VolleyballCompetition
         fields = ['id', 'name', 'description', 'organizer', 'status',
@@ -57,7 +57,7 @@ class VolleyballCompetitionSerializer(serializers.ModelSerializer):
 #
 
 class VolleyballMatchSerializer(serializers.ModelSerializer):
-    matchDateTime = serializers.DateTimeField(format="%H:%M %d.%m.%Y")
+    matchDateTime = serializers.DateTimeField(format="%H:%M %d.%m.%Y", required=False)
     class Meta:
         model = VolleyballMatch
         fields = ["id", "isAnnounced", "competition", "matchDateTime", "place", "protocol",

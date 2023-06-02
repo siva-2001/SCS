@@ -170,7 +170,9 @@ class VolleyballMatch(AbstractMatch):
         if len(teamsResults) != 2: return Response({"ERROR":"Ошибка сервера: количество команд не равно 2"})
 
         goalActions = MatchAction.objects.all().filter(match=self).filter(eventType="GOAL")
-        lastGoalActionTeam = goalActions.order_by("-eventTime")[0].team.participant.name
+
+        try: lastGoalActionTeam = goalActions.order_by("-eventTime")[0].team.participant.name
+        except: lastGoalActionTeam = teamsResults[0].team.participant.name
 
         return {
             "message_type" : "translation_data",

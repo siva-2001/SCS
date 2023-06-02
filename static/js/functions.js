@@ -159,3 +159,26 @@ function set_cookie ( name, value, exp_y, exp_m, exp_d, path, domain, secure ){
     cookie_string += ';';
     document.cookie = cookie_string;
 }
+
+function updateCompetition(comp_id, title=null, description=null, datetime=null){
+    var data = {};
+    if(title) data["name"] = title;
+    if(description) data["description"] = description;
+    if(datetime) data["dateTimeStartCompetition"] = datetime;
+
+    console.log(title, description, datetime);
+
+    $.ajax({
+        method: "PUT",
+        url: "http://127.0.0.1:8000/api/v1/competition/" + comp_id + "/",
+        contentType: 'application/json',
+        data: JSON.stringify(data),
+        headers:{ "Authorization": cookieStrToObject(document.cookie).Authorization  },
+        success: function(msg){
+            console.log(msg);
+            alert("Соревнование успешно обновлено!");
+            location.reload();
+        },
+
+    })
+}

@@ -81,7 +81,6 @@ class VolleyballConsumer(ChatConsumer):
             message = json.loads(text_data)['message']
             teamRes = VolleyballMatchTeamResult.objects.all().get(id=message["team_result_id"]) if message["team_result_id"] else None
 
-            message = json.loads(text_data)['message']
 
             if message["signal"] == "GOAL" and self.match.round_translated_now:
                 action = self.createAction(message["signal"], teamRes)
@@ -96,6 +95,7 @@ class VolleyballConsumer(ChatConsumer):
                     self.send_to_group(json.dumps(action.getActionMessage(), ensure_ascii=False))
 
             if message["signal"] == "START_ROUND" and not self.match.round_translated_now:
+                # ограничитель на количество событий данного типа в раунде
                 self.match.startRound()
                 action = self.createAction(message["signal"], teamRes)
                 self.send_to_group(json.dumps(action.getActionMessage(), ensure_ascii=False))

@@ -24,44 +24,32 @@
 
 
 
-    <form method="POST">
-        {% csrf_token %}
+
+
     <div class="collapse" id="collapseCompetitionEdit">
         <div class="card card-body rounded-3 mt-3 col-12 col-lg-10 col-xl-8">
-            <p class="h3 my-3"><strong>
-                Редактирование
-            </strong></p>
+                <p class="h3 my-3"><strong>   Редактирование    </strong></p>
+
+            <input type="hidden" name="_method" value="put" />
 
             <div class="input-group input-group-lg mb-3">
                 <span class="input-group-text">Заголовок</span>
-                {{ compForm.name }}
-                </div>
+                <textarea id="competition_title_edit" cols="20" rows="3" class="form-control" placeholder="Томская межвузовская спартакиада"></textarea>
+            </div>
+            <div class="input-group input-group-lg mb-3">
+                <span class="input-group-text">Описание</span>
+                <textarea id="competition_description_edit" cols="30" rows="10" class="form-control competition-description" placeholder="Введите новое описание для соревнований"></textarea>
+            </div>
 
-                <div class="input-group input-group-lg mb-3">
-                    <span class="input-group-text">Организатор</span>
-                    {{ compForm.organizerName }}
-                </div>
+            <div id="competition_datetime_input_string" style="display: none" class="input-group input-group-lg mb-3">
+                <span class="input-group-text">Завявки принимаются до</span>
+                <input id="competition_datetime_edit"  type="datetime-local" class="form-control">
+            </div>
 
-                {% if competition.status == 'Announsed' %}
-                <div class="input-group input-group-lg mb-3">
-                    <span class="input-group-text">Завявки принимаются до</span>
-                    {{ compForm.lastTimeForApplications }}
-                </div>
-
-                <div class="input-group input-group-lg mb-3">
-                    <span class="input-group-text">Мин. кол-во команд</span>
-                    {{ compForm.theNumberOfTeamsRequiredToStartTheCompetition }}
-                </div>
-                {% endif %}
-
-                <div class="input-group input-group-lg mb-3">
-                    <span class="input-group-text">Описание</span>
-                    {{ compForm.discription }}
-                </div>
 
                 <div class="row justify-content-end">
                     <div class="col-auto">
-                        <button type="submit" class="btn createCompBtn" name="formType" value="compEditForm">
+                        <button type="submit" class="btn createCompBtn" name="formType" value="compEditForm" id="sendCompetitionEdit">
                             Обновить
                         </button>
                     </div>
@@ -75,9 +63,9 @@
                         maxTime:'23:59'
                     });
                 </script>
-        </div>
+            </div>
     </div>
-    </form>
+
 
 </div>
 

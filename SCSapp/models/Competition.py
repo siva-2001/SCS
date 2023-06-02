@@ -57,7 +57,7 @@ class Competition(models.Model):
 
     name = models.CharField(max_length=256, verbose_name="Заголовок", null=True)
     description = models.TextField(blank=True, verbose_name="Описание", null=True)
-    dateTimeStartCompetition = models.DateTimeField(verbose_name="Заявки на участие принимаются до", default=None, null=True)
+    dateTimeStartCompetition = models.DateTimeField(verbose_name="Заявки на участие принимаются до", default=None, null=True, blank=True)
     dateTimeFinishCompetition = models.DateTimeField(blank=True, null=True, verbose_name="Соревнование завершилось")
     organizer = models.ForeignKey(User, on_delete=models.CASCADE, verbose_name="Организатор")
     protocol = models.FileField(upload_to='protocols', null=True, blank=True, verbose_name="Протокол")
