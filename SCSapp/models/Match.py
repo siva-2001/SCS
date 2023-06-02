@@ -125,6 +125,9 @@ class VolleyballMatch(AbstractMatch):
 
     def checkEndGame(self):
         if self.current_round == self.competition.numOfRounds and not self.round_translated_now: return True
+
+
+
         else: return False
 
     def endGame(self):

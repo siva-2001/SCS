@@ -111,12 +111,16 @@ class VolleyballConsumer(ChatConsumer):
                     self.send_to_group(json.dumps(action.getActionMessage(), ensure_ascii=False))
                     self.match.pauseRound()
                 else:
-                    message = "Команда использовала все доступные ей перерывы"
-                    self.send_to_channel(json.dumps(self.getInfoWindowMessage(message), ensure_ascii=False))
+                    self.send_to_channel(json.dumps(
+                        self.getInfoWindowMessage("Команда использовала все доступные ей перерывы"),
+                        ensure_ascii=False
+                    ))
 
             matchActions = MatchAction.objects.all().filter(match=self.match)
+
             if message["signal"] == "CONTINUE_ROUND" and not self.match.round_translated_now and self.match.current_round != 0\
                     and (len(matchActions.filter(eventType="PAUSE_ROUND")) != len(matchActions.filter(eventType="CONTINUE_ROUND"))):
+
                 action = self.createAction(message["signal"], teamRes)
                 self.send_to_group(json.dumps(action.getActionMessage(), ensure_ascii=False))
                 self.match.continueRound()
@@ -125,6 +129,7 @@ class VolleyballConsumer(ChatConsumer):
             if message['signal'] == "SWAP_FIELD_SIDE": self.match.swapFieldSide()
 
             if message['signal'] == "STOP_MATCH": pass
+        #     очистка событий в БД --->
 
 
 
