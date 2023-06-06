@@ -41,6 +41,14 @@ $(document).ready(() => {
             }
 
             if(data['message_type'] == "action_info"){
+                if(data["data"]["signal"] == "STOP_MATCH"){
+                    $('#translation_error').text("Матч завершён");
+                    $('#translation-table').hide();
+                }
+            }
+
+
+            if(data['message_type'] == "action_info"){
                 if(data["data"]["signal"] == "CONTINUE_ROUND"){
                     clearInterval(pauseTime);
                 }

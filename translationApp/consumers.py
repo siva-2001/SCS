@@ -81,6 +81,7 @@ class VolleyballConsumer(ChatConsumer):
             message = json.loads(text_data)['message']
             teamRes = VolleyballMatchTeamResult.objects.all().get(id=message["team_result_id"]) if message["team_result_id"] else None
 
+            print(message["signal"])
 
             if message["signal"] == "GOAL" and self.match.round_translated_now:
                 action = self.createAction(message["signal"], teamRes)
@@ -117,7 +118,6 @@ class VolleyballConsumer(ChatConsumer):
                     ))
 
             matchActions = MatchAction.objects.all().filter(match=self.match)
-
             if message["signal"] == "CONTINUE_ROUND" and not self.match.round_translated_now and self.match.current_round != 0\
                     and (len(matchActions.filter(eventType="PAUSE_ROUND")) != len(matchActions.filter(eventType="CONTINUE_ROUND"))):
 
@@ -125,12 +125,12 @@ class VolleyballConsumer(ChatConsumer):
                 self.send_to_group(json.dumps(action.getActionMessage(), ensure_ascii=False))
                 self.match.continueRound()
 
-
             if message['signal'] == "SWAP_FIELD_SIDE": self.match.swapFieldSide()
 
-            if message['signal'] == "STOP_MATCH": pass
-        #     очистка событий в БД --->
-
-
+            if message['signal'] == "STOP_MATCH" and self.match.match_translated_now:
+                action = self.createAction(message["signal"], teamRes)
+                self.send_to_group(json.dumps(action.getActionMessage(), ensure_ascii=False))
+                self.match.stopMatch()
+                self.disconnect("translation close")
 
         self.send_to_group(json.dumps(self.match.getTranslationDataMessage(), ensure_ascii=False))

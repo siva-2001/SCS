@@ -12,7 +12,7 @@ from SCSapp.models.Player import VolleyballPlayer
 from SCSapp.serializers import CompetitionSerializer, VolleyballCompetitionSerializer, VolleyballMatchSerializer
 from SCSapp.serializers import VolleyballTeamSerializer, VolleyballPlayerSerializer, FacultySerializer
 from authorizationApp.models import User
-from SCSapp.models.MatchTeamResult import MatchTeamResult
+from SCSapp.models.MatchTeamResult import MatchTeamResult, VolleyballMatchTeamResult
 from SCSapp.models.Faculty import Faculty
 from translationApp.matchActionsDict import actionsDict
 
@@ -132,7 +132,7 @@ class CertainVolleyballCompetitionAPIView(generics.RetrieveUpdateAPIView):
         return self.update(request, *args, **kwargs)
 
 class VolleyballMatchesOfCompetitionAPIView(generics.ListAPIView):
-    queryset = VolleyballMatch.objects.all().order_by("matchDateTime")
+    queryset = VolleyballMatch.objects.all().order_by('competitionStage', "matchDateTime")
     serializer_class = VolleyballMatchSerializer
 
     def get_queryset(self):
@@ -144,12 +144,32 @@ class VolleyballMatchesOfCompetitionAPIView(generics.ListAPIView):
         serializer = VolleyballMatchSerializer(self.get_queryset(), many=True)
 
         for matchDataDict in serializer.data:
-            teamRes = MatchTeamResult.objects.filter(match=matchDataDict["id"])
+            teamRes = VolleyballMatchTeamResult.objects.filter(match=matchDataDict["id"])
             matchDataDict["firstTeam"] = teamRes[0].team.participant.name
+            matchDataDict["firstTeamScore"] = teamRes[0].teamScore
             matchDataDict["firstTeamEmblem"] = teamRes[0].team.participant.emblem.url if teamRes[0].team.participant.emblem else None
 
             matchDataDict["secondTeam"] = teamRes[1].team.participant.name
+            matchDataDict["secondTeamScore"] = teamRes[1].teamScore
             matchDataDict["secondTeamEmblem"] = teamRes[1].team.participant.emblem.url if teamRes[1].team.participant.emblem else None
+
+
+
+            roundsScore = ''
+            if not matchDataDict["isAnnounced"]:
+                if teamRes[0].firstRoundScore and teamRes[1].firstRoundScore:
+                    roundsScore += ('(' + teamRes[0].firstRoundScore + ":" + teamRes[1].firstRoundScore + '; ')
+                if teamRes[0].secondRoundScore and teamRes[1].secondRoundScore:
+                    roundsScore += (teamRes[0].secondRoundScore + ":" + teamRes[1].secondRoundScore + '; ')
+                if teamRes[0].thirdRoundScore and teamRes[1].thirdRoundScore:
+                    roundsScore += (teamRes[0].thirdRoundScore + ":" + teamRes[1].thirdRoundScore + '; ')
+                if teamRes[0].fourthRoundScore and teamRes[1].fourthRoundScore:
+                    roundsScore += (teamRes[0].fourthRoundScore + ":" + teamRes[1].fourthRoundScore + '; ')
+                if teamRes[0].fifthRoundScore and teamRes[1].fifthRoundScore:
+                    roundsScore += (teamRes[0].fifthRoundScore + ":" + teamRes[1].fifthRoundScore + '; ')
+            matchDataDict["roundsScore"] = roundsScore
+
+
 
         return Response(serializer.data)
 

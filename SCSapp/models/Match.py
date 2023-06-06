@@ -15,10 +15,20 @@ class AbstractMatch(models.Model):
     place = models.CharField(max_length=128, null=True, blank=True)
     protocol = models.FileField(upload_to='media/protocols/match', default=None, null=True, blank=True)
     judge = models.ForeignKey(User, on_delete=models.SET_NULL, default=None, blank=True, null=True)
-
     match_translated_now = models.BooleanField(default=False)
 
+    class competitionStageChoices(models.TextChoices):
+        FINAL = "1/1", 'Финал'
+        SEMI_FINAL = '1/2', 'Полуфинал'
+        QUARTER_FINAL = '1/4', '1/4-финал'
+        EIGHTH_FINALS = '1/8', '1/8-финал'
 
+    competitionStage = models.CharField(
+        max_length=16,
+        choices=competitionStageChoices.choices,
+        verbose_name='Круг розыгрыша',
+        null=True,
+    )
 
     class Meta:
         verbose_name = 'Матч'
@@ -156,6 +166,14 @@ class VolleyballMatch(AbstractMatch):
         roundTimer -= timeToSec(start_action.eventTime)
         return roundTimer
 
+    def stopMatch(self):
+        for act in MatchAction.objects.all().filter(match=self): act.delete()
+        for res in VolleyballMatchTeamResult.objects.all().filter(match=self): res.stopMatch()
+        self.match_translated_now = False
+        self.round_translated_now = False
+        self.current_round = 0
+        self.isAnnounced = True
+        self.save()
 
     def pauseRound(self):
         self.round_translated_now = False

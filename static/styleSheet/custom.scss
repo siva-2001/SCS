@@ -372,6 +372,36 @@ textarea {
     }
 }
 
+.matchList{
+    font-size:          $h4-font-size;
+    color:              #777;
+    border-top:        2px solid $black;
+
+    .competitionStage{
+        border-bottom:        3px solid $black;
+        border-top:           1px solid $black;
+        color:                #000;
+    }
+
+    .matchNote{
+        border-bottom:        2px solid $black;
+
+        .score{
+            font-size:          $h2-font-size;
+
+            .winner{
+                color:              #090;
+            }
+
+            .loser{
+                color:              #900;
+            }
+        }
+    }
+
+
+}
+
 .competitionInfoConteiner{
     padding-top:        3rem;
     line-height:        1.3;

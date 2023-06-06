@@ -23,9 +23,6 @@
     </div>
 
 
-
-
-
     <div class="collapse" id="collapseCompetitionEdit">
         <div class="card card-body rounded-3 mt-3 col-12 col-lg-10 col-xl-8">
                 <p class="h3 my-3"><strong>   Редактирование    </strong></p>
@@ -65,225 +62,270 @@
                 </script>
             </div>
     </div>
-
-
 </div>
 
 
 
-{% if competition.status == 'Current' or competition.status == 'Past' %}            <!--    ТУРНИРНАЯ ТАБЛИЦА    -->
-<p class="h2 mt-3"><strong>Матчи турнира</strong></p>
-{% for matchData, matchForm, matchIndex in matchesData %}
-    <div class="row">
-        {% if matchData.status_isCompleted %}
-        <div class="col-12 col-lg-9 match pastMatch">
-        {% else %}
-        <div class="col-12 col-lg-9 match ">
-        {% endif %}
-            <div class="row justify-content-between">
-                <div class="col-auto">
 
-                    {% if matchIndex == 0 and matchData.status_isCompleted == False %}
-                    <p class="h6 notification"><strong>Следующий матч</strong></p>
-                    {% endif %}
-                    <p class="title"><strong>{{ matchData.name }}</strong></p>
-                    <p class="h6">Время проведения: {{ matchData.getDateTime }}</p>
-                    <p class="h6">Место проведения:
-                        {% if matchData.place %}
-                            {{ matchData.place }}
-                        {% else %}
-                            Место неизвестно
-                        {% endif %}
-                    </p>
-                    <a class="h5" href="#">Протокол</a>                                                       <!----->
-                </div>
-                <div class="col-auto">
-                    {% if userIsJudge and not matchData.status_isCompleted %}
-                    <div class="row justify-content-end">
-                        <div class="col-auto me-3">
-                            <a data-bs-toggle="collapse" href="#collapseEditMatchInd{{matchIndex}}" role="button" aria-expanded="false" aria-controls="collapseExample">
-                                <img src="{% static 'pancil.png' %}" width="22" height="22">
-                            </a>
-                        </div>
-                    </div>
-                    <div class="row mt-3 me-3 justify-content-end">
-                    {% else %}
-                    <div class="row mt-5 me-3 justify-content-end">
-                    {% endif %}
-                        <div class="col-auto">
-                            <p class="h6 mb-1">команда</p>
-                            {% if not matchData.firstTeam == None %}
-                                <p class="h5"><strong>{{ matchData.firstTeam.name }}</strong></p>
-                            {% else %}
-                                <p class="h5"><strong>________</strong></p>
-                            {% endif %}
-
-                            {% if not matchData.status_isCompleted %}
-                            <div class="score">
-                                <strong>{{ matchData.firstTeamScore}}</strong>
-                            </div>
-                            {% else %}
-                                {% if matchData.firstTeamScore > matchData.secondTeamScore %}
-                                <div class="score winner">
-                                    <strong>{{ matchData.firstTeamScore}}</strong>
-                                </div>
-                                {% else %}
-                                <div class="score loser">
-                                    <strong>{{ matchData.firstTeamScore}}</strong>
-                                </div>
-                                {% endif %}
-                            {% endif %}
-                        </div>
-
-                        <div class="col-auto">
-                            <p class="h6 mb-1">команда</p>
-                            {% if not matchData.secondTeam == None %}
-                            <p class="h5"><strong>{{ matchData.secondTeam.name }}</strong></p>
-                            {% else %}
-                                <p class="h5"><strong>________</strong></p>
-                            {% endif %}
+<div id="tournament_grid_block">
+    <p class="h2 mt-5"><strong>Матчи турнира</strong></p>
+    <div id="tournament_grid" class="matchList"></div>
+</div>
 
 
-                            {% if not matchData.status_isCompleted  %}
-                            <div class="score">
-                                <strong>{{ matchData.secondTeamScore}}</strong>
-                            </div>
-                            {% else %}
-                                {% if matchData.firstTeamScore < matchData.secondTeamScore %}
-                                <div class="score winner">
-                                    <strong>{{ matchData.secondTeamScore}}</strong>
-                                </div>
-                                {% else %}
-                                <div class="score loser">
-                                    <strong>{{ matchData.secondTeamScore}}</strong>
-                                </div>
-                                {% endif %}
-                            {% endif %}
-                        </div>
-                    </div>
-                </div>
-            </div>
-
-            {% if userIsJudge and not matchData.status_isCompleted %}           <!--- РЕДАКТИРОВАНИЕ МАТЧЕЙ    -->
-                <form method="POST">
-                    {% csrf_token %}
-                    <div class="collapse me-4" id="collapseEditMatchInd{{matchIndex}}">
-                        <div class="card card-body rounded-3 mt-3 col-12">
-                            <p class="h3 my-3"><strong>
-                                Редактирование
-                            </strong></p>
-                            <input type="hidden" name="id" value="{{ matchData.id }}">
-
-                            <div class="input-group input-group-lg mb-3">
-                                <span class="input-group-text">Заголовок</span>
-                                {{ matchForm.name }}
-                            </div>
-
-                            <div class="input-group input-group-lg mb-3">
-                                <span class="input-group-text">Место проведения</span>
-                                {{ matchForm.place }}
-                            </div>
-
-                            <div class="input-group input-group-lg mb-3">
-                                <span class="input-group-text">Время матча</span>
-                                {{ matchForm.matchDateTime }}
-                            </div>
-
-                            {% if matchData.firstTeam and matchData.secondTeam %}
-                            <div class="row justify-content-between">
-                                <div class="col">
-                                    <div class="input-group input-group-lg mb-3">
-                                        <span class="input-group-text">Очки "{{ matchData.firstTeam }}"</span>
-                                        {{ matchForm.firstTeamScore }}
-                                        {{ matchForm.secondTeamScore }}
-                                        <span class="input-group-text">Очки "{{ matchData.secondTeam }}"</span>
-                                    </div>
-                                </div>
-                            </div>
-                            {% endif %}
-                            <div class="row justify-content-end mb-5">
-                                <div class="col-auto">
-                                    <button type="submit" class="btn createCompBtn" name="formType" value="matchEditForm">
-                                        Редактировать
-                                    </button>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </form>
-
-                <!--  не прописан идентификатор  -->
-
-                <script>
-                    $('#id_datetimepicker_' + {{matchIndex}} ).datetimepicker({
-                        format:'Y:m:d H:i',
-                        step: 10,
-                        theme:'dark',
-                        maxTime:'23:59'
-                    });
-                </script>
-
-
-            {% endif %}
-        </div>
-    </div>
-{% endfor %}
-        </div>
-{% else %}
-<p class="h3" style="color: #339955"><strong> {{ teamFormAns }}</strong></p>
+<!--    <div class="matchNote">-->
+<!--        <div class="row mh-1">-->
+<!--            <div class="col-3">-->
+<!--                <div class="row mp-3">-->
+<!--                    <p class="p6">12:00, 12 дек 2022</p>-->
+<!--                </div>-->
+<!--                <div class="row mt-5 mb-1">-->
+<!--                    <a href="http://127.0.0.1:8000" download=""> Протокол </a>-->
+<!--                </div>-->
+<!--            </div>-->
+<!--            <div class="container text-center col">-->
+<!--                <div class="row score justify-content-md-center mt-2">-->
+<!--                    <div class="col-3">-->
+<!--                        ФСУ-->
+<!--                        <img width="50" height="50" src="http://127.0.0.1:8000/media/media/emblems/FSU.png">-->
+<!--                    </div>-->
+<!--                    <div class="col-2">-->
+<!--                        <p6 class="p6 loser"> 3 </p6> : <p6 class="p6 winner"> 2 </p6>-->
+<!--                    </div>-->
+<!--                    <div class="col-3"> АСУ </div>-->
+<!--                </div>-->
+<!--                <div class="row justify-content-md-center mt-4">-->
+<!--                    <div class="col"> (12:15; 11:15; 15:11) </div>-->
+<!--                </div>-->
+<!--            </div>-->
+<!--            <div class="col-2">-->
+<!--                <div class="row mp-3">-->
+<!--                    <p class="p6" align="right">СК ТУСУР</p>-->
+<!--                </div>-->
+<!--            </div>-->
+<!--        </div>-->
+<!--    </div>-->
 
 
 
-{% if not unableToCreateTeam %}         <!--            ЗАЯВКА НА УЧАСТИЕ             --->
-    <form method="POST">
-        {% csrf_token %}
-        <div class="teamRegistrForm">
-            <div class="row justify-content-start teamFormData">
-                <div class="col-12 col-xl-8">
-                    <p class="h2 mt-2">
-                        <strong>Регистрация на соревнование</strong>
-                    </p>
-                    <div class="my-2 input-group input-group-lg mb-3">
-                           {{ teamForm.0.name }}
-                    </div>
-                    <div class="my-2 input-group input-group-lg mb-3">
-                        {{ teamForm.0.discription }}
-                    </div>
-                </div>
-            </div>
-            <div class="row justify-content-between">
-                {% for playerForm in teamForm.1 %}
-                    <div class="col-12 col-md-6 ">
-                        <div class="playerFormData">
-                            <div class="my-2 input-group input-group-lg mb-3">
-                                {{ playerForm.name }}
-                            </div>
-                            <div class="my-2 input-group input-group-lg mb-3">
-                                {{ playerForm.surename }}
-                            </div>
-                            <div class="my-2 input-group input-group-lg mb-3">
-                                {{ playerForm.patronymic }}
-                            </div>
-                            <div class="my-2 input-group input-group-lg mb-3 px-5">
-                                {{ playerForm.age}}
-                            </div>
-                        </div>
-                    </div>
-                {% endfor %}
 
-                <div class="row justify-content-end mb-5">
-                    <div class="col-auto">
-                        <button type="submit" class="btn createCompBtn" name="formType" value="teamRegistrForm">
-                            Отправить заявку
-                        </button>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </form>
-{% endif %}
 
-{% endif %}
+
+
+
+
+
+
+<!--&lt;!&ndash;    ТУРНИРНАЯ ТАБЛИЦА    &ndash;&gt;-->
+<!--<p class="h2 mt-3"><strong>Матчи турнира</strong></p>-->
+<!--&lt;!&ndash; for matchData, matchForm, matchIndex in matchesData &ndash;&gt;-->
+<!--    <div class="row">-->
+<!--        {% if matchData.status_isCompleted %}-->
+<!--        <div class="col-12 col-lg-9 match pastMatch">-->
+<!--        {% else %}-->
+<!--        <div class="col-12 col-lg-9 match ">-->
+<!--        {% endif %}-->
+<!--            <div class="row justify-content-between">-->
+<!--                <div class="col-auto">-->
+
+<!--                    {% if matchIndex == 0 and matchData.status_isCompleted == False %}-->
+<!--                    <p class="h6 notification"><strong>Следующий матч</strong></p>-->
+<!--                    {% endif %}-->
+<!--                    <p class="title"><strong>{{ matchData.name }}</strong></p>-->
+<!--                    <p class="h6">Время проведения: {{ matchData.getDateTime }}</p>-->
+<!--                    <p class="h6">Место проведения:-->
+<!--                        {% if matchData.place %}-->
+<!--                            {{ matchData.place }}-->
+<!--                        {% else %}-->
+<!--                            Место неизвестно-->
+<!--                        {% endif %}-->
+<!--                    </p>-->
+<!--                    <a class="h5" href="#">Протокол</a>                                                       &lt;!&ndash;-&ndash;&gt;-->
+<!--                </div>-->
+<!--                <div class="col-auto">-->
+<!--                    {% if userIsJudge and not matchData.status_isCompleted %}-->
+<!--                    <div class="row justify-content-end">-->
+<!--                        <div class="col-auto me-3">-->
+<!--                            <a data-bs-toggle="collapse" href="#collapseEditMatchInd{{matchIndex}}" role="button" aria-expanded="false" aria-controls="collapseExample">-->
+<!--                                <img src="{% static 'pancil.png' %}" width="22" height="22">-->
+<!--                            </a>-->
+<!--                        </div>-->
+<!--                    </div>-->
+<!--                    <div class="row mt-3 me-3 justify-content-end">-->
+<!--                    {% else %}-->
+<!--                    <div class="row mt-5 me-3 justify-content-end">-->
+<!--                    {% endif %}-->
+<!--                        <div class="col-auto">-->
+<!--                            <p class="h6 mb-1">команда</p>-->
+<!--                            {% if not matchData.firstTeam == None %}-->
+<!--                                <p class="h5"><strong>{{ matchData.firstTeam.name }}</strong></p>-->
+<!--                            {% else %}-->
+<!--                                <p class="h5"><strong>________</strong></p>-->
+<!--                            {% endif %}-->
+
+<!--                            {% if not matchData.status_isCompleted %}-->
+<!--                            <div class="score">-->
+<!--                                <strong>{{ matchData.firstTeamScore}}</strong>-->
+<!--                            </div>-->
+<!--                            {% else %}-->
+<!--                                {% if matchData.firstTeamScore > matchData.secondTeamScore %}-->
+<!--                                <div class="score winner">-->
+<!--                                    <strong>{{ matchData.firstTeamScore}}</strong>-->
+<!--                                </div>-->
+<!--                                {% else %}-->
+<!--                                <div class="score loser">-->
+<!--                                    <strong>{{ matchData.firstTeamScore}}</strong>-->
+<!--                                </div>-->
+<!--                                {% endif %}-->
+<!--                            {% endif %}-->
+<!--                        </div>-->
+
+<!--                        <div class="col-auto">-->
+<!--                            <p class="h6 mb-1">команда</p>-->
+<!--                            {% if not matchData.secondTeam == None %}-->
+<!--                            <p class="h5"><strong>{{ matchData.secondTeam.name }}</strong></p>-->
+<!--                            {% else %}-->
+<!--                                <p class="h5"><strong>________</strong></p>-->
+<!--                            {% endif %}-->
+
+
+<!--                            {% if not matchData.status_isCompleted  %}-->
+<!--                            <div class="score">-->
+<!--                                <strong>{{ matchData.secondTeamScore}}</strong>-->
+<!--                            </div>-->
+<!--                            {% else %}-->
+<!--                                {% if matchData.firstTeamScore < matchData.secondTeamScore %}-->
+<!--                                <div class="score winner">-->
+<!--                                    <strong>{{ matchData.secondTeamScore}}</strong>-->
+<!--                                </div>-->
+<!--                                {% else %}-->
+<!--                                <div class="score loser">-->
+<!--                                    <strong>{{ matchData.secondTeamScore}}</strong>-->
+<!--                                </div>-->
+<!--                                {% endif %}-->
+<!--                            {% endif %}-->
+<!--                        </div>-->
+<!--                    </div>-->
+<!--                </div>-->
+<!--            </div>-->
+
+<!--&lt;!&ndash;             if userIsJudge and not matchData.status_isCompleted            &lt;!&ndash;- РЕДАКТИРОВАНИЕ МАТЧЕЙ    &ndash;&gt;&ndash;&gt;-->
+<!--                <form method="POST">-->
+<!--                    {% csrf_token %}-->
+<!--                    <div class="collapse me-4" id="collapseEditMatchInd{{matchIndex}}">-->
+<!--                        <div class="card card-body rounded-3 mt-3 col-12">-->
+<!--                            <p class="h3 my-3"><strong>-->
+<!--                                Редактирование-->
+<!--                            </strong></p>-->
+<!--                            <input type="hidden" name="id" value="{{ matchData.id }}">-->
+
+<!--                            <div class="input-group input-group-lg mb-3">-->
+<!--                                <span class="input-group-text">Заголовок</span>-->
+<!--                                {{ matchForm.name }}-->
+<!--                            </div>-->
+
+<!--                            <div class="input-group input-group-lg mb-3">-->
+<!--                                <span class="input-group-text">Место проведения</span>-->
+<!--                                {{ matchForm.place }}-->
+<!--                            </div>-->
+
+<!--                            <div class="input-group input-group-lg mb-3">-->
+<!--                                <span class="input-group-text">Время матча</span>-->
+<!--                                {{ matchForm.matchDateTime }}-->
+<!--                            </div>-->
+
+<!--                            {% if matchData.firstTeam and matchData.secondTeam %}-->
+<!--                            <div class="row justify-content-between">-->
+<!--                                <div class="col">-->
+<!--                                    <div class="input-group input-group-lg mb-3">-->
+<!--                                        <span class="input-group-text">Очки "{{ matchData.firstTeam }}"</span>-->
+<!--                                        {{ matchForm.firstTeamScore }}-->
+<!--                                        {{ matchForm.secondTeamScore }}-->
+<!--                                        <span class="input-group-text">Очки "{{ matchData.secondTeam }}"</span>-->
+<!--                                    </div>-->
+<!--                                </div>-->
+<!--                            </div>-->
+
+<!--                            <div class="row justify-content-end mb-5">-->
+<!--                                <div class="col-auto">-->
+<!--                                    <button type="submit" class="btn createCompBtn" name="formType" value="matchEditForm">-->
+<!--                                        Редактировать-->
+<!--                                    </button>-->
+<!--                                </div>-->
+<!--                            </div>-->
+<!--                        </div>-->
+<!--                    </div>-->
+<!--                </form>-->
+
+<!--                &lt;!&ndash;  не прописан идентификатор  &ndash;&gt;-->
+
+<!--                <script>-->
+<!--                    $('#id_datetimepicker_' + {{matchIndex}} ).datetimepicker({-->
+<!--                        format:'Y:m:d H:i',-->
+<!--                        step: 10,-->
+<!--                        theme:'dark',-->
+<!--                        maxTime:'23:59'-->
+<!--                    });-->
+<!--                </script>-->
+
+
+<!--            {% endif %}-->
+<!--        </div>-->
+<!--    </div>-->
+<!--</div>-->
+
+<!--<p class="h3" style="color: #339955"><strong> {{ teamFormAns }}</strong></p>-->
+
+
+
+
+<!--    <form method="POST">-->
+<!--        {% csrf_token %}-->
+<!--        <div class="teamRegistrForm">-->
+<!--            <div class="row justify-content-start teamFormData">-->
+<!--                <div class="col-12 col-xl-8">-->
+<!--                    <p class="h2 mt-2">-->
+<!--                        <strong>Регистрация на соревнование</strong>-->
+<!--                    </p>-->
+<!--                    <div class="input-group input-group-lg mb-3">-->
+<!--                        <span class="input-group-text">Описание</span>-->
+<!--                        <input id="team_name" class="form-control" placeholder="Введите название команды">-->
+<!--                    </div>-->
+<!--                    <div class="my-2 input-group input-group-lg mb-3">-->
+
+<!--                    </div>-->
+<!--                </div>-->
+<!--            </div>-->
+<!--            <div class="row justify-content-between">-->
+<!--                {% for playerForm in teamForm.1 %}-->
+<!--                    <div class="col-12 col-md-6 ">-->
+<!--                        <div class="playerFormData">-->
+<!--                            <div class="my-2 input-group input-group-lg mb-3">-->
+<!--                                {{ playerForm.name }}-->
+<!--                            </div>-->
+<!--                            <div class="my-2 input-group input-group-lg mb-3">-->
+<!--                                {{ playerForm.surename }}-->
+<!--                            </div>-->
+<!--                            <div class="my-2 input-group input-group-lg mb-3">-->
+<!--                                {{ playerForm.patronymic }}-->
+<!--                            </div>-->
+<!--                            <div class="my-2 input-group input-group-lg mb-3 px-5">-->
+<!--                                {{ playerForm.age}}-->
+<!--                            </div>-->
+<!--                        </div>-->
+<!--                    </div>-->
+<!--                {% endfor %}-->
+
+<!--                <div class="row justify-content-end mb-5">-->
+<!--                    <div class="col-auto">-->
+<!--                        <button type="submit" class="btn createCompBtn" name="formType" value="teamRegistrForm">-->
+<!--                            Отправить заявку-->
+<!--                        </button>-->
+<!--                    </div>-->
+<!--                </div>-->
+<!--            </div>-->
+<!--        </div>-->
+<!--    </form>-->
 
 
 {% endblock %}

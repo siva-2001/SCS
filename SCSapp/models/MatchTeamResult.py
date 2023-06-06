@@ -38,6 +38,16 @@ class VolleyballMatchTeamResult(MatchTeamResult):
         verbose_name_plural = 'Результаты в матче по волейболу'
 
 
+    def stopMatch(self):
+        self.currentRoundScore = None
+        self.teamScore = None
+        self.firstRoundScore = None
+        self.secondRoundScore = None
+        self.thirdRoundScore = None
+        self.fourthRoundScore = None
+        self.fifthRoundScore = None
+        self.save()
+
     def startMatch(self):
         self.currentRoundScore = 0
         self.teamScore = 0

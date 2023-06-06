@@ -60,7 +60,7 @@ class VolleyballMatchSerializer(serializers.ModelSerializer):
     matchDateTime = serializers.DateTimeField(format="%H:%M %d.%m.%Y", required=False)
     class Meta:
         model = VolleyballMatch
-        fields = ["id", "isAnnounced", "competition", "matchDateTime", "place", "protocol",
+        fields = ["id", "isAnnounced", "competition", "matchDateTime", "place", "protocol", "competitionStage",
                   "judge", "round_translated_now", "current_round", "match_translated_now"]
 
 class VolleyballTeamSerializer(serializers.ModelSerializer):
