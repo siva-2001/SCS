@@ -372,6 +372,25 @@ textarea {
     }
 }
 
+.teamsList{
+    font-size:                  $h4-font-size;
+    padding-top:                1.5rem;
+    padding-bottom:             1.5rem;
+    background-color:           #ddd;
+    border-radius:              1.2rem;
+    margin-top:                 1rem;
+    margin-bottom:                 3rem;
+
+    .titles{
+        border-bottom:          1px solid $black;
+        padding-bottom:         1rem;
+    }
+
+    .team{
+        padding-top:                1rem;
+    }
+}
+
 .matchList{
     font-size:          $h4-font-size;
     color:              #777;
@@ -398,8 +417,6 @@ textarea {
             }
         }
     }
-
-
 }
 
 .competitionInfoConteiner{

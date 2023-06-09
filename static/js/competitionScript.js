@@ -69,6 +69,34 @@ function addMatchNote(match_data){
     $("#tournament_grid").append(html_match_element);
 }
 
+function addTeamNote(team_data){
+    icon_url = team_data["icon_url"]
+
+    html_team_element =
+        '<div class="team">'
+            + '<div class="row">'
+                + '<div class="col-4 text-center">'
+                    + '<img width="50" height="50" src="http://127.0.0.1:8000/' + icon_url + '">'
+                    + team_data["name"]
+                + '</div>'
+                + '<div id="completed" class="col-2 text-center">'
+                + team_data["completed"]
+                + '</div>'
+                + '<div id="won" class="col-2 text-center">'
+                    + team_data["won"]
+                + '</div>'
+                + '<div id="lost" class="col-2 text-center">'
+                    + team_data["lost"]
+                + '</div>'
+                + '<div id="score" class="col-2 text-center">'
+                    + team_data["score"]
+                + '</div>'
+            + '</div>'
+        + '</div>'
+
+    $("#teamsList").append(html_team_element);
+}
+
 function addCompetitionStage(stage){
     var stageString;
     if(stage == "1/1") stageString = "Финал";
@@ -111,7 +139,16 @@ $(document).ready(() => {
                 else if (competition_data.status == "PAST")
                     $("#organizer").text("Соревнования завершились: " + competition_data.dateTimeStartCompetition.split(" ")[1]);
 
-
+                if (competition_data.protocol) $(".protocol").append(
+                    "<a href='" + competition_data.protocol+ "' download>"
+                        + '<p class="h3">Скачать протокол</p>'
+                    + '</a>'
+                );
+                if (competition_data.regulations) $(".regulations").append(
+                    "<a href='" + competition_data.protocol + "' download>"
+                        + '<p class="h3">Скачать регламент</p>'
+                    + '</a>'
+                );
 
 
                 $.ajax({
@@ -132,10 +169,6 @@ $(document).ready(() => {
                                 }
                                 addMatchNote(match_data);
 
-
-
-
-
                                 if(match_data.isAnnounced && !match_data.match_translated_now)
                                     nextMatchDateTime = match_data.matchDateTime;
                             }
@@ -149,16 +182,7 @@ $(document).ready(() => {
 
 
 
-                if (competition_data.protocol) $(".protocol").append(
-                    "<a href='" + competition_data.protocol+ "' download>"
-                        + '<p class="h3">Скачать протокол</p>'
-                    + '</a>'
-                );
-                if (competition_data.regulations) $(".regulations").append(
-                    "<a href='" + competition_data.protocol + "' download>"
-                        + '<p class="h3">Скачать регламент</p>'
-                    + '</a>'
-                );
+
             },
             error: function(competition_data){
                 alert("Искомого соревнования не существует");

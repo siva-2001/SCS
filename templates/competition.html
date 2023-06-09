@@ -72,40 +72,18 @@
     <div id="tournament_grid" class="matchList"></div>
 </div>
 
-
-<!--    <div class="matchNote">-->
-<!--        <div class="row mh-1">-->
-<!--            <div class="col-3">-->
-<!--                <div class="row mp-3">-->
-<!--                    <p class="p6">12:00, 12 дек 2022</p>-->
-<!--                </div>-->
-<!--                <div class="row mt-5 mb-1">-->
-<!--                    <a href="http://127.0.0.1:8000" download=""> Протокол </a>-->
-<!--                </div>-->
-<!--            </div>-->
-<!--            <div class="container text-center col">-->
-<!--                <div class="row score justify-content-md-center mt-2">-->
-<!--                    <div class="col-3">-->
-<!--                        ФСУ-->
-<!--                        <img width="50" height="50" src="http://127.0.0.1:8000/media/media/emblems/FSU.png">-->
-<!--                    </div>-->
-<!--                    <div class="col-2">-->
-<!--                        <p6 class="p6 loser"> 3 </p6> : <p6 class="p6 winner"> 2 </p6>-->
-<!--                    </div>-->
-<!--                    <div class="col-3"> АСУ </div>-->
-<!--                </div>-->
-<!--                <div class="row justify-content-md-center mt-4">-->
-<!--                    <div class="col"> (12:15; 11:15; 15:11) </div>-->
-<!--                </div>-->
-<!--            </div>-->
-<!--            <div class="col-2">-->
-<!--                <div class="row mp-3">-->
-<!--                    <p class="p6" align="right">СК ТУСУР</p>-->
-<!--                </div>-->
-<!--            </div>-->
-<!--        </div>-->
-<!--    </div>-->
-
+<p class="h2 mt-5"><strong>Участвующие команды</strong></p>
+<div id="teamsList" class="teamsList col-10">
+    <div class="titles">
+        <div class="row">
+            <div class="col-4 text-center"> <b> Команда </b> </div>
+            <div class="col-2 text-center"> <b> Сыграли </b> </div>
+            <div class="col-2 text-center"> <b> Проиграли </b> </div>
+            <div class="col-2 text-center"> <b> Выиграли </b> </div>
+            <div class="col-2 text-center"> <b> Очки </b> </div>
+        </div>
+    </div>
+</div>
 
 
 
@@ -278,6 +256,8 @@
 
 
 
+<!--///////////////////////////////////////////////////////////////////////////////-->
+
 
 <!--    <form method="POST">-->
 <!--        {% csrf_token %}-->
@@ -291,30 +271,34 @@
 <!--                        <span class="input-group-text">Описание</span>-->
 <!--                        <input id="team_name" class="form-control" placeholder="Введите название команды">-->
 <!--                    </div>-->
-<!--                    <div class="my-2 input-group input-group-lg mb-3">-->
+<!--&lt;!&ndash;                    <div class="my-2 input-group input-group-lg mb-3">&ndash;&gt;-->
 
-<!--                    </div>-->
+<!--&lt;!&ndash;                    </div>&ndash;&gt;-->
 <!--                </div>-->
 <!--            </div>-->
 <!--            <div class="row justify-content-between">-->
-<!--                {% for playerForm in teamForm.1 %}-->
+
 <!--                    <div class="col-12 col-md-6 ">-->
 <!--                        <div class="playerFormData">-->
 <!--                            <div class="my-2 input-group input-group-lg mb-3">-->
-<!--                                {{ playerForm.name }}-->
+<!--                                <span class="input-group-text">Описание</span>-->
+<!--                                <input id="eam_name" class="form-control" placeholder="Введите название команды">-->
 <!--                            </div>-->
 <!--                            <div class="my-2 input-group input-group-lg mb-3">-->
-<!--                                {{ playerForm.surename }}-->
+<!--                                <span class="input-group-text">Описание</span>-->
+<!--                                <input id="eam_ame" class="form-control" placeholder="Введите название команды">-->
 <!--                            </div>-->
 <!--                            <div class="my-2 input-group input-group-lg mb-3">-->
-<!--                                {{ playerForm.patronymic }}-->
+<!--                                <span class="input-group-text">Описание</span>-->
+<!--                                <input id="am_name" class="form-control" placeholder="Введите название команды">-->
 <!--                            </div>-->
 <!--                            <div class="my-2 input-group input-group-lg mb-3 px-5">-->
-<!--                                {{ playerForm.age}}-->
+<!--                                <span class="input-group-text">Описание</span>-->
+<!--                                <input id="eam_name" class="form-control" placeholder="Введите название команды">-->
 <!--                            </div>-->
 <!--                        </div>-->
 <!--                    </div>-->
-<!--                {% endfor %}-->
+
 
 <!--                <div class="row justify-content-end mb-5">-->
 <!--                    <div class="col-auto">-->
