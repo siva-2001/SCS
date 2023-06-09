@@ -7,6 +7,7 @@ from SCSapp.models.MatchTeamResult import VolleyballMatchTeamResult
 from django.db.models import Q
 import datetime
 import time
+from SCSapp.protocolCreator.MatchProtocolCreator import PDFProtocolCreator
 
 class AbstractMatch(models.Model):
     isAnnounced = models.BooleanField(default=True)
@@ -141,6 +142,75 @@ class VolleyballMatch(AbstractMatch):
         self.match_translated_now = False
         #  ГЕНЕРАЦИЯ ПРОТОКОЛА
         self.save()
+        PDFProtocolCreator.volleybalMatchProtocol(getProtocolFormatMatchData())
+
+    def getProtocolFormatMatchData(self):
+        return {
+            "place" : self.place,
+            "datetime" : self.matchDateTime,
+            "firstJudgeFIO" : self.judge,
+            "secondJudgeFIO" : None,
+
+
+            'firstCommand': {
+                'name': "ФСУ",
+                'trainerFIO': "Чаймаа Даваа-Сурун Кенден-Дуржуевич",
+                'roundsScore': [12, 13, 18, 22, 5],
+                'finalScore': 5,
+                'players': ['Толяяяяяяяяяяяяяяяяяяяяяяяяяяяяяяяяяяяяяяяяя', "Коля", "Петя", "Антон", "Влад", "Гоша",
+                            'yaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa'],
+                'timeouts': [{
+                    'timeoutRound': 3,
+                    'timeoutTime': "12:21"
+                },
+                    {
+                        'timeoutRound': 3,
+                        'timeoutTime': "12:50"
+                    }
+                ],
+                'playerChanges': [{
+                    'changeRound': 3,
+                    'changeTime': '12:21',
+                    'changedPlayer': "2",
+                    'playerOnChange': "6"
+                }, {
+                    'changeRound': 1,
+                    'changeTime': '12:21',
+                    'changedPlayer': "2",
+                    'playerOnChange': "6"
+                },
+                    {
+                        'changeRound': 4,
+                        'changeTime': '14:21',
+                        'changedPlayer': "4",
+                        'playerOnChange': "2"
+                    }, {
+                        'changeRound': 3,
+                        'changeTime': '12:21',
+                        'changedPlayer': "2",
+                        'playerOnChange': "6"
+                    }],
+            },
+            'secondCommand': {
+                'name': "РТФ",
+                'trainerFIO': "Виктор Викторович Викторов",
+                'roundsScore': [15, 18, 11, 23, 25],
+                'finalScore': 5,
+                'players': ['Толя', "Коля", "Петя", "Антон", "Влад", "Гоша", "Чаймаа Даваа-Сурун Кенден-Дуржуевич"],
+                'timeouts': [{
+                    'timeoutRound': 4,
+                    'timeoutTime': "12:21"
+                }],
+                'playerChanges': [{
+                    'changeRound': 4,
+                    'changeTime': '12:21',
+                    'changedPlayer': "1",
+                    'playerOnChange': "2"
+                }],
+            }
+        }
+
+
 
 
     def getRoundTimer(self):

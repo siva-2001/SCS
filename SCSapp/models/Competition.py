@@ -50,6 +50,7 @@ class Competition(models.Model):
     def get_absolute_url(self):
         return reverse('competition', args=[str(self.id)])
 
+
     @classmethod
     def create(cls, name, description, startDate=None, organizer=None, regulations = None):
         object = cls()
@@ -104,6 +105,8 @@ class VolleyballCompetition(Competition):
 
         object.save()
         return object
+
+
 
     def draw(self):
         if(self.status == self.StatusChoices.ANNOUNSED):

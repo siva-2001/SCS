@@ -38,6 +38,9 @@ $input-group-addon-color:                  #ddd;
 
 // New variables since 19 october
 
+$input-border-width:                    2px;
+$input-border-color:                    #444;
+
 $h2-font-color: #001D3D;
 $button-primary-bg-color: #FFD60A;
 $white: #fff;
@@ -369,6 +372,18 @@ textarea {
         padding-bottom: .7rem;
         font-size: $h4-font-size;
         border-radius: 1.2rem;
+    }
+}
+
+.editMatch{
+    padding-top:                1rem;
+    padding-bottom:             1rem;
+    font-size:                  $h3-font-size;
+    color:                      #000;
+
+    .question{
+        padding-top:             1rem;
+        padding-bottom:             1rem;
     }
 }
 

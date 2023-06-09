@@ -10,14 +10,9 @@ from django.views.generic import TemplateView
 
 
 def homePageView(request):
-    listOfCurrentEvents = list()
-    listOfAnnouncedEvents = list()
-    for comp in Competition.announced_objects.all(): listOfAnnouncedEvents.append(comp.getData())
-    for comp in Competition.current_objects.all(): listOfCurrentEvents.append(comp.getData())
-
     return render(request, 'homePage.html', {
-        'announcedEvents':listOfAnnouncedEvents,
-        'currentEvents': listOfCurrentEvents,
+        'announcedEvents' : [comp.__dict__ for comp in Competition.announced_objects.all()],
+        'currentEvents': [comp.__dict__ for comp in Competition.current_objects.all()],
     })
 
 

@@ -119,15 +119,15 @@ class PDFProtocolCreator():
 
         pdf.ln(16)
         pdf.cell(40, 8, txt="Судья 1", border=False)
-        if (len(d['firstJudjeFIO']) > 28):
+        if (len(d['firstJudgeFIO']) > 28):
             pdf.set_font_size(5)
-        pdf.cell(50, 8, txt=d['firstJudjeFIO'], border='B')
+        pdf.cell(50, 8, txt=d['firstJudgeFIO'], border='B')
         pdf.set_font_size(10)
         pdf.cell(10, 8, txt='', border=False)
         pdf.cell(40, 8, txt="Судья 2", border=False)
-        if (len(d['secondJudjeFIO']) > 28):
+        if (len(d['secondJudgeFIO']) > 28):
             pdf.set_font_size(5)
-        pdf.cell(50, 8, txt=d['secondJudjeFIO'], border='B')
+        pdf.cell(50, 8, txt=d['secondJudeFIO'], border='B')
         pdf.set_font_size(10)
         pdf.ln(8)
         pdf.cell(40, 8, txt="Секретарь", border=False)
@@ -308,72 +308,6 @@ class PDFProtocolCreator():
 
         pdf.output('test.pdf')
 
-
-
 def find_index(li, key, value):
     return next((i for i, x in enumerate(li) if x[key] == value), -1)
 
-d = {
-    'place': 'ТУСУР',
-    'datetime': '17:15',
-    'firstJudjeFIO': 'Павел Александрович Иванов',
-    'secondJudjeFIO': "Александр Павлович Иванов",
-    'firstCommand': {
-        'name': "ФСУ",
-        'trainerFIO': "Чаймаа Даваа-Сурун Кенден-Дуржуевич",
-        'roundsScore':  [12, 13, 18, 22, 5],
-        'finalScore': 5,
-        'players': ['Толяяяяяяяяяяяяяяяяяяяяяяяяяяяяяяяяяяяяяяяяя', "Коля", "Петя", "Антон", "Влад", "Гоша", 'yaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa'],
-        'timeouts':[{
-            'timeoutRound': 3,
-            'timeoutTime': "12:21"
-        },
-        {
-            'timeoutRound': 3,
-            'timeoutTime': "12:50"
-        }
-        ],
-        'playerChanges': [{
-            'changeRound': 3,
-            'changeTime': '12:21',
-            'changedPlayer': "2",
-            'playerOnChange': "6"
-        }, {
-            'changeRound': 1,
-            'changeTime': '12:21',
-            'changedPlayer': "2",
-            'playerOnChange': "6"
-        },
-        {
-            'changeRound': 4,
-            'changeTime': '14:21',
-            'changedPlayer': "4",
-            'playerOnChange': "2"
-        }, {
-            'changeRound': 3,
-            'changeTime': '12:21',
-            'changedPlayer': "2",
-            'playerOnChange': "6"
-        }],
-    },
-    'secondCommand': {
-        'name': "РТФ",
-        'trainerFIO': "Виктор Викторович Викторов",
-        'roundsScore':  [15, 18, 11, 23, 25],
-        'finalScore': 5,
-        'players': ['Толя', "Коля", "Петя", "Антон", "Влад", "Гоша", "Чаймаа Даваа-Сурун Кенден-Дуржуевич"],
-        'timeouts':[{
-            'timeoutRound': 4,
-            'timeoutTime': "12:21"
-        }],
-        'playerChanges': [{
-            'changeRound': 4,
-            'changeTime': '12:21',
-            'changedPlayer': "1",
-            'playerOnChange': "2"
-        }],
-    }
-}
-
-test = PDFProtocolCreator()
-test.volleybalMatchProtocol(d)

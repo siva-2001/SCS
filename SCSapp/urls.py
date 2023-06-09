@@ -15,7 +15,7 @@ from authorizationApp.views import JudgeObtainAuthToken
 scs_urlpatterns = [
     path('createTestDataset/', CreateTestDataView, name='createTestDataView'),
     path('createCompetition/', CreateCompetitionView.as_view(), name='createCompetition'),
-    path('', homePageView.as_view(), name='homePage'),
+    path('', homePageView, name='homePage'),
     path('competition/<pk>/', competitionView.as_view(), name='competition'),
     path('past/', pastEventsView, name='history'),
 
