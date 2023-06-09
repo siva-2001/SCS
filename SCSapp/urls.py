@@ -15,7 +15,7 @@ from authorizationApp.views import JudgeObtainAuthToken
 scs_urlpatterns = [
     path('createTestDataset/', CreateTestDataView, name='createTestDataView'),
     path('createCompetition/', CreateCompetitionView.as_view(), name='createCompetition'),
-    path('', homePageView, name='homePage'),
+    path('', homePageView.as_view(), name='homePage'),
     path('competition/<pk>/', competitionView.as_view(), name='competition'),
     path('past/', pastEventsView, name='history'),
 
@@ -29,7 +29,7 @@ scs_urlpatterns = [
     path('api/v1/competition/<pk>/', CertainVolleyballCompetitionAPIView.as_view(), name = 'competitionAPI'),
     path('api/v1/matchesOfCompetition/<pk>/', VolleyballMatchesOfCompetitionAPIView.as_view(), name = 'matchesOfCompetitionAPI'),
     path('api/v1/match/<pk>/', CertainVolleyballMatch.as_view(), name = 'matchAPI'),
-    path('api/v1/teamsOfCompetition/', VolleyballTeamAPIView.as_view(), name="teamsOfCompetitionAPI"),
+    path('api/v1/teamsOfCompetition/<pk>/', VolleyballTeamAPIView.as_view(), name="teamsOfCompetitionAPI"),
     path('api/v1/playersOfTeam/', PlayerAPIView.as_view(), name="playersOfTeamAPI"),
 
     # ______________________________________    mobile API views    ____________________________________________

@@ -135,13 +135,12 @@ class VolleyballMatchesOfCompetitionAPIView(generics.ListAPIView):
     queryset = VolleyballMatch.objects.all().order_by('competitionStage', "matchDateTime")
     serializer_class = VolleyballMatchSerializer
 
-    def get_queryset(self):
-        if self.request.GET.get("competition_id"):
-            return self.queryset.filter(competition = self.request.GET.get("competition_id"))
+    def get_queryset(self, comp_id):
+        if comp_id: return self.queryset.filter(competition = comp_id)
         else: return self.queryset.all()
 
     def get(self, request, *args, **kwargs):
-        serializer = VolleyballMatchSerializer(self.get_queryset(), many=True)
+        serializer = self.serializer_class(self.get_queryset(kwargs['pk']), many=True)
 
         for matchDataDict in serializer.data:
             teamRes = VolleyballMatchTeamResult.objects.filter(match=matchDataDict["id"])
@@ -158,15 +157,16 @@ class VolleyballMatchesOfCompetitionAPIView(generics.ListAPIView):
             roundsScore = ''
             if not matchDataDict["isAnnounced"]:
                 if teamRes[0].firstRoundScore and teamRes[1].firstRoundScore:
-                    roundsScore += ('(' + teamRes[0].firstRoundScore + ":" + teamRes[1].firstRoundScore + '; ')
+                    roundsScore += ('(' + str(teamRes[0].firstRoundScore) + ":" + str(teamRes[1].firstRoundScore) + ';  ')
                 if teamRes[0].secondRoundScore and teamRes[1].secondRoundScore:
-                    roundsScore += (teamRes[0].secondRoundScore + ":" + teamRes[1].secondRoundScore + '; ')
+                    roundsScore += (str(teamRes[0].secondRoundScore) + ":" + str(teamRes[1].secondRoundScore) + ';  ')
                 if teamRes[0].thirdRoundScore and teamRes[1].thirdRoundScore:
-                    roundsScore += (teamRes[0].thirdRoundScore + ":" + teamRes[1].thirdRoundScore + '; ')
+                    roundsScore += (str(teamRes[0].thirdRoundScore) + ":" + str(teamRes[1].thirdRoundScore) + ';  ')
                 if teamRes[0].fourthRoundScore and teamRes[1].fourthRoundScore:
-                    roundsScore += (teamRes[0].fourthRoundScore + ":" + teamRes[1].fourthRoundScore + '; ')
+                    roundsScore += (str(teamRes[0].fourthRoundScore) + ":" + str(teamRes[1].fourthRoundScore) + ';  ')
                 if teamRes[0].fifthRoundScore and teamRes[1].fifthRoundScore:
-                    roundsScore += (teamRes[0].fifthRoundScore + ":" + teamRes[1].fifthRoundScore + '; ')
+                    roundsScore += (str(teamRes[0].fifthRoundScore) + ":" + str(teamRes[1].fifthRoundScore) + ';')
+                roundsScore += ")"
             matchDataDict["roundsScore"] = roundsScore
 
 
@@ -188,10 +188,21 @@ class VolleyballTeamAPIView(generics.ListCreateAPIView):
     queryset = VolleyballTeam.objects.all()
     serializer_class = VolleyballTeamSerializer
 
-    def get_queryset(self):
-        if self.request.GET.get("competition_id"):
-            return self.queryset.filter(competition = self.request.GET.get("competition_id"))
+    def get_queryset(self, comp_id):
+        if comp_id: return self.queryset.filter(competition = comp_id)
         else: return self.queryset.all()
+
+    def get(self, request, *args, **kwargs):
+        serializer = self.serializer_class(self.get_queryset(kwargs['pk']), many=True)
+
+        competition = VolleyballCompetition.objects.get(id=kwargs["pk"])
+        competition.draw()
+
+        for teamDataDict in serializer.data:
+            teamDataDict['icon_url'] = Faculty.objects.get(id=teamDataDict['participant']).emblem.url
+            teamDataDict['participant_name'] = Faculty.objects.get(id=teamDataDict['participant']).name
+        return Response(serializer.data)
+
 
 
 class PlayerAPIView(generics.ListCreateAPIView):

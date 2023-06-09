@@ -3,6 +3,10 @@ from SCSapp.models.Competition import Competition
 # from SCSapp.models.Olympics import Olympics
 from django.core.paginator import Paginator
 from SportCompetitionService import settings
+from django.views.generic import TemplateView
+
+# class homePageView(TemplateView):
+#     template_name = 'homePage.html'
 
 
 def homePageView(request):

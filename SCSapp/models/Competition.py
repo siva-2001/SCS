@@ -2,7 +2,7 @@ from django.urls import reverse
 from django.db import models
 
 from authorizationApp.models import User
-from .Match import AbstractMatch
+from .Match import AbstractMatch, VolleyballMatch
 from .VolleyballTeam import VolleyballTeam
 
 class CurrentCompetitionManager(models.Manager):
@@ -80,6 +80,9 @@ class VolleyballCompetition(Competition):
     twoPointsLose = models.IntegerField(verbose_name="Балл за проигрыш в 2 очка", null=True, blank=True)
     threePointsLose = models.IntegerField(verbose_name="Балл за проигрыш в 3 очка", null=True, blank=True)
 
+    def getData(self):
+        pass
+
     @classmethod
     def create(cls, name, description, startDate=None, organizer=None, regulations = None,
                numOfRounds=5, roundPointLimit=25, lastRoundPointLimit=15,
@@ -101,6 +104,13 @@ class VolleyballCompetition(Competition):
 
         object.save()
         return object
+
+    def draw(self):
+        if(self.status == self.StatusChoices.ANNOUNSED):
+            self.status = self.StatusChoices.CURRENT
+            teams = VolleyballTeam.objects.all().filter(competition=self)
+
+        #       ЖЕРЕБЬЁВКА
 
 
 

@@ -76,11 +76,11 @@ function addTeamNote(team_data){
         '<div class="team">'
             + '<div class="row">'
                 + '<div class="col-4 text-center">'
-                    + '<img width="50" height="50" src="http://127.0.0.1:8000/' + icon_url + '">'
-                    + team_data["name"]
+                    + '<img width="50" height="50" src="http://127.0.0.1:8000' + icon_url + '"> '
+                    + team_data["participant_name"]
                 + '</div>'
                 + '<div id="completed" class="col-2 text-center">'
-                + team_data["completed"]
+                + team_data["completed_games"]
                 + '</div>'
                 + '<div id="won" class="col-2 text-center">'
                     + team_data["won"]
@@ -94,7 +94,7 @@ function addTeamNote(team_data){
             + '</div>'
         + '</div>'
 
-    $("#teamsList").append(html_team_element);
+    $("#teams_list").append(html_team_element);
 }
 
 function addCompetitionStage(stage){
@@ -180,7 +180,26 @@ $(document).ready(() => {
                     error: function(data){  console.log('error in load competition data');  },
                 })
 
-
+                $.ajax({
+                    method: "GET",
+                    url: "http://127.0.0.1:8000/api/v1/teamsOfCompetition/" + getPK() + "/",
+                    dataType : 'json',
+                    headers:{   "Authorization": cookieStrToObject(document.cookie).Authorization },
+                    success: function(teams_data){
+                        if (teams_data.length > 0) {
+                            var number_of_teams = 0;
+                            for (i = 0; i < teams_data.length; i++){
+                                if (teams_data[i]["confirmed"]){
+                                    addTeamNote(teams_data[i]);
+                                    number_of_teams += 1;
+                                    $("#teams_list_block").show();
+                                }
+                            }
+                            $("#number_of_teams").append("(" + number_of_teams + ")");
+                        }
+                    },
+                    error: function(data){  console.log('error in load competition data');  },
+                })
 
 
             },

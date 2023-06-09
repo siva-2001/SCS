@@ -64,26 +64,54 @@
     </div>
 </div>
 
-
-
-
 <div id="tournament_grid_block">
     <p class="h2 mt-5"><strong>Матчи турнира</strong></p>
     <div id="tournament_grid" class="matchList"></div>
 </div>
 
-<p class="h2 mt-5"><strong>Участвующие команды</strong></p>
-<div id="teamsList" class="teamsList col-10">
-    <div class="titles">
-        <div class="row">
-            <div class="col-4 text-center"> <b> Команда </b> </div>
-            <div class="col-2 text-center"> <b> Сыграли </b> </div>
-            <div class="col-2 text-center"> <b> Проиграли </b> </div>
-            <div class="col-2 text-center"> <b> Выиграли </b> </div>
-            <div class="col-2 text-center"> <b> Очки </b> </div>
+<div id="teams_list_block" style="display: none">
+    <p id="number_of_teams" class="h2 mt-5">
+        <strong>Участвующие команды</strong>
+
+    </p>
+    <div id="teams_list" class="teamsList col-10">
+        <div class="titles">
+            <div class="row">
+                <div class="col-4 text-center"> <b> Команда </b> </div>
+                <div class="col-2 text-center"> <b> Сыграно </b> </div>
+                <div class="col-2 text-center"> <b> Проиграно </b> </div>
+                <div class="col-2 text-center"> <b> Выиграно </b> </div>
+                <div class="col-2 text-center"> <b> Очков </b> </div>
+            </div>
         </div>
+
+
+        <div class="team">
+            <div class="row">
+                <div class="col-4 text-center">
+                    <img width="50" height="50" src="http://127.0.0.1:8000/media/media/emblems/FSU.png">
+                    ФСУ
+                </div>
+                <div id="completed" class="col-2 text-center">
+                3
+                </div>
+                <div id="won" class="col-2 text-center">
+                    2
+                </div>
+                <div id="lost" class="col-2 text-center">
+                   3
+                </div>
+                <div id="score" class="col-2 text-center">
+                    2
+                </div>
+            </div>
+        </div>
+
+
     </div>
 </div>
+
+
 
 
 

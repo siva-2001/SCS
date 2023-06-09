@@ -11,7 +11,8 @@ class Team(models.Model):
 
 class VolleyballTeam(Team):
     competition = models.ForeignKey("SCSapp.VolleyballCompetition", on_delete=models.CASCADE, default=None, null=True)
-    completed = models.IntegerField(default=0)
+    confirmed = models.BooleanField(default=False)
+    completed_games = models.IntegerField(default=0)
     won = models.IntegerField(default=0)
     lost = models.IntegerField(default=0)
     score = models.IntegerField(default=0)
