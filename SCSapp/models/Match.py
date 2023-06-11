@@ -4,6 +4,7 @@ from SCSapp.models.MatchTeamResult import MatchTeamResult
 from translationApp.models import MatchAction
 from authorizationApp.models import User
 from SCSapp.models.MatchTeamResult import VolleyballMatchTeamResult
+from SCSapp.models.VolleyballTeam import VolleyballTeam
 from django.db.models import Q
 import datetime
 import time
@@ -142,9 +143,19 @@ class VolleyballMatch(AbstractMatch):
         self.match_translated_now = False
         #  ГЕНЕРАЦИЯ ПРОТОКОЛА
         self.save()
-        PDFProtocolCreator.volleybalMatchProtocol(getProtocolFormatMatchData())
+        PDFProtocolCreator.volleybalMatchProtocol(self.getProtocolFormatMatchData())
 
     def getProtocolFormatMatchData(self):
+
+        #
+        match = self
+
+        #
+        results = VolleyballMatchTeamResult.objects.all().filter(match=self)
+
+        #
+        matchActions = MatchAction.objects.all().filter(match=self)
+
         return {
             "place" : self.place,
             "datetime" : self.matchDateTime,

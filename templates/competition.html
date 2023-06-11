@@ -5,9 +5,7 @@
 <div class="row justify-content-between competitionInfoConteiner">
     <div class="col-12 col-md-8">
         <p class="title">
-            <a id="competitionEditButton" style="display: none" data-bs-toggle="collapse" href="#collapseCompetitionEdit" role="button" aria-expanded="false" aria-controls="collapseExample">
-                <img src="{% static 'pancil_black.png' %}" width="25" height="25">
-            </a>
+
         </p>
         <p class="description"></p>
     </div>
@@ -64,39 +62,9 @@
     </div>
 </div>
 
-<div id="tournament_grid_block">
+<div id="tournament_grid_block" style="display: none">
     <p class="h2 mt-5"><strong>Матчи турнира</strong></p>
-    <div id="tournament_grid" class="matchList">
-        <div class="editMatch">
-            <div class="row question">
-                <div class="col-5">
-                    <strong>Где проводится матч?</strong>
-                </div>
-                <div class="col-7">
-                    <input type="text" class="form-control">
-                </div>
-            </div>
-            <div class="row question">
-                <div class="col-5">
-                    <strong>Кто судействует?</strong>
-                </div>
-                <div class="col-5">
-                    <input type="text" class="form-control">
-                </div>
-            </div>
-            <div class="row question">
-                <div class="col-5">
-                    <strong>Когда пройдёт матч?</strong>
-                </div>
-                <div class="col-3">
-                    <input type="text" class="form-control">
-                </div>
-                <div class="col-4 content-justify-end">
-                    <button>button</button>
-                </div>
-            </div>
-        </div>
-    </div>
+    <div id="tournament_grid" class="matchList"></div>
 </div>
 
 <div id="teams_list_block" style="display: none">

@@ -12,6 +12,7 @@ from SCSapp.models.Player import VolleyballPlayer
 from SCSapp.serializers import CompetitionSerializer, VolleyballCompetitionSerializer, VolleyballMatchSerializer
 from SCSapp.serializers import VolleyballTeamSerializer, VolleyballPlayerSerializer, FacultySerializer
 from authorizationApp.models import User
+from authorizationApp.serializers import UserSerializer
 from SCSapp.models.MatchTeamResult import MatchTeamResult, VolleyballMatchTeamResult
 from SCSapp.models.Faculty import Faculty
 from translationApp.matchActionsDict import actionsDict
@@ -152,7 +153,8 @@ class VolleyballMatchesOfCompetitionAPIView(generics.ListAPIView):
             matchDataDict["secondTeamScore"] = teamRes[1].teamScore
             matchDataDict["secondTeamEmblem"] = teamRes[1].team.participant.emblem.url if teamRes[1].team.participant.emblem else None
 
-
+            judge = User.objects.get(id=matchDataDict['judge'])
+            matchDataDict["judgeName"] = judge.first_name + " " + judge.last_name
 
             roundsScore = ''
             if not matchDataDict["isAnnounced"]:
@@ -172,6 +174,11 @@ class VolleyballMatchesOfCompetitionAPIView(generics.ListAPIView):
 
 
         return Response(serializer.data)
+
+class JudgeAPIView(generics.ListAPIView):
+    queryset = User.objects.all()
+    serializer_class = UserSerializer
+
 
 class CertainVolleyballMatch(generics.RetrieveUpdateAPIView):
     queryset = VolleyballMatch.objects.all()

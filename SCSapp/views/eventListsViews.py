@@ -19,7 +19,7 @@ def homePageView(request):
 def pastEventsView(request):
     PAST_EVENT_PAGE_LEN = 10
     data = dict()
-    events = [e.getData for e in Competition.objects.filter(status=Competition.StatusChoices.PAST)]
+    events = [e.__dict__ for e in Competition.objects.filter(status=Competition.StatusChoices.PAST)]
 
     if len(events) > PAST_EVENT_PAGE_LEN:
         paginator = Paginator(events, settings.PAST_EVENT_PAGE_LEN)
