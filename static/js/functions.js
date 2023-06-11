@@ -15,7 +15,6 @@ function addAnonymousUserButtons(){
 
 function getPK(){
     var pk = 0;
-    console.log(window.location.pathname);
     window.location.pathname.split("/").forEach(function(item, i, arr) {
         if (!isNaN(parseInt(item))) pk = item;
     });
@@ -40,7 +39,6 @@ function checkAccessPermissions(){
             "Authorization": cookieStrToObject(document.cookie).Authorization 
         },
         success: function(data){
-            console.log(data);
             if (data.isAnonymousUser || data.details == "Invalid token.") addAnonymousUserButtons();
             else {
                 if(data.isOrganizer) {
@@ -165,8 +163,6 @@ function updateCompetition(comp_id, title=null, description=null, datetime=null)
     if(title) data["name"] = title;
     if(description) data["description"] = description;
     if(datetime) data["dateTimeStartCompetition"] = datetime;
-
-    console.log(title, description, datetime);
 
     $.ajax({
         method: "PUT",

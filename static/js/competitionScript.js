@@ -1,7 +1,5 @@
 
 function addMatchNote(match_data){
-    console.log(match_data);
-
     var datetime = match_data["matchDateTime"] ? match_data["matchDateTime"] : "Время и дата не определены"
     var place = match_data['place'] ? match_data['place'] : " "
     var firstTeamScore = match_data["firstTeamScore"] ? match_data["firstTeamScore"] : ""
@@ -16,13 +14,20 @@ function addMatchNote(match_data){
         success: function(judges_data){
 
             var judgeDropdownList = '<select id="match_judge_ID_' + match_data["id"] + '" class="form-select" size="3" aria-label="size 3 select example">'
+            var selected = false;
             for (var j = 0; j < judges_data.length; j++){
                 judge_data = judges_data[j];
                 str = '<option value=' +judge_data["id"];
-                if (match_data["judge"] == judge_data["id"]) str += "   selected";
+                if (match_data["judge"] == judge_data["id"]){
+                     str += "   selected";
+                     selected = true;
+                }
                 str += '>' + judge_data['first_name'] + ' ' + judge_data['last_name'] + '</option>';
                 judgeDropdownList += str;
             }
+            judgeDropdownList += '<option value=""'
+            if(!selected) judgeDropdownList +=" selected";
+            judgeDropdownList += ">-<option>";
             judgeDropdownList = judgeDropdownList +'</select>';
 
         html_match_element =
@@ -110,16 +115,20 @@ function addMatchNote(match_data){
                                     +'<input id="match_datetime_ID_' + match_data["id"] + '" type="datetime-local" class="form-control">'
                                 +'</div>'
                                 +'<div class="col-4 d-flex align-items-end flex-column">'
-                                    +'<button type="submit" id="send_edit_match_btn_ID_' + match_data["id"] + '" class="btn btn-primary pt-3 pb-3 mt-auto">Подвтердить</button>'
+                                    +'<button value="' + match_data["id"] + '" class="send_edit_match btn btn-primary pt-3 pb-3 mt-auto">Подвтердить</button>'
                                 +'</div>'
                             +'</div>'
                         +'</div>'
                     +'</div>'
                 + '</div>'
             $("#tournament_grid").append(html_match_element);
+
         },
         error: function(data){ console.log('error in load judges data'); },
     });
+
+
+
 }
 
 function addTeamNote(team_data){
@@ -164,20 +173,8 @@ function addCompetitionStage(stage){
 $(document).ready(() => {
     if (window.location.pathname.match(/competition/)) {
 
-
-        $("#match_edit_btn").click(() => {
-            addEditMatchForm(2);
-        });
-
-        $("#sendCompetitionEdit").click(() => {
-            updateCompetition(
-                getPK(),
-                $("#competition_title_edit").val(),
-                $("#competition_description_edit").val(),
-                $("#competition_datetime_edit").val());
-        });
-
         $.ajax({
+            async: false,
             method: "GET",
             url: "http://127.0.0.1:8000/api/v1/competition/" + getPK() + "/",
             dataType : 'json',
@@ -210,6 +207,7 @@ $(document).ready(() => {
 
 
                 $.ajax({
+                    async: false,
                     method: "GET",
                     url: "http://127.0.0.1:8000/api/v1/matchesOfCompetition/" + getPK() + "/",
                     dataType : 'json',
@@ -221,12 +219,10 @@ $(document).ready(() => {
 
                             if (matches_data.length != 0) $("#tournament_grid_block").show();
 
-
                             for (var i = 0; i < matches_data.length; i++){
                                 match_data = matches_data[i];
 
                                 if (competitionStage != match_data["competitionStage"]){
-                                    console.log(competitionStage + ' ' + match_data["competitionStage"]);
                                     competitionStage = match_data["competitionStage"];
                                     addCompetitionStage(competitionStage);
                                 }
@@ -275,7 +271,50 @@ $(document).ready(() => {
             then: function(){   console.log(competition_data);  }
         })
 
-//        console.log(comp_ajax);
+        $('.send_edit_match').on('click', e => {
+            var formData = new FormData();
+
+            var id = $(e.target).val();
+            console.log($('#match_place_ID_' + id).val());
+            console.log($('#match_judge_ID_' + id).val());
+            console.log($('#match_datetime_ID_' + id).val());
+
+            if ($('#match_place_ID_' + id).val() === ""
+            && $('#match_judge_ID_' + id).val() === ""
+            && $('#match_datetime_ID_' + id).val() === ""){
+//                alert("Заполните пустые поля");
+                return;
+            }
+
+            if ($('#match_place_ID_' + id).val() != "") formData.append('place', $('#match_place_ID_' + id).val());
+            if ($('#match_judge_ID_' + id).val() != "") formData.append('judge', $('#match_judge_ID_' + id).val());
+            if ($('#match_datetime_ID_' + id).val() != "") formData.append('datetime', $('#match_datetime_ID_' + id).val());
+
+            $.ajax({
+                    method: "PUT",
+                    url: "http://127.0.0.1:8000/api/v1/match/" + id + "/",
+                    dataType : 'json',
+                    contentType: false,
+                    processData: false,
+                    cache: false,
+                    data: formData,
+                    headers:{
+                        "X-CSRFToken": $('[name="csrfmiddlewaretoken"]').attr('value'),
+                        "Authorization": cookieStrToObject(document.cookie).Authorization
+                    },
+                }).done(function() {
+                    alert('Матч успешно отредактирован!');
+                });
+        });
+
+
+        $("#sendCompetitionEdit").click(() => {
+            updateCompetition(
+                getPK(),
+                $("#competition_title_edit").val(),
+                $("#competition_description_edit").val(),
+                $("#competition_datetime_edit").val());
+        });
     }
 
 });
