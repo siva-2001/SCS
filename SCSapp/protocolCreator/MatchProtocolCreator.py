@@ -1,4 +1,3 @@
- 
 from fpdf import FPDF
 
 class PDFProtocolCreator():
@@ -8,18 +7,20 @@ class PDFProtocolCreator():
         pdf = FPDF('P', 'mm', 'A4')
 
         pdf.add_page()
-        pdf.add_font('DejaVu', '', 'Arial.ttf', uni=True)
+        pdf.add_font('DejaVu', '', 'DejaVuSansCondensed.ttf', uni=True)
         pdf.set_font('DejaVu', size=10)
 
         pdf.cell(0, 8, align='C', txt="ПРОТОКОЛ №", border=False)
-        pdf.ln(16)
-        pdf.cell(0, 8, align='C', txt="соревнований по воллейболу", border=False, ln=1)
+        pdf.ln(8)
+        pdf.cell(0, 8, align='C', txt=d.get('nameCompetition'), border=False)
+        pdf.ln(8)
+        pdf.cell(0, 8, align='C', txt="Матча по воллейболу", border=False, ln=1)
         pdf.cell(50, 8, txt="Место проведения:", border=False)
         pdf.cell(0, 8, txt=d.get('place'), border='B', ln=1)
         pdf.cell(20, 8, txt="Время:", border=False)
-        pdf.cell(60, 8, txt=d.get('datetime'), border='B')
+        pdf.cell(60, 8, txt=d.get('time'), border='B')
         pdf.cell(20, 8, txt="Дата:", border=False)
-        pdf.cell(0, 8, txt="                ", border='B')
+        pdf.cell(0, 8, txt=d.get('date'), border='B')
         pdf.ln(12)
         pdf.cell(0, 8, txt="среди муж./жен./смеш. команд")
         pdf.ln(12)
@@ -118,16 +119,17 @@ class PDFProtocolCreator():
         pdf.cell(50, 8, txt=str(d["firstCommand"]['finalScore']) + " : " + str(d["secondCommand"]['finalScore']), border='B')
 
         pdf.ln(16)
-        pdf.cell(40, 8, txt="Судья 1", border=False)
-        if (len(d['firstJudgeFIO']) > 28):
+        pdf.cell(40, 8, txt="Судья", border=False)
+        if (len(d['firstJudjeFIO']) > 28):
             pdf.set_font_size(5)
-        pdf.cell(50, 8, txt=d['firstJudgeFIO'], border='B')
+        pdf.cell(50, 8, txt=d['firstJudjeFIO'], border='B')
         pdf.set_font_size(10)
         pdf.cell(10, 8, txt='', border=False)
-        pdf.cell(40, 8, txt="Судья 2", border=False)
-        if (len(d['secondJudgeFIO']) > 28):
-            pdf.set_font_size(5)
-        pdf.cell(50, 8, txt=d['secondJudeFIO'], border='B')
+        if 'secondJudjeFIO' in d:
+            pdf.cell(40, 8, txt="Судья 2", border=False)
+            if (len(d['secondJudjeFIO']) > 28):
+                pdf.set_font_size(5)
+                pdf.cell(50, 8, txt=d['secondJudjeFIO'], border='B')
         pdf.set_font_size(10)
         pdf.ln(8)
         pdf.cell(40, 8, txt="Секретарь", border=False)
@@ -141,34 +143,34 @@ class PDFProtocolCreator():
        # pdf.cell(0, 8, txt="Счет игры по пратиям", border=1, align='C')
         pdf.ln(8)
 
-        pdf.cell(8, 8, txt='', border=0, align="C")
-        pdf.cell(34, 8, txt="1 партия", border=1, align="C")
-        pdf.cell(3, 8, txt='', border=False)
-        pdf.cell(34, 8, txt="2 партия", border=1, align="C")
-        pdf.cell(3, 8, txt='', border=False)
-        pdf.cell(34, 8, txt="3 партия", border=1, align="C")
-        pdf.cell(3, 8, txt='', border=False)
-        pdf.cell(34, 8, txt="4 партия", border=1, align="C")
-        pdf.cell(3, 8, txt='', border=False)
-        pdf.cell(34, 8, txt="5 партия", border=1, align="C")
-        pdf.ln(8)
-
-        pdf.cell(8, 8, txt='', border=0, align="C")
-        pdf.cell(17, 8, txt="А", border=1, align="C")
-        pdf.cell(17, 8, txt="Б", border=1, align="C")
-        pdf.cell(3, 8, txt='', border=False)
-        pdf.cell(17, 8, txt="А", border=1, align="C")
-        pdf.cell(17, 8, txt="Б", border=1, align="C")
-        pdf.cell(3, 8, txt='', border=False)
-        pdf.cell(17, 8, txt="А", border=1, align="C")
-        pdf.cell(17, 8, txt="Б", border=1, align="C")
-        pdf.cell(3, 8, txt='', border=False)
-        pdf.cell(17, 8, txt="А", border=1, align="C")
-        pdf.cell(17, 8, txt="Б", border=1, align="C")
-        pdf.cell(3, 8, txt='', border=False)
-        pdf.cell(17, 8, txt="А", border=1, align="C")
-        pdf.cell(17, 8, txt="Б", border=1, align="C")
-        pdf.ln(8)
+        # pdf.cell(8, 8, txt='', border=0, align="C")
+        # pdf.cell(34, 8, txt="1 партия", border=1, align="C")
+        # pdf.cell(3, 8, txt='', border=False)
+        # pdf.cell(34, 8, txt="2 партия", border=1, align="C")
+        # pdf.cell(3, 8, txt='', border=False)
+        # pdf.cell(34, 8, txt="3 партия", border=1, align="C")
+        # pdf.cell(3, 8, txt='', border=False)
+        # pdf.cell(34, 8, txt="4 партия", border=1, align="C")
+        # pdf.cell(3, 8, txt='', border=False)
+        # pdf.cell(34, 8, txt="5 партия", border=1, align="C")
+        # pdf.ln(8)
+        #
+        # pdf.cell(8, 8, txt='', border=0, align="C")
+        # pdf.cell(17, 8, txt="А", border=1, align="C")
+        # pdf.cell(17, 8, txt="Б", border=1, align="C")
+        # pdf.cell(3, 8, txt='', border=False)
+        # pdf.cell(17, 8, txt="А", border=1, align="C")
+        # pdf.cell(17, 8, txt="Б", border=1, align="C")
+        # pdf.cell(3, 8, txt='', border=False)
+        # pdf.cell(17, 8, txt="А", border=1, align="C")
+        # pdf.cell(17, 8, txt="Б", border=1, align="C")
+        # pdf.cell(3, 8, txt='', border=False)
+        # pdf.cell(17, 8, txt="А", border=1, align="C")
+        # pdf.cell(17, 8, txt="Б", border=1, align="C")
+        # pdf.cell(3, 8, txt='', border=False)
+        # pdf.cell(17, 8, txt="А", border=1, align="C")
+        # pdf.cell(17, 8, txt="Б", border=1, align="C")
+        # pdf.ln(8)
 
         # for row in range(1, 31):
         #     pdf.cell(8, 8, txt='', border=0, align="C")
@@ -256,58 +258,143 @@ class PDFProtocolCreator():
 
 
         pdf.ln(8)
-        pdf.cell(8, 8, txt='', border=0, align="C")
-        pdf.cell(0, 8, txt="Замены", border=1, align='C', ln=1)
-
-        for row in range(1, 7):
-            pdf.cell(8, 8, txt=str(row), border=1, align="C")
-            for column in range(1, 6):
-                founded1 = find_index(d['firstCommand']['playerChanges'], 'changeRound', column)
-                founded2 = find_index(d['secondCommand']['playerChanges'], 'changeRound', column)
-                if (founded1 != -1):
-                    pdf.cell(17, 4, txt=d['firstCommand']['playerChanges'][founded1]['changedPlayer'] + ' / '
-                                        + d['firstCommand']['playerChanges'][founded1]['playerOnChange'], border=1, align="C")
-
-                else: pdf.cell(17, 4, txt='/', border=1, align="C")
-                if (founded2 != -1):
-                    pdf.cell(17, 4, txt=d['secondCommand']['playerChanges'][founded2]['changedPlayer'] + ' / '
-                                        + d['secondCommand']['playerChanges'][founded2]['playerOnChange'], border=1,
-                             align="C")
-
-                else:
-                    pdf.cell(17, 4, txt='/', border=1, align="C")
-                pdf.cell(3, 8, txt='', border=False)
-
-            pdf.ln(4)
-            pdf.cell(8, 4, txt='', border=0, align="C")
-            for column in range(1, 6):
-                founded1 = find_index(d['firstCommand']['playerChanges'], 'changeRound', column)
-                founded2 = find_index(d['secondCommand']['playerChanges'], 'changeRound', column)
-                if (founded1 != -1):
-                    pdf.cell(17, 4, txt=d['firstCommand']['playerChanges'][founded1]['changeTime'], border=1, align="C")
-                    d['firstCommand']['playerChanges'][founded1]['changeRound'] = 0
-                else: pdf.cell(17, 4, txt=':', border=1, align="C")
-                if (founded2 != -1):
-                    pdf.cell(17, 4, txt=d['secondCommand']['playerChanges'][founded2]['changeTime'], border=1, align="C")
-                    d['secondCommand']['playerChanges'][founded2]['changeRound'] = 0
-                else:
-                    pdf.cell(17, 4, txt=':', border=1, align="C")
-                pdf.cell(3, 8, txt='', border=False)
-            pdf.ln(4)
-
-        pdf.ln(8)
-        pdf.cell(8, 8, txt='', border=0, align="C")
-        pdf.cell(0, 8, txt="Расстановка", border=1, align='C', ln=1)
-        for row in range(1, 7):
-            pdf.cell(8, 8, txt=str(row), border=1, align="C")
-            for column in range(0, 5):
-                pdf.cell(17, 8, txt='', border=1, align="C")
-                pdf.cell(17, 8, txt='', border=1, align="C")
-                pdf.cell(3, 8, txt='', border=False)
-            pdf.ln(8)
+        # pdf.cell(8, 8, txt='', border=0, align="C")
+        # pdf.cell(0, 8, txt="Замены", border=1, align='C', ln=1)
+        #
+        # for row in range(1, 7):
+        #     pdf.cell(8, 8, txt=str(row), border=1, align="C")
+        #     for column in range(1, 6):
+        #         founded1 = find_index(d['firstCommand']['playerChanges'], 'changeRound', column)
+        #         founded2 = find_index(d['secondCommand']['playerChanges'], 'changeRound', column)
+        #         if (founded1 != -1):
+        #             pdf.cell(17, 4, txt=d['firstCommand']['playerChanges'][founded1]['changedPlayer'] + ' / '
+        #                                 + d['firstCommand']['playerChanges'][founded1]['playerOnChange'], border=1, align="C")
+        #
+        #         else: pdf.cell(17, 4, txt='/', border=1, align="C")
+        #         if (founded2 != -1):
+        #             pdf.cell(17, 4, txt=d['secondCommand']['playerChanges'][founded2]['changedPlayer'] + ' / '
+        #                                 + d['secondCommand']['playerChanges'][founded2]['playerOnChange'], border=1,
+        #                      align="C")
+        #
+        #         else:
+        #             pdf.cell(17, 4, txt='/', border=1, align="C")
+        #         pdf.cell(3, 8, txt='', border=False)
+        #
+        #     pdf.ln(4)
+        #     pdf.cell(8, 4, txt='', border=0, align="C")
+        #     for column in range(1, 6):
+        #         founded1 = find_index(d['firstCommand']['playerChanges'], 'changeRound', column)
+        #         founded2 = find_index(d['secondCommand']['playerChanges'], 'changeRound', column)
+        #         if (founded1 != -1):
+        #             pdf.cell(17, 4, txt=d['firstCommand']['playerChanges'][founded1]['changeTime'], border=1, align="C")
+        #             d['firstCommand']['playerChanges'][founded1]['changeRound'] = 0
+        #         else: pdf.cell(17, 4, txt=':', border=1, align="C")
+        #         if (founded2 != -1):
+        #             pdf.cell(17, 4, txt=d['secondCommand']['playerChanges'][founded2]['changeTime'], border=1, align="C")
+        #             d['secondCommand']['playerChanges'][founded2]['changeRound'] = 0
+        #         else:
+        #             pdf.cell(17, 4, txt=':', border=1, align="C")
+        #         pdf.cell(3, 8, txt='', border=False)
+        #     pdf.ln(4)
+        #
+        # pdf.ln(8)
+        # pdf.cell(8, 8, txt='', border=0, align="C")
+        # pdf.cell(0, 8, txt="Расстановка", border=1, align='C', ln=1)
+        # for row in range(1, 7):
+        #     pdf.cell(8, 8, txt=str(row), border=1, align="C")
+        #     for column in range(0, 5):
+        #         pdf.cell(17, 8, txt='', border=1, align="C")
+        #         pdf.cell(17, 8, txt='', border=1, align="C")
+        #         pdf.cell(3, 8, txt='', border=False)
+        #     pdf.ln(8)
 
         pdf.output('test.pdf')
+
+
 
 def find_index(li, key, value):
     return next((i for i, x in enumerate(li) if x[key] == value), -1)
 
+# d = {
+#     'place': 'ТУСУР',
+#     'time': '17:15',
+#     'date':'22.06.2023',
+#     'firstJudjeFIO': 'Павел Александрович Иванов',
+#     'firstCommand': {
+#         'name': "ФСУ",
+#         'trainerFIO': "Чаймаа Даваа-Сурун Кенден-Дуржуевич",
+#         'roundsScore':  [12, 13, 18, 22, 5],
+#         'finalScore': 5,
+#         'players': ['Толяяяяяяяяяяяяяяяяяяяяяяяяяяяяяяяяяяяяяяяяя', "Коля", "Петя", "Антон", "Влад", "Гоша", 'yaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa'],
+#         'timeouts':[{
+#             'timeoutRound': 3,
+#             'timeoutTime': "12:21"
+#         },
+#         {
+#             'timeoutRound': 3,
+#             'timeoutTime': "12:50"
+#         }
+#         ],
+#         'playerChanges': [{
+#             'changeRound': 3,
+#             'changeTime': '12:21',
+#             'changedPlayer': "2",
+#             'playerOnChange': "6"
+#         }],
+#     },
+#     'secondCommand': {
+#         'name': "РТФ",
+#         'trainerFIO': "Виктор Викторович Викторов",
+#         'roundsScore':  [15, 18, 11, 23, 25],
+#         'finalScore': 5,
+#         'players': ['Толя', "Коля", "Петя", "Антон", "Влад", "Гоша", "Чаймаа Даваа-Сурун Кенден-Дуржуевич"],
+#         'timeouts':[{
+#             'timeoutRound': 4,
+#             'timeoutTime': "12:21"
+#         }],
+#         'playerChanges': [{
+#             'changeRound': 4,
+#             'changeTime': '12:21',
+#             'changedPlayer': "1",
+#             'playerOnChange': "2"
+#         }],
+#     }
+# }
+
+d = {
+    'nameCompetition': 'Спортакиада',
+    'place': 'ТУСУР',
+    'time': '17:15',
+    'date':'22.06.2023',
+    'firstJudjeFIO': 'Павел Александрович Иванов',
+    'firstCommand': {
+        'name': "ФСУ",
+        'trainerFIO': "Чаймаа Даваа-Сурун Кенден-Дуржуевич",
+        'roundsScore':  [12, 13, 18, 22, 5],
+        'finalScore': 5,
+        'players': ['Толя', "Коля", "Петя", "Антон", "Влад", "Гоша", 'Тестовоя Длинная Строка'],
+        'timeouts':[{
+            'timeoutRound': 3,
+            'timeoutTime': "12:21"
+        },
+        {
+            'timeoutRound': 3,
+            'timeoutTime': "12:50"
+        }
+        ],
+    },
+    'secondCommand': {
+        'name': "РТФ",
+        'trainerFIO': "Виктор Викторович Викторов",
+        'roundsScore':  [15, 18, 11, 23, 25],
+        'finalScore': 5,
+        'players': ['Толя', "Коля", "Петя", "Антон", "Влад", "Гоша", "Чаймаа Даваа-Сурун Кенден-Дуржуевич"],
+        'timeouts':[{
+            'timeoutRound': 4,
+            'timeoutTime': "12:21"
+        }],
+    }
+}
+
+test = PDFProtocolCreator()
+test.volleybalMatchProtocol(d)
