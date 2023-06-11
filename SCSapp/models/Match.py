@@ -49,6 +49,11 @@ class AbstractMatch(models.Model):
 
     def startMatch(self):
         if self.isAnnounced:
+
+            from SCSapp.protocolCreator.MatchProtocolCreator import PDFProtocolCreator
+            creator = PDFProtocolCreator()
+            creator.test()
+
             self.match_translated_now = True
             self.isAnnounced = False
             self.save()

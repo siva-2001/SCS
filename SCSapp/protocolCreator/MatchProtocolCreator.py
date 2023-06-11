@@ -310,6 +310,43 @@ class PDFProtocolCreator():
 
         pdf.output('test.pdf')
 
+    def test(self):
+        d = {
+            'nameCompetition': 'Спортакиада',
+            'place': 'ТУСУР',
+            'time': '17:15',
+            'date': '22.06.2023',
+            'firstJudjeFIO': 'Павел Александрович Иванов',
+            'firstCommand': {
+                'name': "ФСУ",
+                'trainerFIO': "Чаймаа Даваа-Сурун Кенден-Дуржуевич",
+                'roundsScore': [12, 13, 18, 22, 5],
+                'finalScore': 5,
+                'players': ['Толя', "Коля", "Петя", "Антон", "Влад", "Гоша", 'Тестовоя Длинная Строка'],
+                'timeouts': [{
+                    'timeoutRound': 3,
+                    'timeoutTime': "12:21"
+                },
+                    {
+                        'timeoutRound': 3,
+                        'timeoutTime': "12:50"
+                    }
+                ],
+            },
+            'secondCommand': {
+                'name': "РТФ",
+                'trainerFIO': "Виктор Викторович Викторов",
+                'roundsScore': [15, 18, 11, 23, 25],
+                'finalScore': 5,
+                'players': ['Толя', "Коля", "Петя", "Антон", "Влад", "Гоша", "Чаймаа Даваа-Сурун Кенден-Дуржуевич"],
+                'timeouts': [{
+                    'timeoutRound': 4,
+                    'timeoutTime': "12:21"
+                }],
+            }
+        }
+
+        self.volleybalMatchProtocol(d)
 
 
 def find_index(li, key, value):
@@ -360,41 +397,3 @@ def find_index(li, key, value):
 #         }],
 #     }
 # }
-
-d = {
-    'nameCompetition': 'Спортакиада',
-    'place': 'ТУСУР',
-    'time': '17:15',
-    'date':'22.06.2023',
-    'firstJudjeFIO': 'Павел Александрович Иванов',
-    'firstCommand': {
-        'name': "ФСУ",
-        'trainerFIO': "Чаймаа Даваа-Сурун Кенден-Дуржуевич",
-        'roundsScore':  [12, 13, 18, 22, 5],
-        'finalScore': 5,
-        'players': ['Толя', "Коля", "Петя", "Антон", "Влад", "Гоша", 'Тестовоя Длинная Строка'],
-        'timeouts':[{
-            'timeoutRound': 3,
-            'timeoutTime': "12:21"
-        },
-        {
-            'timeoutRound': 3,
-            'timeoutTime': "12:50"
-        }
-        ],
-    },
-    'secondCommand': {
-        'name': "РТФ",
-        'trainerFIO': "Виктор Викторович Викторов",
-        'roundsScore':  [15, 18, 11, 23, 25],
-        'finalScore': 5,
-        'players': ['Толя', "Коля", "Петя", "Антон", "Влад", "Гоша", "Чаймаа Даваа-Сурун Кенден-Дуржуевич"],
-        'timeouts':[{
-            'timeoutRound': 4,
-            'timeoutTime': "12:21"
-        }],
-    }
-}
-
-test = PDFProtocolCreator()
-test.volleybalMatchProtocol(d)
