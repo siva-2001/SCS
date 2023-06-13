@@ -1,0 +1,138 @@
+{% extends 'base.html' %}
+{% block content %}
+{% load static %}
+
+<div class="container">
+    <div id="main-info-form" style="display: block" class="block">
+        <div class="create-competition-title h1 text-center pt-5 mb-5">Название соревнования</div>
+        <div class="h2 fw-bold mb-5">Регистрация команды</div>
+        <div class="row">
+            <div class="row">
+                <div class="col-8 mb-3">
+                    <label class="form-label">Тренер команды</label>
+                    <input type="text" class="form-control" id="coach-command" placeholder="Иванов Иван Иваныч"
+                           required>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-8 mb-3">
+                    <label class="form-label fs-2">Добавленные участники</label>
+                    <div class="scroll" id="players-command">
+                        <div class="row">
+                            <div class="col-8">
+                                <div class="scroll-text mt-3 ms-3">Иванов Иван Иваныч</div>
+                            </div>
+                            <div class="col-4">
+                                <button class="btn mt-3  butt colorButt1">Изменить</button>
+                                <button class="btn mt-3 butt colorButt2">Удалить</button>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-8">
+                                <div class="scroll-text mt-3 ms-3">Иванов Иван Иваныч</div>
+                            </div>
+                            <div class="col-4">
+                                <button class="btn mt-3  butt colorButt1">Изменить</button>
+                                <button class="btn mt-3 butt colorButt2">Удалить</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-8 mb-3">
+                    <div class="player">
+                        <div class="row">
+                            <div class="col-10 mb-3">
+                                <label class="form-label text-label ms-5 mt-3">ФИО</label>
+                                <input type="text" class="form-control ms-5 " id="name-player"
+                                       placeholder="Иванов Иван Иваныч"
+                                       required>
+                            </div>
+                            <div class="row">
+                                <div class="col-5 mb-5">
+                                    <label class="form-label text-label ms-5 mt-3">Рост</label>
+                                    <input type="text" class="form-control ms-5" id="height-player" placeholder="180см"
+                                           required>
+                                </div>
+                                <div class="col-5 mb-5 ms-4">
+                                    <label class="form-label text-label ms-5 mt-3">Вес</label>
+                                    <input type="text" class="form-control ms-5" id="weight-player" placeholder="90кг"
+                                           required>
+                                </div>
+                            </div>
+                            <div class="col-12 text-center" style="justify-content: center">
+                                <button class="btn buttSave" id="buttSave">Сохранить</button>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="mt-3">
+                        <button class="regCommand" id="regCommand">Зарегестрировать команду</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<style>
+    .scroll {
+        height: 515px;
+        background: #ECEAEA;
+        overflow: auto;
+        border-radius: 10px;
+    }
+
+    .scroll-text {
+        font-size: 20px;
+    }
+
+    .butt {
+        border-radius: 20px;
+        font-size: 15px;
+    }
+
+    .colorButt1 {
+        background: #003566;
+        color: #FFFFFF;
+    }
+
+    .colorButt2 {
+        color: #FFD60A;
+        background: #000814;
+    }
+
+    .player {
+        height: 440px;
+        background: #003566;
+        border-radius: 20px;
+    }
+
+    .text-label {
+        color: #FFFFFF;
+    }
+
+    .buttSave {
+        width: 250px;
+        height: 50px;
+        color: #001D3D;
+        background: #ECEAEA;
+    }
+    .regCommand{
+        width: 350px;
+        height: 60px;
+        background: #FFD60A;
+        color: #001D3D;
+        border-radius: 20px;
+        font-weight: bold;
+    }
+    .block{
+        align-self: center;
+    }
+    .container{
+        display: flex;
+        justify-content: center;
+    }
+</style>
+
+{% endblock %}
