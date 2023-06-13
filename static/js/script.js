@@ -1,5 +1,5 @@
 $(document).ready(() => {
-    checkAccessPermissions();
+//    checkAccessPermissions();
 
 
     if (window.location.pathname == '/logout/'){

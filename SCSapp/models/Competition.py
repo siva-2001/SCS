@@ -81,6 +81,7 @@ class VolleyballCompetition(Competition):
     twoPointsLose = models.IntegerField(verbose_name="Балл за проигрыш в 2 очка", null=True, blank=True)
     threePointsLose = models.IntegerField(verbose_name="Балл за проигрыш в 3 очка", null=True, blank=True)
 
+
     def getData(self):
         pass
 

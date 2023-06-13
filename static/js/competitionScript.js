@@ -27,7 +27,7 @@ function addMatchNote(match_data){
             }
             judgeDropdownList += '<option value=""'
             if(!selected) judgeDropdownList +=" selected";
-            judgeDropdownList += ">-<option>";
+            judgeDropdownList += "> - <option>";
             judgeDropdownList = judgeDropdownList +'</select>';
 
         html_match_element =
@@ -83,7 +83,7 @@ function addMatchNote(match_data){
                             + '</div>'
 
                             + '<div class="row mt-4">'
-                                + '<a id="match_edit_form_ID_' + match_data["id"] + '" data-bs-toggle="collapse" href="#matchEdit_ID_' + match_data["id"] + '" role="button" aria-expanded="false" aria-controls="collapseExample">'
+                                + '<a class="link" id="match_edit_form_ID_' + match_data["id"] + '" style="display: none" data-bs-toggle="collapse" href="#matchEdit_ID_' + match_data["id"] + '" role="button" aria-expanded="false" aria-controls="collapseExample">'
                                     + '<p align="right" class="p6">Редактировать</p>'
                                 + '</a>'
                             + '</div>'
@@ -288,7 +288,7 @@ $(document).ready(() => {
 
             if ($('#match_place_ID_' + id).val() != "") formData.append('place', $('#match_place_ID_' + id).val());
             if ($('#match_judge_ID_' + id).val() != "") formData.append('judge', $('#match_judge_ID_' + id).val());
-            if ($('#match_datetime_ID_' + id).val() != "") formData.append('datetime', $('#match_datetime_ID_' + id).val());
+            if ($('#match_datetime_ID_' + id).val() != "") formData.append('matchDateTime', $('#match_datetime_ID_' + id).val());
 
             $.ajax({
                     method: "PUT",
@@ -304,6 +304,7 @@ $(document).ready(() => {
                     },
                 }).done(function() {
                     alert('Матч успешно отредактирован!');
+                    document.location.reload()
                 });
         });
 
@@ -316,6 +317,8 @@ $(document).ready(() => {
                 $("#competition_datetime_edit").val());
         });
     }
+
+    checkAccessPermissions();
 
 });
 

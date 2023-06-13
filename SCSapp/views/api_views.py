@@ -168,7 +168,7 @@ class VolleyballMatchesOfCompetitionAPIView(generics.ListAPIView):
                     roundsScore += (str(teamRes[0].fourthRoundScore) + ":" + str(teamRes[1].fourthRoundScore) + ';  ')
                 if teamRes[0].fifthRoundScore and teamRes[1].fifthRoundScore:
                     roundsScore += (str(teamRes[0].fifthRoundScore) + ":" + str(teamRes[1].fifthRoundScore) + ';')
-                roundsScore += ")"
+                if teamRes[0].firstRoundScore and teamRes[1].firstRoundScore: roundsScore += ")"
             matchDataDict["roundsScore"] = roundsScore
 
 

@@ -3,6 +3,7 @@ from django.db import models
 
 class Team(models.Model):
     participant = models.ForeignKey("SCSapp.Faculty", on_delete=models.CASCADE, default=None, null=True)
+    # registratedDateTime = models.DateTimeField(auto_add=True)
 
 
     class Meta:
@@ -19,5 +20,5 @@ class VolleyballTeam(Team):
 
 
     class Meta:
-            verbose_name = 'Волейбольная команда'
-            verbose_name_plural = 'Волейбольные команды'
+        verbose_name = 'Волейбольная команда'
+        verbose_name_plural = 'Волейбольные команды'

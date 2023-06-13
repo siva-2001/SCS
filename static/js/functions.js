@@ -43,7 +43,10 @@ function checkAccessPermissions(){
             else {
                 if(data.isOrganizer) {
                     addCreateEventButton();
-                    if(window.location.pathname.match(/competition/)) $("#competitionEditButton").show();
+                    if(window.location.pathname.match(/competition/)){
+                        $("#competitionEditButton").show();
+                        $(".link").show();
+                    }
                 }
                 addProfileElement();
             }
