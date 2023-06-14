@@ -4,11 +4,12 @@
 
 <div class="container">
     <div id="main-info-form" style="display: block" class="block">
-        <div class="create-competition-title h1 text-center pt-5 mb-5">Регистрация команды</div>
+        <div class="create-competition-title h1 text-center pt-5 mb-5" id="nameCompetition">Название соревнования</div>
+        <div class="h2 fw-bold mb-5">Регистрация команды</div>
         <div class="row">
             <div class="row">
                 <div class="col-8 mb-3">
-                    <label class="form-label">Тренер команды</label>
+                    <label class="form-label fs-2">Тренер команды</label>
                     <input type="text" class="form-control" id="coach-command" placeholder="Иванов Иван Иваныч"
                            required>
                 </div>
@@ -66,7 +67,7 @@
                         </div>
                     </div>
                     <div class="text-end frame mt-4">
-                        <button class="regCommand" id="regCommand">Зарегестрировать команду</button>
+                        <button class="btn regCommand" id="regCommand">Зарегестрировать команду</button>
                     </div>
                 </div>
             </div>
@@ -119,8 +120,8 @@
         background: #ECEAEA;
     }
     .regCommand{
-        width: 350px;
-        height: 60px;
+        width: 370px;
+        height: 70px;
         background: #FFD60A;
         color: #001D3D;
         border-radius: 20px;
