@@ -4,8 +4,7 @@
 
 <div class="container">
     <div id="main-info-form" style="display: block" class="block">
-        <div class="create-competition-title h1 text-center pt-5 mb-5">Название соревнования</div>
-        <div class="h2 fw-bold mb-5">Регистрация команды</div>
+        <div class="create-competition-title h1 text-center pt-5 mb-5">Регистрация команды</div>
         <div class="row">
             <div class="row">
                 <div class="col-8 mb-3">
@@ -66,7 +65,7 @@
                             </div>
                         </div>
                     </div>
-                    <div class="mt-3">
+                    <div class="text-end frame mt-4">
                         <button class="regCommand" id="regCommand">Зарегестрировать команду</button>
                     </div>
                 </div>
@@ -80,6 +79,7 @@
         height: 515px;
         background: #ECEAEA;
         overflow: auto;
+        overflow-x: hidden;
         border-radius: 10px;
     }
 
@@ -132,6 +132,9 @@
     .container{
         display: flex;
         justify-content: center;
+    }
+    .frame{
+        height: 150px;
     }
 </style>
 
