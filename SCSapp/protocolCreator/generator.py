@@ -210,7 +210,9 @@ def main():
 
     generate_pdf_table(competition, matches)
     print("PDF-файл с таблицей команд и их статистикой успешно создан.")
-
+    current_file_path = os.path.abspath(__file__)
+    directory_path = os.path.dirname(current_file_path)
+    print(directory_path)
     
 
 if __name__ == '__main__':
