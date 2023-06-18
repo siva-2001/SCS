@@ -1,10 +1,30 @@
 from fpdf import FPDF
 import os
+import configparser
 
 
 class PDFProtocolCreator():
 
     def volleybalMatchProtocol(self, d):
+
+        # Получение абсолютного пути к текущему скрипту
+        current_path = os.path.dirname(os.path.abspath(__file__))
+
+        # Формирование пути к файлу конфигурации для каждого пользователя
+        config_file_path = os.path.join(current_path, 'config.ini')
+
+        # Создание объекта конфигурации
+        config = configparser.ConfigParser()
+
+        # Чтение файла конфигурации
+        config.read(config_file_path)
+
+        # Получение значения font_path из файла конфигурации
+        font_path = config.get('Paths', 'font_path')
+
+        # Создайте абсолютный путь к файлу на основе расположения скрипта
+        script_dir = os.path.dirname(os.path.abspath(__file__))
+        absolute_font_path = os.path.join(script_dir, font_path)
 
         # Определение пути к текущей директории
         current_file_path = os.path.abspath(__file__)
@@ -20,7 +40,7 @@ class PDFProtocolCreator():
         pdf = FPDF('P', 'mm', 'A4')
 
         pdf.add_page()
-        pdf.add_font('DejaVu', '', directory_path+'\DejaVuSansCondensed.ttf', uni=True)
+        pdf.add_font('DejaVu', '', absolute_font_path, uni=True)
         pdf.set_font('DejaVu', size=10)
 
         pdf.cell(0, 8, align='C', txt="ПРОТОКОЛ №", border=False)
