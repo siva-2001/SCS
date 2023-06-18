@@ -115,6 +115,7 @@ class VolleyballCompetition(Competition):
             teams = VolleyballTeam.objects.all().filter(competition=self)
 
         #       ЖЕРЕБЬЁВКА
+        #   Генерация сетки, создание матчей и результатов команды в них
 
 
 

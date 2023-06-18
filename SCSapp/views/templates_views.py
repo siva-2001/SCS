@@ -1,20 +1,29 @@
+from django.views.generic import TemplateView
+from django.contrib.auth.decorators import login_required, permission_required
+from django.contrib.auth.mixins import LoginRequiredMixin
 from django.shortcuts import render
 from SCSapp.models.Competition import Competition
-# from SCSapp.models.Olympics import Olympics
 from django.core.paginator import Paginator
 from SportCompetitionService import settings
-from django.views.generic import TemplateView
 
-# class homePageView(TemplateView):
-#     template_name = 'homePage.html'
+# @login_required()
+# @permission_required()
+class CreateCompetitionView(LoginRequiredMixin, TemplateView):
+    login_url = '/loginPage/'
+    permission_required = 'scsapp.add_competition'
+    template_name = 'createCompetitions.html'
 
+class CompetitionView(TemplateView):
+    template_name = 'competition.html'
+
+class TeamRegistrView(TemplateView):
+    template_name = 'registrationCommand.html'
 
 def homePageView(request):
     return render(request, 'homePage.html', {
         'announcedEvents' : [comp.__dict__ for comp in Competition.announced_objects.all()],
         'currentEvents': [comp.__dict__ for comp in Competition.current_objects.all()],
     })
-
 
 def pastEventsView(request):
     PAST_EVENT_PAGE_LEN = 10

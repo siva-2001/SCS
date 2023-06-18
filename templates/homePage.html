@@ -4,7 +4,7 @@
 
 <div class="d-flex gap-5 pt-5 justify-content-center">
     <div class="current-events d-flex flex-column">
-        <div class="h2 fw-bold mb-3">Текущие события</div>
+        <div class="h2 fw-bold mb-3">Текущие соревнования</div>
         {% for event in currentEvents %}
         <div class="event-item current-event-item mb-4 p-4">
             <div class="event-name mb-2 fs-4 fw-bold">{{ event.name }}</div>
@@ -95,7 +95,7 @@
 
 
     <div class="announced-events d-flex flex-column">
-        <div class="h2 fw-bold mb-3">Анонсированные события</div>
+        <div class="h2 fw-bold mb-3">Анонсированные соревнования</div>
         {% for event in announcedEvents %}
         <div class="event-item announced-event-item mb-4 p-4">
             <div class="event-name mb-2 fs-4 fw-bold">{{ event.name }}</div>

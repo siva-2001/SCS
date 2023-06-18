@@ -18,12 +18,6 @@ from SCSapp.models.Faculty import Faculty
 from translationApp.matchActionsDict import actionsDict
 
 
-
-socketINFO = [    # FOR_DEBUG
-        "Обмен данными происходит по технологии websocket. В сообщении скорей всего мобилка будет передавать JSON-запись с указанием сигнала и, для событий команд - название команды (участника)",
-        "None в button_color окрашивает кнопку в стандартный серый цвет. '_FFFFFF' - нижнее подчёркивание говорит что текст кнопки должен быть белым. Кнопка отмены окрашивается отдельно, смотри фигму",
-    ]
-
 class JudgeCompetitionsAPIView(APIView):
     authentication_classes = [TokenAuthentication]
     permission_classes = [IsAuthenticated]
@@ -102,22 +96,8 @@ class CurrentCompetitionAPIView(generics.ListAPIView):
     queryset =  Competition.current_objects.all()
     serializer_class = CompetitionSerializer
 
-
-# class OlympicsAPIView(generics.ListAPIView):
-#     queryset = Olympics.objects.all()
-#     serializer_class = OlympicsSerializer
-
-# class CurrentOlympicsAPIView(generics.ListAPIView):
-#     queryset = Olympics.current_objects.all()
-#     serializer_class = OlympicsSerializer
-
-
-
-
-
 # ______________________________________________________________________________________________________________________
 # ______________________________________________________________________________________________________________________
-
 
 
 class CertainVolleyballCompetitionAPIView(generics.RetrieveUpdateAPIView):
@@ -225,3 +205,10 @@ class PlayerAPIView(generics.ListCreateAPIView):
 class FacultyDetailAPIView(generics.RetrieveAPIView):
     queryset = Faculty.objects.all()
     serializer_class = FacultySerializer
+
+
+
+socketINFO = [    # FOR_DEBUG
+        "Обмен данными происходит по технологии websocket. В сообщении скорей всего мобилка будет передавать JSON-запись с указанием сигнала и, для событий команд - название команды (участника)",
+        "None в button_color окрашивает кнопку в стандартный серый цвет. '_FFFFFF' - нижнее подчёркивание говорит что текст кнопки должен быть белым. Кнопка отмены окрашивается отдельно, смотри фигму",
+    ]
