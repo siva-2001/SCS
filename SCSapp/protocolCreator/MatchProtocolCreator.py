@@ -1,13 +1,26 @@
 from fpdf import FPDF
+import os
+
 
 class PDFProtocolCreator():
 
     def volleybalMatchProtocol(self, d):
 
+        # Определение пути к текущей директории
+        current_file_path = os.path.abspath(__file__)
+        directory_path = os.path.dirname(current_file_path)
+        media_path = os.path.dirname(os.path.dirname(directory_path))
+
+        # Определение пути к целевой директории относительно текущей директории
+        target_directory = os.path.join(media_path, "media", "protocols")
+
+        # Переход к целевой директории
+        os.chdir(target_directory)
+
         pdf = FPDF('P', 'mm', 'A4')
 
         pdf.add_page()
-        pdf.add_font('DejaVu', '', 'DejaVuSansCondensed.ttf', uni=True)
+        pdf.add_font('DejaVu', '', directory_path+'\DejaVuSansCondensed.ttf', uni=True)
         pdf.set_font('DejaVu', size=10)
 
         pdf.cell(0, 8, align='C', txt="ПРОТОКОЛ №", border=False)
@@ -308,13 +321,16 @@ class PDFProtocolCreator():
         #         pdf.cell(3, 8, txt='', border=False)
         #     pdf.ln(8)
 
-        pdf.output('test.pdf')
+        pdf.output('matchProtocol.pdf')
+        # Возврат к исходной рабочей директории
+        os.chdir(directory_path)
 
     def test(self):
         d = {
             'nameCompetition': 'Спортакиада',
             'place': 'ТУСУР',
             'time': '17:15',
+
             'date': '22.06.2023',
             'firstJudjeFIO': 'Павел Александрович Иванов',
             'firstCommand': {
