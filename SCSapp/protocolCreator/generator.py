@@ -8,6 +8,7 @@ from reportlab.pdfbase.ttfonts import TTFont
 from reportlab.platypus import Paragraph, Spacer
 from reportlab.lib.units import inch
 from reportlab.lib.enums import TA_RIGHT
+import os
 
 
 def generate_pdf_table(competition, matches):
