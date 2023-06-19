@@ -39,6 +39,7 @@ class ChatConsumer(WebsocketConsumer):
             for action in MatchAction.objects.all().filter(match=self.match).order_by("eventTime"):   # order by
                 self.send_to_channel(json.dumps(action.getActionMessage(), ensure_ascii=False))
             self.send_to_channel(json.dumps(self.match.getTranslationDataMessage(), ensure_ascii=False))
+
         else:
             self.send_to_channel(json.dumps({"ERROR":"Трансляция матча не ведётся в данный момент"}, ensure_ascii=False))
             self.disconnect("translation close")

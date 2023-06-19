@@ -5,6 +5,7 @@ import mimetypes
 from email.mime.text import MIMEText
 from email.mime.multipart import MIMEMultipart
 from email.mime.base import MIMEBase
+from pathlib import Path
 
 class Email:
     SENDER_ADRES = 'pomogator2@mail.ru'
@@ -48,7 +49,7 @@ def main():
         'igran2001@gmail.com',
         'georgii2911@gmail.com',
     ]
-    filePath = "screen.png"
+    filePath = Path(__file__).parent.parent.joinpath("media", "protocols", 'matchProtocol.pdf')
     sender = Email()
     print(sender.send_emails(title, message, recipients, filePath))
 
