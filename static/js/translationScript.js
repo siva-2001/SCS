@@ -28,9 +28,9 @@ $(document).ready(() => {
         chatSocket.onmessage = function(e) {
             const data = JSON.parse(JSON.parse(e.data).message);
 
-            if(data['message_type'] == "action_info"){
-                console.log(data)
-            }
+
+            console.log(data)
+
 
             if(data['message_type'] == "action_info"){
                 if(data["data"]["signal"] == "PAUSE_ROUND"){
