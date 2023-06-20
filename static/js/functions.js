@@ -41,14 +41,14 @@ function checkAccessPermissions(){
         success: function(data){
             if (data.isAnonymousUser || data.details == "Invalid token.") addAnonymousUserButtons();
             else {
-                if(data.isOrganizer) {
+                if(data.userrole == "Организатор") {
                     addCreateEventButton();
                     if(window.location.pathname.match(/competition/)){
                         $("#competitionEditButton").show();
                         $(".link").show();
                     }
                 }
-                addProfileElement();
+                addProfileElement(data.FIO, data.userrole);
             }
         },
         error: function(data){
@@ -85,7 +85,7 @@ function addCreateEventButton(){
     // });
 }
 
-function addProfileElement(){
+function addProfileElement(username, userrole){
     $(".footer-actions").append(
         "<div class=\"user-profile-item ms-2\">"
           + "<div class=\"item-icons d-flex align-items-center px-2\">"
@@ -100,15 +100,15 @@ function addProfileElement(){
             +"</div>"
       + "</div>"
       + "<div class=\"hover-menu flex-column p-3\">"
-            +"<div class=\"user-role fw-bold\">Судья</div>"
-            +"<div class=\"user-name\">В. Б. Кутольвас</div>"
+            +"<div class=\"user-role fw-bold\">" + userrole + "</div>"
+            +"<div class=\"user-name\">" + username + "</div>"
             +"<div class=\"user-actions flex-column mt-2\">"
-                +"<a href=\"#\" class=\"user-action profile d-flex align-items-center text-decoration-none\">"
-                    +"<svg class=\"me-2\" width=\"14\" height=\"15\" viewBox=\"0 0 14 15\" fill=\"none\" xmlns=\"http://www.w3.org/2000/svg\">"
-                        +"<path fill-rule=\"evenodd\" clip-rule=\"evenodd\" d=\"M14 13.9853L13.7938 14.9598L0.1863 15L0 14.015L4.26047 12.2656L4.44677 10.3989C4.14117 9.88914 3.90579 9.32858 3.74891 8.73688C2.49215 7.24982 2.67997 5.31316 3.34271 5.25017C3.34271 4.94052 3.33202 4.61686 3.33202 4.28096C3.33202 2.03464 4.58421 0 6.99695 0C9.40969 0 10.6161 1.96816 10.6161 4.62561C10.6161 4.8408 10.6161 5.04898 10.6161 5.25017C11.3124 5.1802 11.5659 7.08537 10.3885 8.60392C10.2678 9.28656 10.0307 9.93518 9.69066 10.5126L9.95332 12.3268L14 13.9853ZM9.06457 13.1106C9.04014 12.7694 9.00196 11.9996 8.97448 11.4451C8.59746 11.8498 8.19249 12.219 7.76353 12.549L6.47011 12.5315C6.0185 12.1984 5.59427 11.819 5.20266 11.3978C5.1767 12.0101 5.137 12.9129 5.12326 13.275C5.07897 14.4559 9.15772 14.4699 9.06457 13.1123V13.1106ZM9.81283 4.19874C9.81283 3.34036 9.51519 2.51713 8.98539 1.91017C8.45559 1.3032 7.73703 0.962212 6.98778 0.962212C6.23854 0.962212 5.51997 1.3032 4.99018 1.91017C4.46038 2.51713 4.16274 3.34036 4.16274 4.19874C4.16274 8.39748 4.60253 9.88628 6.72971 11.4661L7.45201 11.4906C9.48604 9.90728 9.81283 8.36774 9.81283 4.20049V4.19874Z\" fill=\"#000814\"/>"
-                    +"</svg>"
-                    +"Профиль"
-                +"</a>"
+//                +"<a href=\"#\" class=\"user-action profile d-flex align-items-center text-decoration-none\">"
+//                    +"<svg class=\"me-2\" width=\"14\" height=\"15\" viewBox=\"0 0 14 15\" fill=\"none\" xmlns=\"http://www.w3.org/2000/svg\">"
+//                        +"<path fill-rule=\"evenodd\" clip-rule=\"evenodd\" d=\"M14 13.9853L13.7938 14.9598L0.1863 15L0 14.015L4.26047 12.2656L4.44677 10.3989C4.14117 9.88914 3.90579 9.32858 3.74891 8.73688C2.49215 7.24982 2.67997 5.31316 3.34271 5.25017C3.34271 4.94052 3.33202 4.61686 3.33202 4.28096C3.33202 2.03464 4.58421 0 6.99695 0C9.40969 0 10.6161 1.96816 10.6161 4.62561C10.6161 4.8408 10.6161 5.04898 10.6161 5.25017C11.3124 5.1802 11.5659 7.08537 10.3885 8.60392C10.2678 9.28656 10.0307 9.93518 9.69066 10.5126L9.95332 12.3268L14 13.9853ZM9.06457 13.1106C9.04014 12.7694 9.00196 11.9996 8.97448 11.4451C8.59746 11.8498 8.19249 12.219 7.76353 12.549L6.47011 12.5315C6.0185 12.1984 5.59427 11.819 5.20266 11.3978C5.1767 12.0101 5.137 12.9129 5.12326 13.275C5.07897 14.4559 9.15772 14.4699 9.06457 13.1123V13.1106ZM9.81283 4.19874C9.81283 3.34036 9.51519 2.51713 8.98539 1.91017C8.45559 1.3032 7.73703 0.962212 6.98778 0.962212C6.23854 0.962212 5.51997 1.3032 4.99018 1.91017C4.46038 2.51713 4.16274 3.34036 4.16274 4.19874C4.16274 8.39748 4.60253 9.88628 6.72971 11.4661L7.45201 11.4906C9.48604 9.90728 9.81283 8.36774 9.81283 4.20049V4.19874Z\" fill=\"#000814\"/>"
+//                    +"</svg>"
+//                    +"Профиль"
+//                +"</a>"
                 +"<a href=\"http://127.0.0.1:8000/auth/logout/\" class=\"user-action exit d-flex align-items-center text-decoration-none\">"
                     +"<svg class=\"me-2\" width=\"14\" height=\"14\" viewBox=\"0 0 14 14\" fill=\"none\" xmlns=\"http://www.w3.org/2000/svg\">"
                         +"<path d=\"M1.16667 14C0.855556 14 0.583333 13.8833 0.35 13.65C0.116667 13.4167 0 13.1444 0 12.8333V1.16667C0 0.855556 0.116667 0.583333 0.35 0.35C0.583333 0.116667 0.855556 0 1.16667 0H6.825V1.16667H1.16667V12.8333H6.825V14H1.16667ZM10.6167 10.4028L9.78056 9.56667L11.7639 7.58333H4.95833V6.41667H11.725L9.74167 4.43333L10.5778 3.59722L14 7.01944L10.6167 10.4028Z\" fill=\"#000814\"/>"

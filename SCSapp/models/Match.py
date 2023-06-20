@@ -37,15 +37,12 @@ class AbstractMatch(models.Model):
         verbose_name_plural = 'Матчи'
 
     @classmethod
-    def create(cls, firstTeam, secondTeam, competition, judge=None):
+    def create(cls, firstTeam, secondTeam, competitionStage, judge=None):
         object = cls()
-        object.competition = competition
+        object.competitionStage = competitionStage
         object.judge = judge
         object.save()
         return object
-        #   При переопределении в дочерних классах создаются объекты результатов
-        #   AbstractMatchTeamResult.create(firstTeam, object)
-        #   AbstractMatchTeamResult.create(secondTeam, object)
 
 
     def startMatch(self):
@@ -82,8 +79,11 @@ class VolleyballMatch(AbstractMatch):
         verbose_name = 'Волейбольный матч'
         verbose_name_plural = 'Волейбольные матчи'
 
-    def create(cls, firstTeam, secondTeam, competition, judge=None):
-        object = super().create()
+    @classmethod
+    def create(cls, firstTeam, secondTeam, competition, competitionStage=None, judge=None):
+        object = super().create(firstTeam, secondTeam, competitionStage, judge)
+        object.competition = competition
+        object.save()
         VolleyballMatchTeamResult.create(secondTeam, object)
         VolleyballMatchTeamResult.create(firstTeam, object)
         return object

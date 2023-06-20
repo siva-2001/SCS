@@ -61,10 +61,14 @@ class PermissionsAPIView(APIView):
         data["isAnonymousUser"] = True if (type(user) == AnonymousUser) else False
         if not data["isAnonymousUser"]:
             data["id"] = user.id
+            data["username"] = user.username
             if user.last_name:
                 data["FIO"] = user.last_name + ' ' + ((user.first_name[0] + '.') if user.first_name else "")
             else: data["FIO"] = 'NoName'
-            data["isOrganizer"] = user.groups.filter(name="organizer").exists()
+            # data["isOrganizer"] = user.groups.filter(name="organizer").exists()
+            if user.groups.filter(name="organizer").exists(): data["userrole"] = "Организатор"
+            elif user.groups.filter(name="judge").exists(): data["userrole"] = "Судья"
+
         return Response(data)
 
 

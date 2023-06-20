@@ -133,8 +133,9 @@ class VolleyballMatchesOfCompetitionAPIView(generics.ListAPIView):
             matchDataDict["secondTeamScore"] = teamRes[1].teamScore
             matchDataDict["secondTeamEmblem"] = teamRes[1].team.participant.emblem.url if teamRes[1].team.participant.emblem else None
 
-            judge = User.objects.get(id=matchDataDict['judge'])
-            matchDataDict["judgeName"] = judge.first_name + " " + judge.last_name
+
+            judge = User.objects.get(id=matchDataDict['judge']) if matchDataDict['judge'] else None
+            matchDataDict["judgeName"] = (judge.first_name + " " + judge.last_name) if judge else None
 
             roundsScore = ''
             if not matchDataDict["isAnnounced"]:
@@ -169,6 +170,7 @@ class CertainVolleyballMatch(generics.RetrieveUpdateAPIView):
             return Response({"ERROR":"Пользователь не авторизован"})
         if request.user != VolleyballMatch.objects.all().get(id=kwargs['pk']).competition.organizer:
             return Response({"ERROR": "Нет доступа для редактирования"})
+        print(args, kwargs, request.body)
         return self.update(request, *args, **kwargs)
 
 class VolleyballTeamAPIView(generics.ListCreateAPIView):
@@ -183,7 +185,6 @@ class VolleyballTeamAPIView(generics.ListCreateAPIView):
         serializer = self.serializer_class(self.get_queryset(kwargs['pk']), many=True)
 
         competition = VolleyballCompetition.objects.get(id=kwargs["pk"])
-        competition.draw()
 
         for teamDataDict in serializer.data:
             teamDataDict['icon_url'] = Faculty.objects.get(id=teamDataDict['participant']).emblem.url
@@ -206,6 +207,13 @@ class FacultyDetailAPIView(generics.RetrieveAPIView):
     queryset = Faculty.objects.all()
     serializer_class = FacultySerializer
 
+class CompetitionDraw(APIView):
+    def post(self, request):
+        competition = VolleyballCompetition.objects.get(id=json.loads(request.body)["competition_id"])
+        if competition.organizer != self.request.auth.user:
+            return Response({"ERROR":"Вы не являетесь организатором"})
+        competition.draw()
+        return Response(status=200)
 
 
 socketINFO = [    # FOR_DEBUG

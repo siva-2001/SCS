@@ -180,6 +180,8 @@ $(document).ready(() => {
             dataType : 'json',
             headers:{   "Authorization": cookieStrToObject(document.cookie).Authorization   },
             success: function(competition_data){
+                console.log(competition_data)
+
                 $(".title").append(competition_data.name);
                 $("#competition_title_edit").val(competition_data.name)
 
@@ -187,6 +189,7 @@ $(document).ready(() => {
                 $("#competition_description_edit").val(competition_data.description)
 
                 if (competition_data.status == "ANNONCED"){
+                    $("#start_draw").show();
                     $("#organizer").append("Соревнования начнутся: <br>" + competition_data.dateTimeStartCompetition.split(" ")[1]);
                     $("#competition_datetime_input_string").show();
                     $("#tournament_grid_block").hide();
@@ -213,6 +216,9 @@ $(document).ready(() => {
                     dataType : 'json',
                     headers:{   "Authorization": cookieStrToObject(document.cookie).Authorization   },
                     success: function(matches_data){
+                        console.log(matches_data);
+                        console.log(competition_data.status);
+
                         if (competition_data.status == "CURRENT") {
                             var nextMatchDateTime;
                             var competitionStage = "-";
@@ -222,10 +228,10 @@ $(document).ready(() => {
                             for (var i = 0; i < matches_data.length; i++){
                                 match_data = matches_data[i];
 
-                                if (competitionStage != match_data["competitionStage"]){
-                                    competitionStage = match_data["competitionStage"];
-                                    addCompetitionStage(competitionStage);
-                                }
+//                                if (competitionStage != match_data["competitionStage"]){
+//                                    competitionStage = match_data["competitionStage"];
+//                                    addCompetitionStage(competitionStage);
+//                                }
                                 addMatchNote(match_data);
 
                                 if(match_data.isAnnounced && !match_data.match_translated_now)
@@ -309,7 +315,6 @@ $(document).ready(() => {
                 });
         });
 
-
         $("#sendCompetitionEdit").click(() => {
             updateCompetition(
                 getPK(),
@@ -317,10 +322,28 @@ $(document).ready(() => {
                 $("#competition_description_edit").val(),
                 $("#competition_datetime_edit").val());
         });
+
+        $("#start_draw").click(() => {
+            $.ajax({
+                async: false,
+                method: "POST",
+                url: "http://127.0.0.1:8000/api/v1/competition_draw/",
+                dataType : 'json',
+                contentType: false,
+                processData: false,
+                cache: false,
+                data: '{"competition_id":' + getPK() + '}',
+                headers:{
+//                        "X-CSRFToken": $('[name="csrfmiddlewaretoken"]').attr('value'),
+                    "Authorization": cookieStrToObject(document.cookie).Authorization
+                },
+            }).always(function(){
+                document.location.reload();
+            });
+        });
     }
 
     checkAccessPermissions();
-
 });
 
 

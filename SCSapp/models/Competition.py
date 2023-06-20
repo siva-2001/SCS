@@ -1,5 +1,6 @@
 from django.urls import reverse
 from django.db import models
+import random
 
 from authorizationApp.models import User
 from .Match import AbstractMatch, VolleyballMatch
@@ -81,7 +82,6 @@ class VolleyballCompetition(Competition):
     twoPointsLose = models.IntegerField(verbose_name="Балл за проигрыш в 2 очка", null=True, blank=True)
     threePointsLose = models.IntegerField(verbose_name="Балл за проигрыш в 3 очка", null=True, blank=True)
 
-
     def getData(self):
         pass
 
@@ -108,42 +108,17 @@ class VolleyballCompetition(Competition):
         return object
 
 
-
     def draw(self):
         if(self.status == self.StatusChoices.ANNOUNSED):
             self.status = self.StatusChoices.CURRENT
-            teams = VolleyballTeam.objects.all().filter(competition=self)
+            teams = list(VolleyballTeam.objects.all().filter(competition=self).filter(confirmed=True))
 
-        #       ЖЕРЕБЬЁВКА
-        #   Генерация сетки, создание матчей и результатов команды в них
-
-
-
-
-
-
-
-# class CacheScore(models.Model):
-#     participantScore = models.IntegerField()
-#     participantRaiting = models.FloatField()
-#     participantPlace = models.IntegerField()
-#     competition = models.ForeignKey('SCSapp.Competition', on_delete=models.CASCADE)
-#     participant = models.ForeignKey('SCSapp.Faculty', on_delete=models.CASCADE)
-#
-#
-#     @classmethod
-#     def create(cls, participant, competition):
-#         object = cls()
-#         object.participantScore = 0
-#         object.participantPlace = 0
-#         object.participantRaiting = 0
-#         object.competition = competition
-#         object.participant = participant
-#         object.save()
-#         return object
-#
-#     def update(self, score, raiting, place):
-#         self.participantRaiting = raiting
-#         self.participantScore = score
-#         self.participantPlace = place
-#         self.save()
+            for i in range(len(teams)):
+                for j in range(i+1, len(teams)):
+                    print("create")
+                    VolleyballMatch.create(
+                        firstTeam = teams[i],
+                        secondTeam = teams[j],
+                        competition = self,
+                    )
+            self.save()
