@@ -1,5 +1,6 @@
 from fpdf import FPDF
 
+
 class PDF(FPDF):
     pdf_w = 210
     pdf_h = 297
@@ -19,11 +20,13 @@ class PDF(FPDF):
         self.cell(w=100, h=10, align='L', border=0, ln=2, txt='Команды участницы:')
         self.set_font("DejaVu", '', 12)
 
-        self.cell(w=70, h=8, ln=0, align='C', border='BTRL', txt="Название")
+        self.cell(w=50, h=8, ln=0, align='C', border='BTRL', txt="Подразделение")
+        self.cell(w=20, h=8, ln=0, align='C', border='BTRL', txt="Очки")
         self.cell(w=50, h=8, ln=0, align='C', border='BTR', txt="Время регистрации")
-        self.cell(w=70, h=8, ln=1, align='C', border='BTR', txt='Представитель')
+        self.cell(w=70, h=8, ln=1, align='C', border='BTR', txt='Тренер')
         for team in teams:
-            self.cell(w=70, h=8, ln=0, align='C', border='RL', txt=team['name'])
+            self.cell(w=50, h=8, ln=0, align='C', border='RL', txt=team['name'])
+            self.cell(w=20, h=8, ln=0, align='C', border='RL', txt=team['score'])
             self.cell(w=50, h=8, ln=0, align='C', border='R', txt=team['registeredTime'])
             self.cell(w=70, h=8, ln=1, align='C', border='R', txt=team['user'])
         self.cell(w=190, h=0, ln=1, border='T', txt='')
@@ -61,7 +64,7 @@ class PDF(FPDF):
     def CompetitionProtocol(self, compName, teams, matches, orgName, date):
         try:
             self.add_page()
-            self.add_font('DejaVu', '', 'DejaVuSansCondensed.ttf', uni=True)
+            self.add_font('DejaVu', '', 'Arial.ttf', uni=True)
             self.set_text_color(0,0,0)
             self.Titles(compName)
             self.Teams(teams)
@@ -70,4 +73,5 @@ class PDF(FPDF):
             self.output("tempFile.pdf","F")
         except Exception as ex:
             self.error(f'Протокол не был создан:{ex}')
+
 

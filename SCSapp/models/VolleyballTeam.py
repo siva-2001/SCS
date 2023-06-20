@@ -18,6 +18,8 @@ class VolleyballTeam(Team):
     lost = models.IntegerField(default=0)
     score = models.IntegerField(default=0)
 
+    def __str__(self):
+        return self.participant.name + " в " + (self.competition.name if self.competition else " ")
 
     class Meta:
         verbose_name = 'Волейбольная команда'

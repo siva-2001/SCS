@@ -108,7 +108,7 @@ function addMatchNote(match_data){
                                 +'</div>'
                             +'</div>'
                             +'<div class="row question">'
-                                +'<div class="col-5">'
+                                   +'<div class="col-5">'
                                     +'<strong>Когда пройдёт матч?</strong>'
                                 +'</div>'
                                 +'<div class="col-3">'
@@ -246,6 +246,7 @@ $(document).ready(() => {
                     dataType : 'json',
                     headers:{   "Authorization": cookieStrToObject(document.cookie).Authorization },
                     success: function(teams_data){
+                        console.log(teams_data);
                         if (teams_data.length > 0) {
                             var number_of_teams = 0;
                             for (var i = 0; i < teams_data.length; i++){

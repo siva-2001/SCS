@@ -19,24 +19,22 @@ class CompetitionSerializer(serializers.ModelSerializer):
         model = Competition
         fields = ['id', 'name', 'description', 'organizer', 'dateTimeStartCompetition', 'sportType', 'type', 'regulations']
 
-    def save(self, user):
-        organizer = user
-        super().save()
 
 
 class VolleyballCompetitionSerializer(serializers.ModelSerializer):
     # organizer = serializers.ForeignKeyField(default=serializers.CurrentUserDefault())
 
-    organizer = serializers.SlugRelatedField(
-        default=serializers.CurrentUserDefault(),
-        read_only=True,
-        slug_field='id'
-    )
+    # organizer = serializers.SlugRelatedField(
+    #     default=serializers.CurrentUserDefault(),
+    #     read_only=True,
+    #     # slug_field='id'
+    # )
+    organizer = serializers.HiddenField(default=serializers.CurrentUserDefault())
 
     dateTimeStartCompetition = serializers.DateTimeField(format="%H:%M %d.%m.%Y", required=False)
     class Meta:
         model = VolleyballCompetition
-        fields = ['id', 'name', 'description', 'organizer', 'status',
+        fields = ['id', 'name', 'description', 'status', 'organizer',
                   'dateTimeStartCompetition', 'regulations', 'protocol',
                   'numOfRounds', 'roundPointLimit', 'lastRoundPointLimit',
                   'onePointLead', 'twoPointsLead', 'threePointsLead',
