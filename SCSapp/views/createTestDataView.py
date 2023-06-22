@@ -182,22 +182,44 @@ def CreateTestDataView(request):
     action_1 = MatchAction.objects.create(
         eventType = "START_ROUND",
         team = team_1,
-        match = match_2
+        match = match_2,
+        roundEventTime=142,
+        round = 2,
     )
     action_2 = MatchAction.objects.create(
         eventType = "GOAL",
         team = team_1,
-        match = match_2
+        match = match_2,
+        roundEventTime = 142,
+        round=2,
     )
     action_3 = MatchAction.objects.create(
         eventType = "GOAL",
         team = team_1,
-        match = match_2
+        match = match_2,
+        roundEventTime=11,
+        round=2,
     )
     action_4 = MatchAction.objects.create(
         eventType = "GOAL",
         team = team_1,
-        match = match_2
+        match = match_2,
+        roundEventTime=42,
+        round=2,
+    )
+    action_5 = MatchAction.objects.create(
+        eventType = "PAUSE_ROUND",
+        team = team_2,
+        match = match_2,
+        roundEventTime=12,
+        round=3,
+    )
+    action_6 = MatchAction.objects.create(
+        eventType = "PAUSE_ROUND",
+        team = team_1,
+        match = match_2,
+        roundEventTime=142,
+        round=1,
     )
 
     group = Group.objects.create()

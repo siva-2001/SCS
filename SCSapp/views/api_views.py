@@ -193,6 +193,7 @@ class VolleyballTeamAPIView(generics.ListCreateAPIView):
 
 
 
+
 class PlayerAPIView(generics.ListCreateAPIView):
     queryset = VolleyballPlayer.objects.all()
     serializer_class = VolleyballPlayerSerializer
