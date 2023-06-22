@@ -53,14 +53,14 @@ class Competition(models.Model):
 
 
     @classmethod
-    def create(cls, name, description, startDate=None, organizer=None, regulations = None):
+    def create(cls, name, description, startDate=None, organizer=None, regulations = None, status="ANNONCED"):
         object = cls()
         object.name = name
         object.description = description
         object.dateTimeStartCompetition = startDate
         object.organizer = organizer
         object.regulations = regulations
-        object.status = cls.StatusChoices.ANNOUNSED
+        object.status = status
         object.save()
         return object
 

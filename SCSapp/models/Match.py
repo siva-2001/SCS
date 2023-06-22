@@ -5,6 +5,7 @@ from translationApp.models import MatchAction
 from authorizationApp.models import User
 from SCSapp.models.MatchTeamResult import VolleyballMatchTeamResult
 from SCSapp.models.VolleyballTeam import VolleyballTeam
+from SCSapp.models.Player import VolleyballPlayer
 from django.db.models import Q
 import datetime
 import time
@@ -90,7 +91,6 @@ class VolleyballMatch(AbstractMatch):
 
     def startRound(self):
         if (not self.round_translated_now) and (self.competition.numOfRounds >  self.current_round):
-            print("here")
             self.round_translated_now = True
             self.current_round += 1
             self.save()
@@ -148,82 +148,38 @@ class VolleyballMatch(AbstractMatch):
         self.match_translated_now = False
         #  ГЕНЕРАЦИЯ ПРОТОКОЛА
         self.save()
-        PDFProtocolCreator.volleybalMatchProtocol(self.getProtocolFormatMatchData())
+        # PDFProtocolCreator.volleyballMatchProtocol(self.getProtocolFormatMatchData())
+
 
     def getProtocolFormatMatchData(self):
-
-        #
-        match = self
-
-        #
-        results = VolleyballMatchTeamResult.objects.all().filter(match=self)
-
-        #
-        matchActions = MatchAction.objects.all().filter(match=self)
-
-        return {
-            "place" : self.place,
-            "datetime" : self.matchDateTime,
-            "firstJudgeFIO" : self.judge,
-            "secondJudgeFIO" : None,
-
-
-            'firstCommand': {
-                'name': "ФСУ",
-                'trainerFIO': "Чаймаа Даваа-Сурун Кенден-Дуржуевич",
-                'roundsScore': [12, 13, 18, 22, 5],
-                'finalScore': 5,
-                'players': ['Толяяяяяяяяяяяяяяяяяяяяяяяяяяяяяяяяяяяяяяяяя', "Коля", "Петя", "Антон", "Влад", "Гоша",
-                            'yaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa'],
-                'timeouts': [{
-                    'timeoutRound': 3,
-                    'timeoutTime': "12:21"
-                },
-                    {
-                        'timeoutRound': 3,
-                        'timeoutTime': "12:50"
-                    }
+        def getCommandDate(ind, results, pauseActions):
+            try: trainer = VolleyballPlayer.objects.all().filter(team=results[ind].team).get(trainer=True)
+            except: trainer = None
+            return {
+                'name': results[ind].team.participant.name,
+                'trainerFIO': (trainer.FIO if trainer else ''),
+                'roundsScore': results[ind].getRoundsScore(),
+                'finalScore': results[ind].teamScore,
+                'players': [player.FIO for player in VolleyballPlayer.objects.all().filter(team=results[ind].team)],
+                'timeouts': [
+                    {"timeoutRound": act.round, "timeoutTime": act.roundEventTime} for act in pauseActions.filter(team=results[ind].team)
                 ],
-                'playerChanges': [{
-                    'changeRound': 3,
-                    'changeTime': '12:21',
-                    'changedPlayer': "2",
-                    'playerOnChange': "6"
-                }, {
-                    'changeRound': 1,
-                    'changeTime': '12:21',
-                    'changedPlayer': "2",
-                    'playerOnChange': "6"
-                },
-                    {
-                        'changeRound': 4,
-                        'changeTime': '14:21',
-                        'changedPlayer': "4",
-                        'playerOnChange': "2"
-                    }, {
-                        'changeRound': 3,
-                        'changeTime': '12:21',
-                        'changedPlayer': "2",
-                        'playerOnChange': "6"
-                    }],
-            },
-            'secondCommand': {
-                'name': "РТФ",
-                'trainerFIO': "Виктор Викторович Викторов",
-                'roundsScore': [15, 18, 11, 23, 25],
-                'finalScore': 5,
-                'players': ['Толя', "Коля", "Петя", "Антон", "Влад", "Гоша", "Чаймаа Даваа-Сурун Кенден-Дуржуевич"],
-                'timeouts': [{
-                    'timeoutRound': 4,
-                    'timeoutTime': "12:21"
-                }],
-                'playerChanges': [{
-                    'changeRound': 4,
-                    'changeTime': '12:21',
-                    'changedPlayer': "1",
-                    'playerOnChange': "2"
-                }],
             }
+
+        results = VolleyballMatchTeamResult.objects.all().filter(match=self)
+        dtStr = str(self.matchDateTime)
+        pauseActions = MatchAction.objects.all().filter(match=self).filter(eventType="PAUSE_ROUND")
+        return {
+            'nameCompetition': self.competition.name,
+            'competitionID': self.competition.id,
+            'matchID': self.id,
+            "place" : (self.place if self.place else " "),
+            'time': (dtStr[11:16] if dtStr else ""),
+            "date" : dtStr[8:9] + "." + dtStr[5:7] + "." + dtStr[0:4],
+            "firstJudgeFIO" : self.judge.first_name,
+            "secondJudgeFIO" : None,
+            'firstCommand' : getCommandDate(0, results, pauseActions),
+            'secondCommand' : getCommandDate(1, results, pauseActions)
         }
 
 
@@ -271,6 +227,8 @@ class VolleyballMatch(AbstractMatch):
 
 
     def getTranslationDataMessage(self):
+        print(self.getProtocolFormatMatchData())
+        PDFProtocolCreator.volleyballMatchProtocol(self.getProtocolFormatMatchData())
         teamsResults = VolleyballMatchTeamResult.objects.all().filter(match=self)
         if len(teamsResults) != 2: return Response({"ERROR":"Ошибка сервера: количество команд не равно 2"})
 

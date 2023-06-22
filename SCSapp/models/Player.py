@@ -20,10 +20,11 @@ class VolleyballPlayer(models.Model):
     team = models.ForeignKey("SCSapp.VolleyballTeam", on_delete=models.CASCADE, default=None, null=True)
 
     def __str__(self):
-        return f'{self.name}  {self.surename}'
+        return f'{self.FIO}'
+
 
     @classmethod
-    def create(cls, name, surname, patronymic, age, height, weight, trainer):
+    def create(cls, FIO, age, height, weight, trainer=False):
         object = cls()
         object.name = name
         object.surname = surname

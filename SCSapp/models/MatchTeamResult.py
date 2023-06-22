@@ -40,6 +40,14 @@ class VolleyballMatchTeamResult(MatchTeamResult):
         verbose_name = 'Результат в матче по волейболу'
         verbose_name_plural = 'Результаты в матче по волейболу'
 
+    def getRoundsScore(self):
+        scores = list()
+        if self.firstRoundScore: scores.append(self.firstRoundScore)
+        if self.secondRoundScore: scores.append(self.secondRoundScore)
+        if self.thirdRoundScore: scores.append(self.thirdRoundScore)
+        if self.fourthRoundScore: scores.append(self.fourthRoundScore)
+        if self.fifthRoundScore: scores.append(self.fifthRoundScore)
+        return scores
 
     def stopMatch(self):
         self.currentRoundScore = None

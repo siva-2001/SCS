@@ -4,8 +4,11 @@ import configparser
 
 
 class PDFProtocolCreator():
+    # def __init__(self):
+    #     self.pdf = FPDF('P', 'mm', 'A4')
 
-    def volleybalMatchProtocol(self, d):
+    @classmethod
+    def volleyballMatchProtocol(self, d):
 
         # Получение абсолютного пути к текущему скрипту
         current_path = os.path.dirname(os.path.abspath(__file__))
@@ -153,16 +156,16 @@ class PDFProtocolCreator():
 
         pdf.ln(16)
         pdf.cell(40, 8, txt="Судья", border=False)
-        if (len(d['firstJudjeFIO']) > 28):
+        if (len(d['firstJudgeFIO']) > 28):
             pdf.set_font_size(5)
-        pdf.cell(50, 8, txt=d['firstJudjeFIO'], border='B')
+        pdf.cell(50, 8, txt=d['firstJudgeFIO'], border='B')
         pdf.set_font_size(10)
         pdf.cell(10, 8, txt='', border=False)
-        if 'secondJudjeFIO' in d:
+        if 'secondJudgeFIO' in d:
             pdf.cell(40, 8, txt="Судья 2", border=False)
-            if (len(d['secondJudjeFIO']) > 28):
+            if (len(d['secondJudgeFIO']) > 28):
                 pdf.set_font_size(5)
-                pdf.cell(50, 8, txt=d['secondJudjeFIO'], border='B')
+                pdf.cell(50, 8, txt=d['secondJudgeFIO'], border='B')
         pdf.set_font_size(10)
         pdf.ln(8)
         pdf.cell(40, 8, txt="Секретарь", border=False)
@@ -340,19 +343,21 @@ class PDFProtocolCreator():
         #         pdf.cell(17, 8, txt='', border=1, align="C")
         #         pdf.cell(3, 8, txt='', border=False)
         #     pdf.ln(8)
-
-        pdf.output('matchProtocol.pdf')
+        protocolName = "matchPr_" + str(d.get('competitionID')) + '.' + str(d.get('matchID')) + ".pdf"
+        pdf.output(protocolName)
         # Возврат к исходной рабочей директории
         os.chdir(directory_path)
 
     def test(self):
         d = {
             'nameCompetition': 'Спортакиада',
+            'competitionID' : 12,
+            'matchID': 2,
             'place': 'ТУСУР',
             'time': '17:15',
-
             'date': '22.06.2023',
-            'firstJudjeFIO': 'Павел Александрович Иванов',
+            'firstJudgeFIO': 'Павел Александрович Иванов',
+
             'firstCommand': {
                 'name': "ФСУ",
                 'trainerFIO': "Чаймаа Даваа-Сурун Кенден-Дуржуевич",
@@ -382,17 +387,20 @@ class PDFProtocolCreator():
             }
         }
 
-        self.volleybalMatchProtocol(d)
+        self.volleyballMatchProtocol(d)
 
 
 def find_index(li, key, value):
     return next((i for i, x in enumerate(li) if x[key] == value), -1)
 
+creator = PDFProtocolCreator()
+creator.test()
+
 # d = {
 #     'place': 'ТУСУР',
 #     'time': '17:15',
 #     'date':'22.06.2023',
-#     'firstJudjeFIO': 'Павел Александрович Иванов',
+#     'firstJudgeFIO': 'Павел Александрович Иванов',
 #     'firstCommand': {
 #         'name': "ФСУ",
 #         'trainerFIO': "Чаймаа Даваа-Сурун Кенден-Дуржуевич",
