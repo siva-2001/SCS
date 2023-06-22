@@ -162,7 +162,7 @@ class VolleyballMatch(AbstractMatch):
                 'finalScore': results[ind].teamScore,
                 'players': [player.FIO for player in VolleyballPlayer.objects.all().filter(team=results[ind].team)],
                 'timeouts': [
-                    {"timeoutRound": act.round, "timeoutTime": act.roundEventTime} for act in pauseActions.filter(team=results[ind].team)
+                    {"timeoutRound": act.round, "timeoutTime": act.getRoundTime()} for act in pauseActions.filter(team=results[ind].team)
                 ],
             }
 
@@ -228,7 +228,9 @@ class VolleyballMatch(AbstractMatch):
 
     def getTranslationDataMessage(self):
         print(self.getProtocolFormatMatchData())
-        PDFProtocolCreator.volleyballMatchProtocol(self.getProtocolFormatMatchData())
+        creator = PDFProtocolCreator()
+        creator.volleyballMatchProtocol(self.getProtocolFormatMatchData())
+
         teamsResults = VolleyballMatchTeamResult.objects.all().filter(match=self)
         if len(teamsResults) != 2: return Response({"ERROR":"Ошибка сервера: количество команд не равно 2"})
 

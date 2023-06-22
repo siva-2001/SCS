@@ -44,3 +44,6 @@ class MatchAction(models.Model):
                 "team" : (self.team.participant.name if self.team else None),
             }
         }
+
+    def getRoundTime(self):
+        return str(int(self.roundEventTime / 60)) + ":" + ("0" if (self.roundEventTime % 60 < 10) else "") + str(self.roundEventTime % 60)

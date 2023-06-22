@@ -1,299 +1,174 @@
 from fpdf import FPDF
 import os
 import configparser
-
+from pathlib import Path
 
 class PDFProtocolCreator():
-    # def __init__(self):
-    #     self.pdf = FPDF('P', 'mm', 'A4')
+    def __init__(self):
+        self.pdf = FPDF('P', 'mm', 'A4')
+        self.pdf.add_page()
+        self.pdf.add_font('DejaVu', '', Path(__file__).parent.joinpath("DejaVuSansCondensed.ttf"), uni=True)
+        self.pdf.set_font('DejaVu', size=10)
 
-    @classmethod
-    def volleyballMatchProtocol(self, d):
+    def printProtocolTitle(self, competitionName):
+        self.pdf.cell(0, 8, align='C', txt="ПРОТОКОЛ №", border=False)
+        self.pdf.ln(8)
+        self.pdf.cell(0, 8, align='C', txt=competitionName, border=False)
+        self.pdf.ln(8)
+        self.pdf.cell(0, 8, align='C', txt="Матча по воллейболу", border=False, ln=1)
 
-        # Получение абсолютного пути к текущему скрипту
-        current_path = os.path.dirname(os.path.abspath(__file__))
+    def printMatchData(self, place, time, date):
+        self.pdf.cell(50, 8, txt="Место проведения:", border=False)
+        self.pdf.cell(0, 8, txt=place, border='B', ln=1)
+        self.pdf.cell(20, 8, txt="Время:", border=False)
+        self.pdf.cell(60, 8, txt=time, border='B')
+        self.pdf.cell(20, 8, txt="Дата:", border=False)
+        self.pdf.cell(0, 8, txt=date, border='B')
+        self.pdf.ln(12)
+        self.pdf.cell(0, 8, txt="среди муж./жен./смеш. команд")
+        self.pdf.ln(12)
 
-        # Формирование пути к файлу конфигурации для каждого пользователя
-        config_file_path = os.path.join(current_path, 'config.ini')
+    def printTeamTitle(self, firstTeam, secondTeam):
+        self.pdf.cell(30, 8, txt="Команда А", border=False)
+        self.pdf.cell(70, 8, txt=firstTeam, border='B')
+        self.pdf.cell(30, 8, txt="Команда Б", border=False)
+        self.pdf.cell(0, 8, txt=secondTeam, border='B')
+        self.pdf.ln(12)
+        self.pdf.cell(100, 8, txt="Состав команды (А)", border=False)
+        self.pdf.cell(0, 8, txt="Состав команды (Б)", border=False)
+        self.pdf.ln(12)
 
-        # Создание объекта конфигурации
-        config = configparser.ConfigParser()
-
-        # Чтение файла конфигурации
-        config.read(config_file_path)
-
-        # Получение значения font_path из файла конфигурации
-        font_path = config.get('Paths', 'font_path')
-
-        # Создайте абсолютный путь к файлу на основе расположения скрипта
-        script_dir = os.path.dirname(os.path.abspath(__file__))
-        absolute_font_path = os.path.join(script_dir, font_path)
-
-        # Определение пути к текущей директории
-        current_file_path = os.path.abspath(__file__)
-        directory_path = os.path.dirname(current_file_path)
-        media_path = os.path.dirname(os.path.dirname(directory_path))
-
-        # Определение пути к целевой директории относительно текущей директории
-        target_directory = os.path.join(media_path, "media", "protocols")
-
-        # Переход к целевой директории
-        os.chdir(target_directory)
-
-        pdf = FPDF('P', 'mm', 'A4')
-
-        pdf.add_page()
-        pdf.add_font('DejaVu', '', absolute_font_path, uni=True)
-        pdf.set_font('DejaVu', size=10)
-
-        pdf.cell(0, 8, align='C', txt="ПРОТОКОЛ №", border=False)
-        pdf.ln(8)
-        pdf.cell(0, 8, align='C', txt=d.get('nameCompetition'), border=False)
-        pdf.ln(8)
-        pdf.cell(0, 8, align='C', txt="Матча по воллейболу", border=False, ln=1)
-        pdf.cell(50, 8, txt="Место проведения:", border=False)
-        pdf.cell(0, 8, txt=d.get('place'), border='B', ln=1)
-        pdf.cell(20, 8, txt="Время:", border=False)
-        pdf.cell(60, 8, txt=d.get('time'), border='B')
-        pdf.cell(20, 8, txt="Дата:", border=False)
-        pdf.cell(0, 8, txt=d.get('date'), border='B')
-        pdf.ln(12)
-        pdf.cell(0, 8, txt="среди муж./жен./смеш. команд")
-        pdf.ln(12)
-        pdf.cell(30, 8, txt="Команда А", border=False)
-        pdf.cell(70, 8, txt=d['firstCommand']["name"], border='B')
-        pdf.cell(30, 8, txt="Команда Б", border=False)
-        pdf.cell(0, 8, txt=d['secondCommand']["name"], border='B')
-        pdf.ln(12)
-        pdf.cell(100, 8, txt="Состав команды (А)", border=False)
-        pdf.cell(0, 8, txt="Состав команды (Б)", border=False)
-        pdf.ln(12)
-
-        pdf.cell(20, 8, txt='№ п/п', border=1)
-        pdf.cell(70, 8, txt='ФИО игрока', border=1)
-        pdf.cell(10, 8, txt='', border=False)
-        pdf.cell(20, 8, txt='№ п/п', border=1)
-        pdf.cell(70, 8, txt='ФИО игрока', border=1)
-        pdf.ln(8)
+    def printListsOfPlayers(self, firstTeamPlayerList, secondTeamPlayerList):
+        self.pdf.cell(20, 8, txt='№ п/п', border=1)
+        self.pdf.cell(70, 8, txt='ФИО игрока', border=1)
+        self.pdf.cell(10, 8, txt='', border=False)
+        self.pdf.cell(20, 8, txt='№ п/п', border=1)
+        self.pdf.cell(70, 8, txt='ФИО игрока', border=1)
+        self.pdf.ln(8)
 
         for row in range(1, 13):
-            pdf.cell(20, 8, txt=str(row), border=1)
-            if (len(d['firstCommand']['players']) > row-1):
-                if (len(d['firstCommand']['players'][row-1]) > 35):
-                    pdf.set_font_size(5)
-                pdf.cell(70, 8, txt=d['firstCommand']['players'][row-1], border=1)
-                pdf.set_font_size(10)
+            self.pdf.cell(20, 8, txt=str(row), border=1)
+            if (len(firstTeamPlayerList) > row-1):
+                if (len(firstTeamPlayerList[row-1]) > 35):
+                    self.pdf.set_font_size(5)
+                self.pdf.cell(70, 8, txt=firstTeamPlayerList[row-1], border=1)
+                self.pdf.set_font_size(10)
             else:
-                pdf.cell(70, 8, txt="", border=1)
+                self.pdf.cell(70, 8, txt="", border=1)
 
-            pdf.cell(10, 8, txt='', border=False)
-            pdf.cell(20, 8, txt=str(row), border=1)
-            if (len(d['secondCommand']['players']) > row - 1):
-                if (len(d['secondCommand']['players'][row-1]) > 35):
-                    pdf.set_font_size(5)
-                pdf.cell(70, 8, txt=d['secondCommand']['players'][row-1], border=1)
-                pdf.set_font_size(10)
+            self.pdf.cell(10, 8, txt='', border=False)
+            self.pdf.cell(20, 8, txt=str(row), border=1)
+            if (len(secondTeamPlayerList) > row - 1):
+                if (len(secondTeamPlayerList[row-1]) > 35):
+                    self.pdf.set_font_size(5)
+                self.pdf.cell(70, 8, txt=secondTeamPlayerList[row-1], border=1)
+                self.pdf.set_font_size(10)
             else:
-                pdf.cell(70, 8, txt="", border=1)
+                self.pdf.cell(70, 8, txt="", border=1)
 
-            pdf.ln(8)
+            self.pdf.ln(8)
 
-        pdf.ln(8)
-        pdf.cell(40, 8, txt="Капитан", border=False)
-        if (len(d['firstCommand']['players'][0]) > 28):
-            pdf.set_font_size(5)
-        pdf.cell(50, 8, txt=d["firstCommand"]['players'][0], border='B')
-        pdf.set_font_size(10)
-        pdf.cell(10, 8, txt='', border=False)
-        pdf.cell(40, 8, txt="Капитан", border=False)
-        if (len(d['secondCommand']['players'][0]) > 28):
-            pdf.set_font_size(5)
-        pdf.cell(50, 8, txt=d["secondCommand"]['players'][0], border='B')
-        pdf.set_font_size(10)
-        pdf.ln(8)
-        pdf.cell(40, 8, txt="Тренер", border=False)
-        if (len(d['firstCommand']['trainerFIO']) > 28):
-            pdf.set_font_size(5)
-        pdf.cell(50, 8, txt=d["firstCommand"]['trainerFIO'], border='B')
-        pdf.set_font_size(10)
-        pdf.cell(10, 8, txt='', border=False)
-        pdf.cell(40, 8, txt="Тренер", border=False)
-        if (len(d['secondCommand']['trainerFIO']) > 28):
-            pdf.set_font_size(5)
-        pdf.cell(50, 8, txt=d["secondCommand"]['trainerFIO'], border='B')
-        pdf.set_font_size(10)
+    def printRoundsScore(self, firstTeam, secondTeam):
+        for i in range(len(firstTeam['roundsScore'])):
+            self.pdf.cell(40, 8, txt="Счёт " + str(i+1) + " партии", border=False)
+            self.pdf.cell(50, 8, txt=str(firstTeam["roundsScore"][i]) + ' : ' + str(secondTeam['roundsScore'][i]), border='B')
+            self.pdf.cell(10, 8, txt='', border=False)
+            if (i > 0 and i%2 == 0): self.pdf.ln(8)
+        self.pdf.cell(40, 8, txt="Общий счет", border=False)
+        self.pdf.cell(50, 8, txt=str(firstTeam['finalScore']) + " : " + str(secondTeam['finalScore']), border='B')
 
-        pdf.ln(16)
-        pdf.cell(40, 8, txt="Счёт 1 партии", border=False)
-        pdf.cell(50, 8, txt=str(d["firstCommand"]['roundsScore'][0]) + ' : ' + str(d["secondCommand"]['roundsScore'][0]), border='B')
-        pdf.cell(10, 8, txt='', border=False)
-        pdf.cell(40, 8, txt="Счёт 2 партии", border=False)
-        if (len(d["firstCommand"]['roundsScore']) > 2):
-            pdf.cell(50, 8, txt=str(d["firstCommand"]['roundsScore'][1]) + ' : ' + str(d["secondCommand"]['roundsScore'][1]), border='B')
-        else:
-            pdf.cell(50, 8, txt='', border='B')
-        pdf.ln(8)
-        pdf.cell(40, 8, txt="Счёт 3 партии", border=False)
-        if (len(d["firstCommand"]['roundsScore']) > 2):
-            pdf.cell(50, 8, txt=str(d["firstCommand"]['roundsScore'][2]) + ' : ' + str(d["secondCommand"]['roundsScore'][2]), border='B')
-        else:
-            pdf.cell(50, 8, txt='', border='B')
-        pdf.cell(10, 8, txt='', border=False)
-        pdf.cell(40, 8, txt="Счёт 4 партии", border=False)
-        if (len(d["firstCommand"]['roundsScore']) > 3):
-            pdf.cell(50, 8, txt=str(d["firstCommand"]['roundsScore'][3]) + ' : ' + str(d["secondCommand"]['roundsScore'][3]), border='B')
-        else:
-            pdf.cell(50, 8, txt='', border='B')
-        pdf.ln(8)
-        pdf.cell(40, 8, txt="Счёт 5 партии", border=False)
-        if (len(d["firstCommand"]['roundsScore']) > 4):
-            pdf.cell(50, 8, txt=str(d["firstCommand"]['roundsScore'][4]) + ' : ' + str(d["secondCommand"]['roundsScore'][4]), border='B')
-        else:
-            pdf.cell(50, 8, txt='', border='B')
-        pdf.cell(10, 8, txt='', border=False)
-        pdf.cell(40, 8, txt="Общий счет", border=False)
-        pdf.cell(50, 8, txt=str(d["firstCommand"]['finalScore']) + " : " + str(d["secondCommand"]['finalScore']), border='B')
+    def printTeamsLeaders(self, firstTeam, secondTeam):
+        self.pdf.ln(8)
+        self.pdf.cell(40, 8, txt="Капитан", border=False)
+        if (len(firstTeam['players'][0]) > 28):
+            self.pdf.set_font_size(5)
+        self.pdf.cell(50, 8, txt=firstTeam['players'][0], border='B')
+        self.pdf.set_font_size(10)
+        self.pdf.cell(10, 8, txt='', border=False)
+        self.pdf.cell(40, 8, txt="Капитан", border=False)
+        if (len(secondTeam['players'][0]) > 28):
+            self.pdf.set_font_size(5)
+        self.pdf.cell(50, 8, txt=secondTeam['players'][0], border='B')
+        self.pdf.set_font_size(10)
+        self.pdf.ln(8)
+        self.pdf.cell(40, 8, txt="Тренер", border=False)
+        if (len(firstTeam['trainerFIO']) > 28):
+            self.pdf.set_font_size(5)
+        self.pdf.cell(50, 8, txt=firstTeam['trainerFIO'], border='B')
+        self.pdf.set_font_size(10)
+        self.pdf.cell(10, 8, txt='', border=False)
+        self.pdf.cell(40, 8, txt="Тренер", border=False)
+        if (len(secondTeam['trainerFIO']) > 28):
+            self.pdf.set_font_size(5)
+        self.pdf.cell(50, 8, txt=secondTeam['trainerFIO'], border='B')
+        self.pdf.set_font_size(10)
+        self.pdf.ln(16)
 
-        pdf.ln(16)
-        pdf.cell(40, 8, txt="Судья", border=False)
-        if (len(d['firstJudgeFIO']) > 28):
-            pdf.set_font_size(5)
-        pdf.cell(50, 8, txt=d['firstJudgeFIO'], border='B')
-        pdf.set_font_size(10)
-        pdf.cell(10, 8, txt='', border=False)
-        if 'secondJudgeFIO' in d:
-            pdf.cell(40, 8, txt="Судья 2", border=False)
-            if (len(d['secondJudgeFIO']) > 28):
-                pdf.set_font_size(5)
-                pdf.cell(50, 8, txt=d['secondJudgeFIO'], border='B')
-        pdf.set_font_size(10)
-        pdf.ln(8)
-        pdf.cell(40, 8, txt="Секретарь", border=False)
-        pdf.cell(50, 8, txt="", border='B')
-        pdf.cell(10, 8, txt='', border=False)
-        # pdf.cell(40, 8, txt="Представитель (Б)", border=False)
-        # pdf.cell(50, 8, txt="", border='B')
+    def printJudges(self, firstJudgeFIO=None, secondJudgeFIO=None):
+        self.pdf.ln(16)
+        self.pdf.cell(40, 8, txt="Судья", border=False)
+        if (len(firstJudgeFIO) > 28):
+            self.pdf.set_font_size(5)
+        self.pdf.cell(50, 8, txt=firstJudgeFIO, border='B')
+        self.pdf.set_font_size(10)
+        self.pdf.cell(10, 8, txt='', border=False)
+        if secondJudgeFIO:
+            self.pdf.cell(40, 8, txt="Судья 2", border=False)
+            if (len(secondJudgeFIO) > 28):
+                self.pdf.set_font_size(5)
+                self.pdf.cell(50, 8, txt=d['secondJudgeFIO'], border='B')
+        self.pdf.set_font_size(10)
+        self.pdf.ln(8)
+        self.pdf.cell(40, 8, txt="Секретарь", border=False)
+        self.pdf.cell(50, 8, txt="", border='B')
+        self.pdf.cell(10, 8, txt='', border=False)
+        self.pdf.ln(16)
+        self.pdf.cell(8, 8, txt='', border=0, align="C")
+        self.pdf.ln(8)
 
-        pdf.ln(16)
-        pdf.cell(8, 8, txt='', border=0, align="C")
-       # pdf.cell(0, 8, txt="Счет игры по пратиям", border=1, align='C')
-        pdf.ln(8)
-
-        # pdf.cell(8, 8, txt='', border=0, align="C")
-        # pdf.cell(34, 8, txt="1 партия", border=1, align="C")
-        # pdf.cell(3, 8, txt='', border=False)
-        # pdf.cell(34, 8, txt="2 партия", border=1, align="C")
-        # pdf.cell(3, 8, txt='', border=False)
-        # pdf.cell(34, 8, txt="3 партия", border=1, align="C")
-        # pdf.cell(3, 8, txt='', border=False)
-        # pdf.cell(34, 8, txt="4 партия", border=1, align="C")
-        # pdf.cell(3, 8, txt='', border=False)
-        # pdf.cell(34, 8, txt="5 партия", border=1, align="C")
-        # pdf.ln(8)
-        #
-        # pdf.cell(8, 8, txt='', border=0, align="C")
-        # pdf.cell(17, 8, txt="А", border=1, align="C")
-        # pdf.cell(17, 8, txt="Б", border=1, align="C")
-        # pdf.cell(3, 8, txt='', border=False)
-        # pdf.cell(17, 8, txt="А", border=1, align="C")
-        # pdf.cell(17, 8, txt="Б", border=1, align="C")
-        # pdf.cell(3, 8, txt='', border=False)
-        # pdf.cell(17, 8, txt="А", border=1, align="C")
-        # pdf.cell(17, 8, txt="Б", border=1, align="C")
-        # pdf.cell(3, 8, txt='', border=False)
-        # pdf.cell(17, 8, txt="А", border=1, align="C")
-        # pdf.cell(17, 8, txt="Б", border=1, align="C")
-        # pdf.cell(3, 8, txt='', border=False)
-        # pdf.cell(17, 8, txt="А", border=1, align="C")
-        # pdf.cell(17, 8, txt="Б", border=1, align="C")
-        # pdf.ln(8)
-
-        # for row in range(1, 31):
-        #     pdf.cell(8, 8, txt='', border=0, align="C")
-        #     if(row <= d['firstCommand']['roundsScore'][0]):
-        #         pdf.cell(17, 8, txt=str(row), border=1, align="C")
-        #     else:
-        #         pdf.cell(17, 8, txt=str(row), border=1, align="C", fill=True)
-        #     if (row <= d['secondCommand']['roundsScore'][0]):
-        #         pdf.cell(17, 8, txt=str(row), border=1, align="C")
-        #     else:
-        #         pdf.cell(17, 8, txt=str(row), border=1, align="C", fill=True)
-        #     pdf.cell(3, 8, txt='', border=False)
-        #     if (row <= d['firstCommand']['roundsScore'][1]):
-        #         pdf.cell(17, 8, txt=str(row), border=1, align="C")
-        #     else:
-        #         pdf.cell(17, 8, txt=str(row), border=1, align="C", fill=True)
-        #     if (row <= d['secondCommand']['roundsScore'][1]):
-        #         pdf.cell(17, 8, txt=str(row), border=1, align="C")
-        #     else:
-        #         pdf.cell(17, 8, txt=str(row), border=1, align="C", fill=True)
-        #     pdf.cell(3, 8, txt='', border=False)
-        #     if (row <= d['firstCommand']['roundsScore'][2]):
-        #         pdf.cell(17, 8, txt=str(row), border=1, align="C")
-        #     else:
-        #         pdf.cell(17, 8, txt=str(row), border=1, align="C", fill=True)
-        #     if ((row <= d['secondCommand']['roundsScore'][2])):
-        #         pdf.cell(17, 8, txt=str(row), border=1, align="C")
-        #     else:
-        #         pdf.cell(17, 8, txt=str(row), border=1, align="C", fill=True)
-        #     pdf.cell(3, 8, txt='', border=False)
-        #     if (len(d['firstCommand']['roundsScore']) > 3):
-        #         if (row <= d['firstCommand']['roundsScore'][3]):
-        #             pdf.cell(17, 8, txt=str(row), border=1, align="C")
-        #         else:
-        #             pdf.cell(17, 8, txt=str(row), border=1, align="C", fill=True)
-        #     else:
-        #         pdf.cell(17, 8, txt=str(row), border=1, align="C", fill=True)
-        #     if (len(d['secondCommand']['roundsScore']) > 3):
-        #         if ((row <= d['secondCommand']['roundsScore'][3])):
-        #             pdf.cell(17, 8, txt=str(row), border=1, align="C")
-        #         else:
-        #             pdf.cell(17, 8, txt=str(row), border=1, align="C", fill=True)
-        #     else:
-        #         pdf.cell(17, 8, txt=str(row), border=1, align="C", fill=True)
-        #     pdf.cell(3, 8, txt='', border=False)
-        #     if (len(d['firstCommand']['roundsScore']) > 4):
-        #         if (row <= d['firstCommand']['roundsScore'][4]):
-        #             pdf.cell(17, 8, txt=str(row), border=1, align="C")
-        #         else:
-        #             pdf.cell(17, 8, txt=str(row), border=1, align="C", fill=True)
-        #     else:
-        #         pdf.cell(17, 8, txt=str(row), border=1, align="C", fill=True)
-        #     if (len(d['secondCommand']['roundsScore']) > 4):
-        #         if ((row <= d['secondCommand']['roundsScore'][4])):
-        #             pdf.cell(17, 8, txt=str(row), border=1, align="C")
-        #         else:
-        #             pdf.cell(17, 8, txt=str(row), border=1, align="C", fill=True)
-        #     else:
-        #         pdf.cell(17, 8, txt=str(row), border=1, align="C", fill=True)
-        #     pdf.ln(8)
-
-        pdf.ln(8)
-        pdf.cell(8, 8, txt='', border=0, align="C")
-        pdf.cell(0, 8, txt="Перерывы", border=1, align='C')
-        pdf.ln(8)
+    def printTimeouts(self, firstTeamTimeouts, secondTeamTimeouts):
+        self.pdf.ln(8)
+        self.pdf.cell(8, 8, txt='', border=0, align="C")
+        self.pdf.cell(0, 8, txt="Перерывы", border=1, align='C')
+        self.pdf.ln(8)
         for row in range(1, 3):
-            pdf.cell(8, 8, txt=str(row), border=1, align="C")
+            self.pdf.cell(8, 8, txt=str(row), border=1, align="C")
             for column in range(1, 6):
-                founded1 = find_index(d['firstCommand']['timeouts'], 'timeoutRound', column)
-                founded2 = find_index(d['secondCommand']['timeouts'], 'timeoutRound', column)
+                founded1 = find_index(firstTeamTimeouts, 'timeoutRound', column)
+                founded2 = find_index(secondTeamTimeouts, 'timeoutRound', column)
                 if (founded1 != -1):
-                    pdf.cell(17, 8, txt=d['firstCommand']['timeouts'][founded1]['timeoutTime'], border=1, align="C")
-                    d['firstCommand']['timeouts'][founded1]['timeoutRound'] = 0
+                    self.pdf.cell(17, 8, txt=firstTeamTimeouts[founded1]['timeoutTime'], border=1, align="C")
+                    firstTeamTimeouts[founded1]['timeoutRound'] = 0
                 else:
-                    pdf.cell(17, 8, txt=':', border=1, align="C")
+                    self.pdf.cell(17, 8, txt=':', border=1, align="C")
                 if (founded2 != -1):
-                    pdf.cell(17, 8, txt=d['secondCommand']['timeouts'][founded2]['timeoutTime'], border=1, align="C")
-                    d['secondCommand']['timeouts'][founded2]['timeoutRound'] = 0
+                    self.pdf.cell(17, 8, txt=secondTeamTimeouts[founded2]['timeoutTime'], border=1, align="C")
+                    secondTeamTimeouts[founded2]['timeoutRound'] = 0
                 else:
-                    pdf.cell(17, 8, txt=':', border=1, align="C")
-                pdf.cell(3, 8, txt='', border=False)
+                    self.pdf.cell(17, 8, txt=':', border=1, align="C")
+                self.pdf.cell(3, 8, txt='', border=False)
 
-            pdf.ln(8)
+            self.pdf.ln(8)
+        self.pdf.ln(8)
+
+
+    def volleyballMatchProtocol(self, d):
+        self.printProtocolTitle(d.get('nameCompetition'))
+        self.printMatchData(d.get('place'), d.get('time'), d.get('date'))
+        self.printTeamTitle(d['firstCommand']["name"], d['secondCommand']["name"])
+        self.printListsOfPlayers(d['firstCommand']['players'], d['secondCommand']['players'])
+        self.printTeamsLeaders(d["firstCommand"], d["secondCommand"])
+        self.printRoundsScore(d["firstCommand"], d["secondCommand"])
+        self.printTimeouts(d['firstCommand']['timeouts'], d['secondCommand']['timeouts'])
+
+        protocolName = "matchPr_" + str(d.get('competitionID')) + '.' + str(d.get('matchID')) + ".pdf"
+        self.pdf.output(Path(__file__).parent.parent.parent.joinpath("media", "protocols", protocolName))
 
 
 
-        pdf.ln(8)
+
+
+
         # pdf.cell(8, 8, txt='', border=0, align="C")
         # pdf.cell(0, 8, txt="Замены", border=1, align='C', ln=1)
         #
@@ -343,101 +218,51 @@ class PDFProtocolCreator():
         #         pdf.cell(17, 8, txt='', border=1, align="C")
         #         pdf.cell(3, 8, txt='', border=False)
         #     pdf.ln(8)
-        protocolName = "matchPr_" + str(d.get('competitionID')) + '.' + str(d.get('matchID')) + ".pdf"
-        pdf.output(protocolName)
-        # Возврат к исходной рабочей директории
-        os.chdir(directory_path)
 
-    def test(self):
-        d = {
-            'nameCompetition': 'Спортакиада',
-            'competitionID' : 12,
-            'matchID': 2,
-            'place': 'ТУСУР',
-            'time': '17:15',
-            'date': '22.06.2023',
-            'firstJudgeFIO': 'Павел Александрович Иванов',
-
-            'firstCommand': {
-                'name': "ФСУ",
-                'trainerFIO': "Чаймаа Даваа-Сурун Кенден-Дуржуевич",
-                'roundsScore': [12, 13, 18, 22, 5],
-                'finalScore': 5,
-                'players': ['Толя', "Коля", "Петя", "Антон", "Влад", "Гоша", 'Тестовоя Длинная Строка'],
-                'timeouts': [{
-                    'timeoutRound': 3,
-                    'timeoutTime': "12:21"
-                },
-                    {
-                        'timeoutRound': 3,
-                        'timeoutTime': "12:50"
-                    }
-                ],
-            },
-            'secondCommand': {
-                'name': "РТФ",
-                'trainerFIO': "Виктор Викторович Викторов",
-                'roundsScore': [15, 18, 11, 23, 25],
-                'finalScore': 5,
-                'players': ['Толя', "Коля", "Петя", "Антон", "Влад", "Гоша", "Чаймаа Даваа-Сурун Кенден-Дуржуевич"],
-                'timeouts': [{
-                    'timeoutRound': 4,
-                    'timeoutTime': "12:21"
-                }],
-            }
-        }
-
-        self.volleyballMatchProtocol(d)
+    #
+    #
+    # def test(self):
+    #     d = {
+    #         'nameCompetition': 'Спортакиада',
+    #         'competitionID' : 12,
+    #         'matchID': 2,
+    #         'place': 'ТУСУР',
+    #         'time': '17:15',
+    #         'date': '22.06.2023',
+    #         'firstJudgeFIO': 'Павел Александрович Иванов',
+    #
+    #         'firstCommand': {
+    #             'name': "ФСУ",
+    #             'trainerFIO': "Чаймаа Даваа-Сурун Кенден-Дуржуевич",
+    #             'roundsScore': [12, 13, 18, 22, 5],
+    #             'finalScore': 5,
+    #             'players': ['Толя', "Коля", "Петя", "Антон", "Влад", "Гоша", 'Тестовоя Длинная Строка'],
+    #             'timeouts': [{
+    #                 'timeoutRound': 3,
+    #                 'timeoutTime': "12:21"
+    #             },
+    #                 {
+    #                     'timeoutRound': 3,
+    #                     'timeoutTime': "12:50"
+    #                 }
+    #             ],
+    #         },
+    #         'secondCommand': {
+    #             'name': "РТФ",
+    #             'trainerFIO': "Виктор Викторович Викторов",
+    #             'roundsScore': [15, 18, 11, 23, 25],
+    #             'finalScore': 5,
+    #             'players': ['Толя', "Коля", "Петя", "Антон", "Влад", "Гоша", "Чаймаа Даваа-Сурун Кенден-Дуржуевич"],
+    #             'timeouts': [{
+    #                 'timeoutRound': 4,
+    #                 'timeoutTime': "12:21"
+    #             }],
+    #         }
+    #     }
+    #
+    #     self.volleyballMatchProtocol(d)
 
 
 def find_index(li, key, value):
     return next((i for i, x in enumerate(li) if x[key] == value), -1)
 
-creator = PDFProtocolCreator()
-creator.test()
-
-# d = {
-#     'place': 'ТУСУР',
-#     'time': '17:15',
-#     'date':'22.06.2023',
-#     'firstJudgeFIO': 'Павел Александрович Иванов',
-#     'firstCommand': {
-#         'name': "ФСУ",
-#         'trainerFIO': "Чаймаа Даваа-Сурун Кенден-Дуржуевич",
-#         'roundsScore':  [12, 13, 18, 22, 5],
-#         'finalScore': 5,
-#         'players': ['Толяяяяяяяяяяяяяяяяяяяяяяяяяяяяяяяяяяяяяяяяя', "Коля", "Петя", "Антон", "Влад", "Гоша", 'yaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa'],
-#         'timeouts':[{
-#             'timeoutRound': 3,
-#             'timeoutTime': "12:21"
-#         },
-#         {
-#             'timeoutRound': 3,
-#             'timeoutTime': "12:50"
-#         }
-#         ],
-#         'playerChanges': [{
-#             'changeRound': 3,
-#             'changeTime': '12:21',
-#             'changedPlayer': "2",
-#             'playerOnChange': "6"
-#         }],
-#     },
-#     'secondCommand': {
-#         'name': "РТФ",
-#         'trainerFIO': "Виктор Викторович Викторов",
-#         'roundsScore':  [15, 18, 11, 23, 25],
-#         'finalScore': 5,
-#         'players': ['Толя', "Коля", "Петя", "Антон", "Влад", "Гоша", "Чаймаа Даваа-Сурун Кенден-Дуржуевич"],
-#         'timeouts':[{
-#             'timeoutRound': 4,
-#             'timeoutTime': "12:21"
-#         }],
-#         'playerChanges': [{
-#             'changeRound': 4,
-#             'changeTime': '12:21',
-#             'changedPlayer': "1",
-#             'playerOnChange': "2"
-#         }],
-#     }
-# }
