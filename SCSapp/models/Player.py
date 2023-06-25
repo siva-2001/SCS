@@ -12,9 +12,9 @@ class VolleyballPlayer(models.Model):
     # patronymic = models.CharField(max_length=32, blank=True, null=True, verbose_name='Отчество')
     #
     FIO = models.CharField(max_length=128, verbose_name='ФИО', default="III")
-    age = models.IntegerField(verbose_name='Возраст')
-    height = models.IntegerField(verbose_name='Рост')
-    weight = models.IntegerField(verbose_name='Вес')
+    age = models.IntegerField(verbose_name='Возраст', null=True, blank=True)
+    height = models.IntegerField(verbose_name='Рост', null=True, blank=True)
+    weight = models.IntegerField(verbose_name='Вес', null=True, blank=True)
     trainer = models.BooleanField(verbose_name='Тренер', null=True, default=False)
 
     team = models.ForeignKey("SCSapp.VolleyballTeam", on_delete=models.CASCADE, default=None, null=True)

@@ -173,24 +173,45 @@ class CertainVolleyballMatch(generics.RetrieveUpdateAPIView):
         print(args, kwargs, request.body)
         return self.update(request, *args, **kwargs)
 
+
 class VolleyballTeamAPIView(generics.ListCreateAPIView):
     queryset = VolleyballTeam.objects.all()
     serializer_class = VolleyballTeamSerializer
 
     def get_queryset(self, comp_id):
-        if comp_id: return self.queryset.filter(competition = comp_id)
+        if comp_id: return self.queryset.filter(competition=comp_id)
         else: return self.queryset.all()
 
     def get(self, request, *args, **kwargs):
         serializer = self.serializer_class(self.get_queryset(kwargs['pk']), many=True)
-
-        competition = VolleyballCompetition.objects.get(id=kwargs["pk"])
-
         for teamDataDict in serializer.data:
             teamDataDict['icon_url'] = Faculty.objects.get(id=teamDataDict['participant']).emblem.url
             teamDataDict['participant_name'] = Faculty.objects.get(id=teamDataDict['participant']).name
         return Response(serializer.data)
 
+    def post(self, request):
+        try: faculty = Faculty.objects.get(representative=request.user)
+        except: return Response(status=403)
+        data = json.loads(request.body)
+        competition = VolleyballCompetition.objects.get(id=data["competition_id"])
+        print(data)
+        team = VolleyballTeam.objects.create(
+            competition = competition,
+            participant = faculty,
+        )
+        VolleyballPlayer.objects.create(
+            FIO = data["trainer"]['FIO'],
+            team = team,
+            trainer=True,
+        )
+        for player in data['players']:
+            VolleyballPlayer.objects.create(
+                FIO = player['FIO'],
+                age = player['age'],
+                team = team,
+                height = player['height'],
+                weigth = player['weigth'],
+            )
 
 
 

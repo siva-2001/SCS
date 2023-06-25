@@ -13,7 +13,7 @@ scs_urlpatterns = [
     path('', homePageView, name='homePage'),
     path('competition/<pk>/', CompetitionView.as_view(), name='competition'),
     path('past/', pastEventsView, name='history'),
-    path('newTeam/', TeamRegistrView.as_view(), name='newCommand'),
+    path('newTeam/<pk>/', TeamRegistrView.as_view(), name='newCommand'),
 
     # __________________________________________    API views    _______________________________________________________
     path('api/v1/competitions/', VolleyballCompetitionAPIView.as_view(), name='competitionsAPI'),
@@ -26,6 +26,7 @@ scs_urlpatterns = [
     path('api/v1/matchesOfCompetition/<pk>/', VolleyballMatchesOfCompetitionAPIView.as_view(), name = 'matchesOfCompetitionAPI'),
     path('api/v1/match/<pk>/', CertainVolleyballMatch.as_view(), name = 'matchAPI'),
     path('api/v1/teamsOfCompetition/<pk>/', VolleyballTeamAPIView.as_view(), name="teamsOfCompetitionAPI"),
+
     path('api/v1/playersOfTeam/', PlayerAPIView.as_view(), name="playersOfTeamAPI"),
     path('api/v1/judges/', JudgeAPIView.as_view(), name="judges"),
 

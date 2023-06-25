@@ -6,6 +6,7 @@ class Faculty(models.Model):
     emblem = models.ImageField(upload_to='media/emblems', default=None, null=True, blank=True)
     description = models.CharField(max_length=512, verbose_name='Описание', default="")
 
+
     class Meta():
         verbose_name = 'Факультет'
         verbose_name_plural = 'Факультеты'
