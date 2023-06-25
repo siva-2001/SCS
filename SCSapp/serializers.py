@@ -77,4 +77,4 @@ class VolleyballPlayerSerializer(serializers.ModelSerializer):
 class FacultySerializer(serializers.ModelSerializer):
     class Meta:
         model = Faculty
-        fields = ['name', 'emblem', "description"]
+        fields = ['name', 'emblem', "description", "representative"]

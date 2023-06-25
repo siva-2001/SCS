@@ -68,10 +68,10 @@ def CreateTestDataView(request):
     participant_3 = Faculty.objects.create(name="ГФ", description="Не лучший факультет")
     participant_4 = Faculty.objects.create(name="ФСУ", description="Лучший факультет")
 
-    team_1 = VolleyballTeam.objects.create(participant=participant_1)
-    team_2 = VolleyballTeam.objects.create(participant=participant_2)
-    team_3 = VolleyballTeam.objects.create(participant=participant_3)
-    team_4 = VolleyballTeam.objects.create(participant=participant_4)
+    team_1 = VolleyballTeam.objects.create(participant=participant_1, confirmed=True)
+    team_2 = VolleyballTeam.objects.create(participant=participant_2, confirmed=True)
+    team_3 = VolleyballTeam.objects.create(participant=participant_3, confirmed=True)
+    team_4 = VolleyballTeam.objects.create(participant=participant_4, confirmed=True)
 
     trainer_1 = VolleyballPlayer.objects.create(
         FIO = "Иванов Пётр Степанович",

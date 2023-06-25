@@ -189,29 +189,41 @@ class VolleyballTeamAPIView(generics.ListCreateAPIView):
             teamDataDict['participant_name'] = Faculty.objects.get(id=teamDataDict['participant']).name
         return Response(serializer.data)
 
-    def post(self, request):
-        try: faculty = Faculty.objects.get(representative=request.user)
+    def post(self, request, *args, **kwargs):
+        print(args, kwargs, request.auth.user)
+        try:
+            faculty = Faculty.objects.get(representative=request.auth.user)
+
         except: return Response(status=403)
         data = json.loads(request.body)
-        competition = VolleyballCompetition.objects.get(id=data["competition_id"])
-        print(data)
-        team = VolleyballTeam.objects.create(
-            competition = competition,
-            participant = faculty,
-        )
-        VolleyballPlayer.objects.create(
-            FIO = data["trainer"]['FIO'],
-            team = team,
-            trainer=True,
-        )
-        for player in data['players']:
-            VolleyballPlayer.objects.create(
-                FIO = player['FIO'],
-                age = player['age'],
-                team = team,
-                height = player['height'],
-                weigth = player['weigth'],
-            )
+
+        if (("trainer" in data) and ("players" in data)):
+            if (("FIO" in data["trainer"]) and (len(data["players"]) >= 6)):
+                for player in data["players"]:
+                    if (not "FIO" in player) or (len(player["FIO"]) < 2): return Response(status=404)
+
+                competition = VolleyballCompetition.objects.get(id=kwargs['pk'])
+                if competition.status != Competition.StatusChoices.ANNOUNSED:
+                    return Response({'ERROR' : "Срок приёма заявок на соревнование истёк"})
+                team = VolleyballTeam.objects.create(
+                    competition = competition,
+                    participant = faculty,
+                )
+                VolleyballPlayer.objects.create(
+                    FIO = data["trainer"]['FIO'],
+                    team = team,
+                    trainer=True,
+                )
+                for player in data['players']:
+                    VolleyballPlayer.objects.create(
+                        FIO = (player['FIO'] if ('FIO' in player) else None),
+                        age = (player['age'] if ('age' in player) else None),
+                        team = team,
+                        height = (player['height'] if ('height' in player) else None),
+                        weight = (player['weight'] if ('weight' in player) else None),
+                    )
+                return Response(status=200)
+        else: return Response({"ERROR" : "Отправленные данные имеют неверный формат"})
 
 
 

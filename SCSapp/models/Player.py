@@ -7,10 +7,6 @@ class VolleyballPlayer(models.Model):
         verbose_name = 'Игрок'
         verbose_name_plural = 'Игроки'
 
-    # name = models.CharField(max_length=32, verbose_name='Имя')
-    # surename = models.CharField(max_length=32, verbose_name='Фамилия')
-    # patronymic = models.CharField(max_length=32, blank=True, null=True, verbose_name='Отчество')
-    #
     FIO = models.CharField(max_length=128, verbose_name='ФИО', default="III")
     age = models.IntegerField(verbose_name='Возраст', null=True, blank=True)
     height = models.IntegerField(verbose_name='Рост', null=True, blank=True)

@@ -8,6 +8,8 @@ from django.http import HttpResponse
 from rest_framework.response import Response
 from rest_framework.authtoken.models import Token
 
+from SCSapp.models.Faculty import Faculty
+
 from rest_framework import generics
 from rest_framework.views import APIView
 from authorizationApp.func import getTokenFromASGIScope
@@ -62,13 +64,10 @@ class PermissionsAPIView(APIView):
         if not data["isAnonymousUser"]:
             data["id"] = user.id
             data["username"] = user.username
-            if user.last_name:
-                data["FIO"] = user.last_name + ' ' + ((user.first_name[0] + '.') if user.first_name else "")
-            else: data["FIO"] = 'NoName'
-            # data["isOrganizer"] = user.groups.filter(name="organizer").exists()
+            data["FIO"] = (user.last_name + " " + user.first_name) if (user.last_name or user.first_name) else "Безымянный"
             if user.groups.filter(name="organizer").exists(): data["userrole"] = "Организатор"
             elif user.groups.filter(name="judge").exists(): data["userrole"] = "Судья"
-
+            elif user in [faculty.representative for faculty in Faculty.objects.all()]: data["userrole"] = "Представитель факультета"
         return Response(data)
 
 

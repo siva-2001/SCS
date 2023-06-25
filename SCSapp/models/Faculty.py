@@ -1,4 +1,5 @@
 from django.db import models
+from authorizationApp.models import User
 
 class Faculty(models.Model):
 
@@ -6,6 +7,7 @@ class Faculty(models.Model):
     emblem = models.ImageField(upload_to='media/emblems', default=None, null=True, blank=True)
     description = models.CharField(max_length=512, verbose_name='Описание', default="")
 
+    representative = models.ForeignKey(User, on_delete=models.SET_NULL, default=None, blank=True, null=True)
 
     class Meta():
         verbose_name = 'Факультет'
