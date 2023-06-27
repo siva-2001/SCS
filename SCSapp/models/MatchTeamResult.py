@@ -32,9 +32,9 @@ class VolleyballMatchTeamResult(MatchTeamResult):
         verbose_name = 'Часть поля',
         null = True,
     )
-    #
-    # def __str__(self):
-    #     return self.team.participant.name
+
+    def __str__(self):
+        return "team" + str(self.team.id) + "_match" + str(self.match.id)
 
     class Meta:
         verbose_name = 'Результат в матче по волейболу'

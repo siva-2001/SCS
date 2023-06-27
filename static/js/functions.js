@@ -183,7 +183,6 @@ function updateCompetition(comp_id, title=null, description=null, datetime=null)
 }
 
 function addSendApplicationButton(comp_id){
-    console.log(comp_id);
     $(".dateTimeInfo").append(
         '<a href="http://127.0.0.1:8000/newTeam/' + comp_id + '/">'
             + '<button class="btn createCompBtn" id="send_application">'
@@ -193,7 +192,7 @@ function addSendApplicationButton(comp_id){
     )
 }
 
-function addMatchNote(match_data){
+function addMatchNote(match_data, withEdit){
     var datetime = match_data["matchDateTime"] ? match_data["matchDateTime"] : "Время и дата не определены"
     var place = match_data['place'] ? match_data['place'] : " "
     var firstTeamScore = match_data["firstTeamScore"] ? match_data["firstTeamScore"] : ""
@@ -216,7 +215,7 @@ function addMatchNote(match_data){
                      str += "   selected";
                      selected = true;
                 }
-                str += '>' + judge_data['first_name'] + ' ' + judge_data['last_name'] + '</option>';
+                str += '>' + judge_data['first_name'] + ' ' + judge_data['last_name'] + ' (' + judge_data["username"] + ')</option>';
                 judgeDropdownList += str;
             }
             judgeDropdownList += '<option value=""'
@@ -276,14 +275,20 @@ function addMatchNote(match_data){
                                 + '<p class="p6" align="right">' + ((place == ' ') ? 'Место не определено' : place) + '</p>'
                             + '</div>'
 
-                            + '<div class="row mt-4">'
-                                + '<a class="link" id="match_edit_form_ID_' + match_data["id"] + '" style="display: none" data-bs-toggle="collapse" href="#matchEdit_ID_' + match_data["id"] + '" role="button" aria-expanded="false" aria-controls="collapseExample">'
-                                    + '<p align="right" class="p6">Редактировать</p>'
-                                + '</a>'
-                            + '</div>'
-                        + '</div>'
+            if (withEdit) {
+                html_match_element = html_match_element
+                    + '<div class="row mt-4">'
+                        + '<a class="link" id="match_edit_form_ID_' + match_data["id"] + '" data-bs-toggle="collapse" href="#matchEdit_ID_' + match_data["id"] + '" role="button" aria-expanded="false" aria-controls="collapseExample">'
+                            + '<p align="right" class="p6">Редактировать</p>'
+                        + '</a>'
                     + '</div>'
-                    + '<div  id="matchEdit_ID_' + match_data["id"] + '" class="collapse">'
+            }
+
+            html_match_element = html_match_element +'</div></div>'
+
+            if (withEdit) {
+                html_match_element = html_match_element
+                + '<div  id="matchEdit_ID_' + match_data["id"] + '" class="collapse">'
                         + '<div class="editMatch">'
                             +'<div class="row question">'
                                 +'<div class="col-5">'
@@ -315,6 +320,8 @@ function addMatchNote(match_data){
                         +'</div>'
                     +'</div>'
                 + '</div>'
+            }
+
             $("#tournament_grid").append(html_match_element);
 
         },
@@ -325,7 +332,7 @@ function addMatchNote(match_data){
 
 }
 
-function addTeamNote(team_data){
+function addConfirmedTeamNote(team_data){
     icon_url = team_data["icon_url"]
 
     html_team_element =
@@ -353,11 +360,50 @@ function addTeamNote(team_data){
     $("#teams_list").append(html_team_element);
 }
 
+function addTeamNote(team_data){
+    icon_url = team_data["icon_url"]
+    console.log(team_data);
+
+    html_team_element =
+        '<div class="team">'
+            + '<div class="row d-flex justify-content-between">'
+                + '<div class="col-4 text-center">'
+                    + '<img width="50" height="50" src="http://127.0.0.1:8000' + icon_url + '"> '
+                    + team_data["participant_name"]
+                + '</div>'
+
+
+                + '<div class="col  text-end">'
+                    +'<button value="' + team_data["id"] + '" class="reject_team btn btn-warning me-3">Отклонить</button>'
+                    +'<button value="' + team_data["id"] + '" class="confirm_team btn btn-primary me-4">Подтвердить</button>'
+                + '</div>'
+
+            + '</div>'
+        + '</div>'
+
+    $("#teams_list").append(html_team_element);
+}
+
+function addPlayerNote(player_fio, player_number){
+    html_player_element =
+        '<div id="player_num' + player_number + '" class="row justify-content-between">'
+            + '<div class="col">'
+                + '<div class="scroll-text mt-3 ms-3">' + player_fio + '</div>'
+            + '</div>'
+            + '<div class="col-auto">'
+                + '<button value=' + player_number + ' class="colorButt2 btn mt-3 me-4 butt">Удалить</button>'
+            + '</div>'
+        + '</div>'
+    $("#players-command").append(html_player_element);
+}
+
+
 function addCompetitionStage(stage){
     var stageString;
     if(stage == "1/1") stageString = "Финал";
     else if(stage == "1/2") stageString = "Полуфинал";
     else if(stage == "1/4") stageString = "1/4-финал";
     else if(stage == "1/8") stageString = "1/8-финал";
+    else stageString = stage;
     $("#tournament_grid").append('<div class="competitionStage">' + stageString + '</div>');
 }

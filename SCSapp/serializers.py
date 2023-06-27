@@ -67,7 +67,7 @@ class VolleyballMatchSerializer(serializers.ModelSerializer):
 class VolleyballTeamSerializer(serializers.ModelSerializer):
     class Meta:
         model = VolleyballTeam
-        fields = ["participant", "competition", "completed_games", "won", "lost", "score", "confirmed"]
+        fields = ["id", "participant", "competition", "completed_games", "won", "lost", "score", "confirmed"]
 
 class VolleyballPlayerSerializer(serializers.ModelSerializer):
     class Meta:

@@ -1,6 +1,8 @@
 $(document).ready(() => {
 
     var userrole;
+    var username;
+    var faculty;
 
     $.ajax({
         async: false,
@@ -14,6 +16,8 @@ $(document).ready(() => {
             if (data.isAnonymousUser || data.details == "Invalid token.") addAnonymousUserButtons();
             else {
                 userrole = data.userrole;
+                username = data.username;
+                if (data.userrole == "Представитель факультета") faculty = data.faculty;
                 addProfileElement(data.FIO, data.userrole);
             }
         },
@@ -174,23 +178,23 @@ $(document).ready(() => {
 
 
                 if(userrole == "Организатор") {
-                    addCreateEventButton();
                     $("#competitionEditButton").show();
-                    $(".link").show();
                 }
 
                 if (competition_data.status == "ANNONCED"){
-                    console.log(userrole);
-                    if(userrole == "Представитель факультета") addSendApplicationButton(getPK());
+                    //if(userrole == "Представитель факультета") addSendApplicationButton(getPK());
                     if(userrole == "Организатор") $("#start_draw").show();
 
-                    if(competition_data.dateTimeStartCompetition) $$("#organizer").append("Соревнования начнутся: <br>" + competition_data.dateTimeStartCompetition.split(" ")[1]);
+                    if(competition_data.dateTimeStartCompetition) $("#organizer").append("Соревнования начнутся: <br>" + competition_data.dateTimeStartCompetition.split(" ")[1]);
                     else $("#organizer").text("Время начала соревнований не определено");
                     $("#competition_datetime_input_string").show();
                     $("#tournament_grid_block").hide();
                 }
-                else if (competition_data.status == "PAST")
-                    $("#organizer").text("Соревнования завершились: " + competition_data.dateTimeStartCompetition.split(" ")[1]);
+                else if (competition_data.status == "PAST"){
+                    if(competition_data.dateTimeStartCompetition)
+                        $("#organizer").text("Соревнования завершились: " + competition_data.dateTimeStartCompetition.split(" ")[1]);
+                }
+
 
                 if (competition_data.protocol) $(".protocol").append(
                     "<a href='" + competition_data.protocol+ "' download>"
@@ -214,7 +218,7 @@ $(document).ready(() => {
                         console.log(matches_data);
                         console.log(competition_data.status);
 
-                        if (competition_data.status == "CURRENT") {
+                        if (competition_data.status != "ANNONCED") {
                             var nextMatchDateTime;
                             var competitionStage = "-";
 
@@ -223,11 +227,11 @@ $(document).ready(() => {
                             for (var i = 0; i < matches_data.length; i++){
                                 match_data = matches_data[i];
 
-//                                if (competitionStage != match_data["competitionStage"]){
-//                                    competitionStage = match_data["competitionStage"];
-//                                    addCompetitionStage(competitionStage);
-//                                }
-                                addMatchNote(match_data);
+                                //if (competitionStage != match_data["competitionStage"]){
+                                  //  competitionStage = match_data["competitionStage"];
+                                    //addCompetitionStage(competitionStage);
+                                //}
+                                addMatchNote(match_data, (userrole == "Организатор"));
 
                                 if(match_data.isAnnounced && !match_data.match_translated_now)
                                     nextMatchDateTime = match_data.matchDateTime;
@@ -242,22 +246,45 @@ $(document).ready(() => {
                 })
 
                 $.ajax({
+                    async: false,
                     method: "GET",
                     url: "http://127.0.0.1:8000/api/v1/teamsOfCompetition/" + getPK() + "/",
                     dataType : 'json',
                     headers:{   "Authorization": cookieStrToObject(document.cookie).Authorization },
                     success: function(teams_data){
                         console.log(teams_data);
+                        team_names = Array();
                         if (teams_data.length > 0) {
                             var number_of_teams = 0;
-                            for (var i = 0; i < teams_data.length; i++){
+
+                            for (var i = 0; i < teams_data.length; i++) {
                                 if (teams_data[i]["confirmed"]){
-                                    addTeamNote(teams_data[i]);
+                                    addConfirmedTeamNote(teams_data[i]);
                                     number_of_teams += 1;
+
                                     $("#teams_list_block").show();
+                                }
+                                team_names.push(teams_data[i]["participant_name"]);
+                            }
+//
+//                            if(userrole == "Представитель факультета"){
+//                                if (!team_names.includes(faculty)) addSendApplicationButton(getPK());
+//                            }
+//
+
+                            if (userrole=="Организатор") {
+                                for (var i = 0; i < teams_data.length; i++){
+                                    if (!teams_data[i]["confirmed"]){
+                                        addTeamNote(teams_data[i]);
+                                        number_of_teams += 1;
+                                        $("#teams_list_block").show();
+                                    }
                                 }
                             }
                             $("#number_of_teams").append("(" + number_of_teams + ")");
+                        }
+                        if(userrole == "Представитель факультета" && competition_data.status == "ANNONCED"){
+                            if (!team_names.includes(faculty)) addSendApplicationButton(getPK());
                         }
                     },
                     error: function(data){  console.log('error in load competition data');  },
@@ -273,6 +300,8 @@ $(document).ready(() => {
             then: function(){   console.log(competition_data);  }
         })
 
+
+
         $('.send_edit_match').on('click', e => {
             var formData = new FormData();
 
@@ -284,7 +313,6 @@ $(document).ready(() => {
             if ($('#match_place_ID_' + id).val() === ""
             && $('#match_judge_ID_' + id).val() === ""
             && $('#match_datetime_ID_' + id).val() === ""){
-//                alert("Заполните пустые поля");
                 return;
             }
 
@@ -310,13 +338,27 @@ $(document).ready(() => {
                 });
         });
 
+        $(".confirm_team").on('click', e => {
+            var id = $(e.target).val();
+            console.log("confirm " + id);
+            sendToHandler("confirmed", id, getPK());
+        });
+
+        $(".reject_team").on('click', e => {
+            var id = $(e.target).val();
+            console.log("reject " + id);
+            sendToHandler("rejected", id, getPK());
+        });
+
         $("#sendCompetitionEdit").click(() => {
             updateCompetition(
                 getPK(),
                 $("#competition_title_edit").val(),
                 $("#competition_description_edit").val(),
-                $("#competition_datetime_edit").val());
+                $("#competition_datetime_edit").val()
+            );
         });
+
 
         $("#send_application").click(() => {
             updateCompetition(
@@ -337,17 +379,107 @@ $(document).ready(() => {
                 cache: false,
                 data: '{"competition_id":' + getPK() + '}',
                 headers:{
-//                        "X-CSRFToken": $('[name="csrfmiddlewaretoken"]').attr('value'),
                     "Authorization": cookieStrToObject(document.cookie).Authorization
                 },
             }).always(function(){
+                alert(data["message"]);
                 document.location.reload();
             });
         });
+
     }
 
 
+    if (window.location.pathname.match("/newTeam/")) {
+        player_list = Array();
+        var competition_id;
 
+        $.ajax({
+            async: false,
+            method: "GET",
+            url: "http://127.0.0.1:8000/api/v1/competition/" + getPK() + "/",
+            dataType : 'json',
+            contentType: false,
+            processData: false,
+            cache: false,
+            headers:{"Authorization": cookieStrToObject(document.cookie).Authorization},
+        }).success(function(data){
+            competition_id = data["id"];
+            $("#nameCompetition").text(data["name"]);
+        }).error(function(){
+            console.log("error");
+        });
+
+
+
+        $("#regCommand").click(() => {
+            if ($("#coach-command").val().length <= 2) alert("Имя тренера слишком короткое");
+            else if (player_list.length < 6) alert("Количество игроков в команде недостаточно");
+            else {
+                data = {
+                    "trainer" : {
+                        "FIO" : $("#coach-command").val(),
+                    },
+                    "players" : player_list,
+                }
+
+                $.ajax({
+                    async: false,
+                    method: "POST",
+                    url: "http://127.0.0.1:8000/api/v1/teamsOfCompetition/" + getPK() + "/",
+                    dataType : 'json',
+                    contentType: false,
+                    processData: false,
+                    cache: false,
+                    data: JSON.stringify(data),
+                    headers:{ "Authorization": cookieStrToObject(document.cookie).Authorization },
+                }).success(function(data){
+                    console.log(data);
+                    alert("Команда зарегистрирована!");
+                    document.location.replace("http://127.0.0.1:8000/competition/" + getPK());
+                }).error(function(){
+                    console.log("error");
+                });
+
+            }
+
+        });
+
+        $(".buttSave").click(() => {
+            if($("#name-player").val().length > 2){
+                addPlayerNote($("#name-player").val(), player_list.length   );
+
+                $(".colorButt2").on('click', e => {
+                    var number = $(e.target).val();
+                    console.log("player_num" + number);
+                    $("#player_num" + number).remove();
+                    player_list.pop();
+                });
+
+                player_list.push({
+                    "FIO" : $("#name-player").val(),
+                    "height" : parseInt($("#height-player").val()),
+                    "weight" : parseInt($("#weight-player").val()),
+                });
+                $("#name-player").val("");
+                $("#height-player").val(undefined);
+                $("#weight-player").val(undefined);
+
+                console.log(player_list);
+            } else {
+                alert("Имя слишком короткое")
+            }
+        });
+
+
+
+
+    }
+
+
+    if(userrole == "Организатор") {
+        addCreateEventButton();
+    }
 
 
 

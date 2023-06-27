@@ -20,8 +20,7 @@
                 <div class="col-8">
                     <div class="competition pastCompetition">
                         <p class="h3 mb-3"> {{ competition.name }} </p>
-                        <p class="h5"> Время окончания: {{ competition.competitionEndDateTime }} </p>
-                        <p class="h5"> Организатор: {{ competition.organizerName }} </p>
+                        <p class="h5"> Время окончания: {{ competition.dateTimeFinishCompetition }} </p>
                         <div class="row">
                             <div class="col-6 link">
                                 <a href="{% url 'competition' competition.id %}"><h4>Подробнее</h4></a>

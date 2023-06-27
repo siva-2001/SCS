@@ -110,8 +110,11 @@ class VolleyballCompetition(Competition):
 
     def draw(self):
         if(self.status == self.StatusChoices.ANNOUNSED):
+
+            print("here")
             self.status = self.StatusChoices.CURRENT
             teams = list(VolleyballTeam.objects.all().filter(competition=self).filter(confirmed=True))
+
 
             for i in range(len(teams)):
                 for j in range(i+1, len(teams)):

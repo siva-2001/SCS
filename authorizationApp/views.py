@@ -67,7 +67,9 @@ class PermissionsAPIView(APIView):
             data["FIO"] = (user.last_name + " " + user.first_name) if (user.last_name or user.first_name) else "Безымянный"
             if user.groups.filter(name="organizer").exists(): data["userrole"] = "Организатор"
             elif user.groups.filter(name="judge").exists(): data["userrole"] = "Судья"
-            elif user in [faculty.representative for faculty in Faculty.objects.all()]: data["userrole"] = "Представитель факультета"
+            elif user in [faculty.representative for faculty in Faculty.objects.all() if (user == faculty.representative)]:
+                data["userrole"] = "Представитель факультета"
+                data["faculty"] = [faculty.name for faculty in Faculty.objects.all() if (user == faculty.representative)][0]
         return Response(data)
 
 

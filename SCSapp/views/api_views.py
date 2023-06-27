@@ -174,6 +174,8 @@ class CertainVolleyballMatch(generics.RetrieveUpdateAPIView):
         return self.update(request, *args, **kwargs)
 
 
+
+
 class VolleyballTeamAPIView(generics.ListCreateAPIView):
     queryset = VolleyballTeam.objects.all()
     serializer_class = VolleyballTeamSerializer
@@ -190,10 +192,8 @@ class VolleyballTeamAPIView(generics.ListCreateAPIView):
         return Response(serializer.data)
 
     def post(self, request, *args, **kwargs):
-        print(args, kwargs, request.auth.user)
-        try:
-            faculty = Faculty.objects.get(representative=request.auth.user)
-
+        print(args, kwargs, request.auth.user, request.body)
+        try: faculty = Faculty.objects.get(representative=request.auth.user)
         except: return Response(status=403)
         data = json.loads(request.body)
 
@@ -222,7 +222,7 @@ class VolleyballTeamAPIView(generics.ListCreateAPIView):
                         height = (player['height'] if ('height' in player) else None),
                         weight = (player['weight'] if ('weight' in player) else None),
                     )
-                return Response(status=200)
+                return Response({"status" : "SUCCES"})
         else: return Response({"ERROR" : "Отправленные данные имеют неверный формат"})
 
 
@@ -248,6 +248,34 @@ class CompetitionDraw(APIView):
             return Response({"ERROR":"Вы не являетесь организатором"})
         competition.draw()
         return Response(status=200)
+
+class TeamApplicationHandler(APIView):
+    queryset = VolleyballTeam.objects.all()
+    serializer_class = VolleyballTeamSerializer
+
+    def get_object(self, pk):
+        try: return self.queryset.objects.get(pk=pk)
+        except VolleyballTeam.DoesNotExist: raise Http404
+
+    def post(self, request):
+        print(request.body)
+        data = json.loads(request.body)
+
+        team = self.queryset.get(id=data["team_id"])
+        # if request.user != VolleyballCompetition.objects.get(id=json.loads(request.body)["competition_id"]).organizer:
+        if not request.auth.user.groups.filter(name="organizer").exists():
+            return Response(status=403)
+        if data["signal"] == "confirmed":
+            team.confirmed = True
+            team.save()
+            return Response({"answer": "Команда " + team.participant.name + " добавлена в список участников"})
+        if data["signal"] == "rejected":
+            team.delete()
+            return Response({"answer": "Заявка "  + team.participant.name + " отклонена"})
+
+
+
+
 
 
 socketINFO = [    # FOR_DEBUG

@@ -2,7 +2,7 @@ from SCSapp.views.createTestDataView import CreateTestDataView
 from django.urls import path, re_path
 from SCSapp.views.api_views import CurrentCompetitionAPIView, JudgeCompetitionsAPIView, CertainVolleyballCompetitionAPIView, CertainVolleyballMatch
 from SCSapp.views.api_views import JudgeMatchesAPIView, MatchManagmentView, VolleyballCompetitionAPIView, VolleyballMatchesOfCompetitionAPIView
-from SCSapp.views.api_views import VolleyballTeamAPIView, PlayerAPIView, JudgeAPIView, CompetitionDraw
+from SCSapp.views.api_views import VolleyballTeamAPIView, PlayerAPIView, JudgeAPIView, CompetitionDraw, TeamApplicationHandler
 from authorizationApp.views import JudgeObtainAuthToken
 from SCSapp.views.templates_views import pastEventsView, homePageView, TemplateView
 from SCSapp.views.templates_views import CompetitionView, CreateCompetitionView, TeamRegistrView
@@ -26,6 +26,8 @@ scs_urlpatterns = [
     path('api/v1/matchesOfCompetition/<pk>/', VolleyballMatchesOfCompetitionAPIView.as_view(), name = 'matchesOfCompetitionAPI'),
     path('api/v1/match/<pk>/', CertainVolleyballMatch.as_view(), name = 'matchAPI'),
     path('api/v1/teamsOfCompetition/<pk>/', VolleyballTeamAPIView.as_view(), name="teamsOfCompetitionAPI"),
+
+    path('api/v1/applicationHandler/', TeamApplicationHandler.as_view(), name="teamsOfCompetitionAPI"),
 
     path('api/v1/playersOfTeam/', PlayerAPIView.as_view(), name="playersOfTeamAPI"),
     path('api/v1/judges/', JudgeAPIView.as_view(), name="judges"),

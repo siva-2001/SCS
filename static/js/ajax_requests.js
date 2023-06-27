@@ -40,6 +40,24 @@ function get_auth_token_request(username, password){
     })
 }
 
+function sendToHandler(signal, team_id, competition_id){
+    $.ajax({
+        method: "POST",
+        url: "http://127.0.0.1:8000/api/v1/applicationHandler/",
+        dataType : 'json',
+        data: JSON.stringify({
+           "signal": signal,
+           "team_id": team_id,
+           "competition_id" : competition_id
+        }),
+        headers:{   "Authorization": cookieStrToObject(document.cookie).Authorization },
+        success: function(data){
+            alert(data["answer"]);
+            document.location.reload();
+        },
+    });
+}
+
 function sign_up_user_request(username, password, scrf_token){
     $.ajax({
         method: "POST",
